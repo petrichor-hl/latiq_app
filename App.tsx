@@ -3,7 +3,6 @@ import {
   Appearance,
   Button,
   Keyboard,
-  KeyboardAvoidingView,
   StyleSheet,
   TextInput,
   View,
@@ -13,13 +12,16 @@ import {
   useSafeAreaInsets,
 } from 'react-native-safe-area-context';
 import { useKeyboardAwareInsets } from './app/base/keyboard/use-keyboard-aware-insets.hook';
+import { showLoading } from './app/zustand/loading.zustand';
+import { GlobalLoading } from './app/base/components/global-loading.component';
 
 function App(): React.JSX.Element {
   useEffect(() => Appearance.setColorScheme('light'), []);
 
   return (
-    <SafeAreaProvider>
+    <SafeAreaProvider style={{ flex: 1 }}>
       <HomeScreen />
+      <GlobalLoading />
     </SafeAreaProvider>
   );
 }
@@ -29,10 +31,7 @@ const HomeScreen = () => {
   const insets = useSafeAreaInsets();
 
   return (
-    <KeyboardAvoidingView
-      style={{
-        flex: 1,
-      }}>
+    <View style={{ flex: 1 }}>
       <View
         style={{
           flex: 1,
@@ -40,6 +39,7 @@ const HomeScreen = () => {
           alignItems: 'center',
         }}>
         <Button onPress={() => Keyboard.dismiss()} title="dismiss keyboard" />
+        <Button onPress={() => showLoading()} title="show loading" />
       </View>
       <View
         style={{
@@ -55,7 +55,7 @@ const HomeScreen = () => {
           keyboardType="numeric"
         />
       </View>
-    </KeyboardAvoidingView>
+    </View>
   );
 };
 
