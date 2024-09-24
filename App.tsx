@@ -14,6 +14,7 @@ import {
 import { useKeyboardAwareInsets } from './app/base/keyboard/use-keyboard-aware-insets.hook';
 import { showLoading } from './app/zustand/loading.zustand';
 import { GlobalLoading } from './app/base/components/global-loading.component';
+import { ColorPalette } from './app/base/constants/color-palette';
 
 function App(): React.JSX.Element {
   useEffect(() => Appearance.setColorScheme('light'), []);
@@ -44,7 +45,7 @@ const HomeScreen = () => {
       <View
         style={{
           padding: 14,
-          backgroundColor: '#00F8',
+          backgroundColor: ColorPalette.indigo[500],
           paddingBottom: Math.max(insets.bottom, useKeyboardAwareInsets()) + 14,
         }}>
         <TextInput
