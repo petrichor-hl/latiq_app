@@ -1,5 +1,8 @@
 import { NativeModules } from 'react-native';
 import Reactotron from 'reactotron-react-native';
+import type { ReactotronReactNative } from 'reactotron-react-native';
+import mmkvPlugin from 'reactotron-react-native-mmkv';
+import { storage } from '../zustand/auth.zustand';
 
 Reactotron.configure({
   name: 'LaTiQ App',
@@ -15,6 +18,7 @@ Reactotron.configure({
     overlay: false, // just turning off overlay
     log: true,
   })
+  .use(mmkvPlugin<ReactotronReactNative>({ storage })) // <--- here we go!
   .connect();
 
 Reactotron.onCustomCommand({
