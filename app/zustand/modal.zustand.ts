@@ -1,6 +1,5 @@
 import { TextStyle, ViewStyle } from 'react-native';
 import { create } from 'zustand';
-import { hideLoading } from './loading.zustand';
 
 interface ModalButton {
   onPress: () => void;
@@ -32,7 +31,6 @@ export const zustandGlobalModal = create<GlobalModalState & GlobalModalAction>(
     content: '',
     buttons: [],
     show: state => {
-      hideLoading();
       set({
         ...state,
         visible: true,

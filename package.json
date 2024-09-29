@@ -12,6 +12,7 @@
   "dependencies": {
     "@react-navigation/native": "^6.1.18",
     "@react-navigation/native-stack": "^6.11.0",
+    "apisauce": "^3.0.1",
     "react": "18.2.0",
     "react-native": "0.74.5",
     "react-native-keyboard-aware-scroll-view": "^0.9.5",
