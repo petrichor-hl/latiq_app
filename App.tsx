@@ -7,6 +7,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { refNavigation } from './app/navigation/navation.config';
 import { HomeScreen } from './app/screens/home.screen';
+import { GlobalModal } from './app/base/components/global-modal.component';
 
 function App(): React.JSX.Element {
   useEffect(() => Appearance.setColorScheme('light'), []);
@@ -25,6 +26,7 @@ function App(): React.JSX.Element {
         </Stack.Navigator>
       </NavigationContainer>
       <GlobalLoading />
+      <GlobalModal />
     </SafeAreaProvider>
   );
 }

@@ -5,6 +5,8 @@ import { ColorPalette } from '../base/constants/color-palette';
 import { useKeyboardAwareInsets } from '../base/keyboard/use-keyboard-aware-insets.hook';
 import { navigate } from '../navigation/navation.config';
 import { showLoading } from '../zustand/loading.zustand';
+import { zustandGlobalModal } from '../zustand/modal.zustand';
+import { zustandAuth } from '../zustand/auth.zustand';
 
 export const HomeScreen = () => {
   const [number, onChangeNumber] = useState('');
@@ -23,6 +25,37 @@ export const HomeScreen = () => {
         <Button
           onPress={() => navigate('Draft', { text: 'DRAFT --> HELLO THERE' })}
           title="open second screen"
+        />
+        <Button
+          onPress={() =>
+            zustandGlobalModal.getState().show({
+              title: 'PETRICHOR',
+              content:
+                'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis nulla erat, placerat id elit ut, viverra commodo urna.',
+              buttons: [
+                {
+                  title: 'OK',
+                  onPress: () => zustandGlobalModal.getState().hide(),
+                  buttonStyle: {
+                    title: { color: ColorPalette.white, fontWeight: 'bold' },
+                    container: {
+                      backgroundColor: ColorPalette.green['600'],
+                      borderRadius: 8,
+                    },
+                  },
+                },
+              ],
+            })
+          }
+          title="show global modal"
+        />
+        <Button
+          onPress={() =>
+            zustandAuth
+              .getState()
+              .updateAuth({ accessToken: '123456', refreshToken: 'petrichor' })
+          }
+          title="store MMKV"
         />
       </View>
       <View

@@ -16,6 +16,7 @@ export const showLoading = () => {
   __DEV__ && console.log('----showLoading----');
   zustandLoading.getState().showLoading();
 };
+
 export const hideLoading = () => {
   __DEV__ && console.log('----hideLoading----');
   zustandLoading.getState().hideLoading();
