@@ -8,6 +8,8 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { refNavigation } from './app/navigation/navation.config';
 import { HomeScreen } from './app/screens/home.screen';
 import { GlobalModal } from './app/base/components/global-modal.component';
+import { ScreenName } from './app/base/constants/screen-name';
+import { PickAvatarScreen } from './app/screens/pick-avatar/pick-avatar.screen';
 
 function App(): React.JSX.Element {
   useEffect(() => Appearance.setColorScheme('light'), []);
@@ -21,8 +23,8 @@ function App(): React.JSX.Element {
             headerShown: false,
             orientation: 'portrait',
           }}>
-          <Stack.Screen name="Home" component={HomeScreen} />
-          <Stack.Screen name="Draft" component={DraftScreen} />
+          <Stack.Screen name={ScreenName.HOME} component={HomeScreen} />
+          <Stack.Screen name={ScreenName.DRAFT} component={DraftScreen} />
         </Stack.Navigator>
       </NavigationContainer>
       <GlobalLoading />
