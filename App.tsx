@@ -9,14 +9,13 @@ import { refNavigation } from './app/navigation/navation.config';
 import { HomeScreen } from './app/screens/home.screen';
 import { GlobalModal } from './app/base/components/global-modal.component';
 import { ScreenName } from './app/base/constants/screen-name';
-import { PickAvatarScreen } from './app/screens/pick-avatar/pick-avatar.screen';
 
 function App(): React.JSX.Element {
   useEffect(() => Appearance.setColorScheme('light'), []);
   const Stack = createNativeStackNavigator();
 
   return (
-    <SafeAreaProvider style={{ flex: 1 }}>
+    <SafeAreaProvider>
       <NavigationContainer ref={refNavigation}>
         <Stack.Navigator
           screenOptions={{
