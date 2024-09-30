@@ -7,6 +7,9 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import { ColorPalette } from '../base/constants/color-palette';
+import { lorelei } from '@dicebear/collection';
+import { createAvatar } from '@dicebear/core';
+import { SvgXml } from 'react-native-svg';
 
 export interface DraftScreenProps {
   text: string;
@@ -15,6 +18,21 @@ export interface DraftScreenProps {
 export const DraftScreen = () => {
   const route = useRoute<RouteProp<ParamList, 'Draft'>>();
   const { text } = route.params;
+
+  const kittyAvatar = createAvatar(lorelei, {
+    seed: 'Kitty',
+    size: 100,
+    // flip: true,
+    // scale: 150, // %
+    backgroundColor: ['bfdbfe'],
+  }).toString();
+
+  const jessicaAvatar = createAvatar(lorelei, {
+    seed: 'Jessica',
+    size: 100,
+    backgroundType: ['gradientLinear'],
+    backgroundColor: ['b6e3f4', 'c0aede'],
+  }).toString();
 
   return (
     <View style={styles.container}>
@@ -58,10 +76,8 @@ export const DraftScreen = () => {
         />
         <FontAwesome5 name={'comments'} size={30} solid />
       </View>
-      {/* <Button
-        onPress={}
-        title="go back"
-      /> */}
+      <SvgXml xml={kittyAvatar} />
+      <SvgXml xml={jessicaAvatar} />
       <Ionicons.Button
         name="arrow-back"
         backgroundColor="#3b5998"
