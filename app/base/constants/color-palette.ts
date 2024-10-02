@@ -6,6 +6,7 @@ export const ColorPalette = {
 
   black: '#000',
   white: '#FFF',
+  transparent: 'transparent',
 
   slate: {
     50: '#f8fafc',
