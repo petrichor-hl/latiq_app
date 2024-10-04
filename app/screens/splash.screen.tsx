@@ -16,10 +16,14 @@ export const SplashScreen = () => {
         refreshToken: zustandAuth.getState().refreshToken,
       };
 
-      const isAuthenticated = await AuthService.refreshToken(localToken);
+      if (localToken.accessToken !== '' && localToken.refreshToken !== '') {
+        const isAuthenticated = await AuthService.refreshToken(localToken);
 
-      if (isAuthenticated) {
-        reset<LoginScreenProps>(ScreenName.HOME);
+        if (isAuthenticated) {
+          reset<LoginScreenProps>(ScreenName.HOME);
+        }
+      } else {
+        reset<LoginScreenProps>(ScreenName.LOGIN);
       }
     };
 

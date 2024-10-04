@@ -7,6 +7,7 @@ import { navigate } from '../navigation/navation.config';
 import { ApiClient } from '../services/api-client/api-client';
 import { Endpoints } from '../base/constants/endpoints';
 import { zustandAuth } from '../zustand/auth.zustand';
+import { AuthService } from '../services/features/auth.services';
 
 export interface HomeScreenProps {}
 
@@ -31,10 +32,8 @@ export const HomeScreen = () => {
         <Button
           onPress={() =>
             zustandAuth.getState().updateAuth({
-              accessToken:
-                'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkODI2NjVmMS1mNzVkLTQ0M2YtYmIyNC0wOGRjZDk5MmZlM2YiLCJqdGkiOiJkODQyNTUxMS01ZDlhLTRhMTEtYWVkZi1hZDY2YWY3ZTFhNmYiLCJpYXQiOiIwNC8xMC8yMDI0IDU6MjI6MzYgUE0iLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9lbWFpbGFkZHJlc3MiOiJtYXRhYmEzOTMzQHNpZ21hem9uLmNvbSIsInRva2VuVmVyc2lvbiI6IjAiLCJleHAiOjE3MjgwNjI5MTYsImlzcyI6Imh0dHBzOi8vbG9jYWxob3N0OjcxNDgiLCJhdWQiOiIqIn0.9JsZd3eQNzA4Tfw0OThp7rkIZ7lfDJQ-ZGJ4j1w-23g',
-              refreshToken:
-                'z2xaclY8KB5jXVJ5sKEJXtmZurATJKDxuO0SeAiiZSocaVyzYIW1D70D+UiuojSY/zcL8iRgBiPEpmOS7b04lg==',
+              accessToken: '',
+              refreshToken: '',
             })
           }
           title="reset MMKV"
@@ -66,6 +65,10 @@ export const HomeScreen = () => {
             })
           }
           title={Endpoints.Test.SERVER_ERROR}
+        />
+        <Button
+          onPress={() => AuthService.logout()}
+          title={Endpoints.Account.LOGOUT}
         />
       </View>
       <View

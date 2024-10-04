@@ -7,6 +7,7 @@ import { zustandAuth } from '../../zustand/auth.zustand';
 import { ApiClient } from '../api-client/api-client';
 import { ScreenName } from '../../base/constants/screen-name';
 import { HomeScreenProps } from '../../screens/home.screen';
+import { LoginScreenProps } from '../../screens/auth/login/login.screen';
 
 interface JwtToken {
   accessToken: string;
@@ -27,10 +28,21 @@ export const AuthService = {
       });
       reset<HomeScreenProps>(ScreenName.HOME);
     } catch {
-      console.log('Login Fail');
+      console.log('Login Failed');
     }
   },
-
+  logout: async () => {
+    try {
+      await ApiClient<{}, {}>({
+        endpoint: Endpoints.Account.LOGOUT,
+        method: 'get',
+      });
+      zustandAuth.getState().clearToken();
+      reset<LoginScreenProps>(ScreenName.LOGIN);
+    } catch {
+      console.log('Logout Failed');
+    }
+  },
   refreshToken: async (payload: JwtToken): Promise<boolean> => {
     try {
       const response = await ApiClient<JwtToken, JwtToken>({

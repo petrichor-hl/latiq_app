@@ -13,7 +13,6 @@ import { ScreenName } from '../../base/constants/screen-name';
 
 export const ApiClient = <ReqType, ResType>(request: ApiRequest<ReqType>) => {
   return new Promise<ResType>(async (resolve, reject) => {
-    // Tại sao khi lỗi xảy ra trong ApiClient (đã được xử lý), thì các code phía sau ApiClient không được gọi
     const { endpoint, method, data, loading = true } = request;
 
     if (loading) {
