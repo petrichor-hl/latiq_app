@@ -10,6 +10,8 @@ import { CLIENT_ERROR, SERVER_ERROR, TIMEOUT_ERROR } from 'apisauce';
 
 export const ApiClient = <ReqType, ResType>(request: ApiRequest<ReqType>) => {
   return new Promise<ResType>(async (resolve, _) => {
+    // TODO: Hiểu bản chất của resolve, reject
+    // Tại sao khi lỗi xảy ra trong ApiClient (đã được xử lý), thì các code phía sau ApiClient không được gọi
     const { endpoint, method, data, loading = true } = request;
 
     if (loading) {
@@ -59,7 +61,7 @@ export const ApiClient = <ReqType, ResType>(request: ApiRequest<ReqType>) => {
             console.log(`${nameUrlLog} - UNAUTHORIZED - ❌`);
             zustandGlobalModal.getState().show({
               title: '- THÔNG BÁO -',
-              content: 'Phiên đăng nhập hết hạn.',
+              content: `Phiên đăng nhập hết hạn.\ncode: ${response.status}`,
               buttons: [
                 {
                   title: 'Đăng nhập lại',
@@ -83,7 +85,9 @@ export const ApiClient = <ReqType, ResType>(request: ApiRequest<ReqType>) => {
           console.log(`${nameUrlLog} - CLIENT_ERROR - ❌`);
           zustandGlobalModal.getState().show({
             title: '- THÔNG BÁO -',
-            content: (response.data as string) || 'Yêu cầu lỗi',
+            content:
+              `code ${response.status}\n${response.data}` ||
+              `${response.status} - Yêu cầu lỗi`,
             buttons: [
               {
                 title: 'OK',
@@ -110,7 +114,7 @@ export const ApiClient = <ReqType, ResType>(request: ApiRequest<ReqType>) => {
         console.log(`${nameUrlLog} - SERVER_ERROR - ❌❌❌`);
         zustandGlobalModal.getState().show({
           title: '- LỖI SERVER -',
-          content: 'Máy chủ gặp lỗi khi thực hiện yêu cầu',
+          content: `Máy chủ gặp lỗi khi thực hiện yêu cầu\ncode: ${response.status}`,
           buttons: [
             {
               title: 'OK',

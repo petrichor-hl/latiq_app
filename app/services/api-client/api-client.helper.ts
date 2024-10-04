@@ -17,7 +17,7 @@ export const createHeader = () => {
 };
 
 export const api = create({
-  baseURL: 'http://192.168.1.10:5076/api',
+  baseURL: 'http://192.168.1.12:5076/api',
   withCredentials: false,
   timeout: DEFAULT_TIMEOUT,
 });

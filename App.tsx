@@ -12,6 +12,7 @@ import { ScreenName } from './app/base/constants/screen-name';
 import { PickAvatarScreen } from './app/screens/pick-avatar/pick-avatar.screen';
 import { MenuProvider } from 'react-native-popup-menu';
 import { ColorPalette } from './app/base/constants/color-palette';
+import { LoginScreen } from './app/screens/auth/login/login.screen';
 
 function App(): React.JSX.Element {
   useEffect(() => {
@@ -33,11 +34,12 @@ function App(): React.JSX.Element {
               headerShown: false,
               orientation: 'portrait',
             }}>
+            <Stack.Screen name={ScreenName.LOGIN} component={LoginScreen} />
+            <Stack.Screen name={ScreenName.HOME} component={HomeScreen} />
             <Stack.Screen
               name={ScreenName.PICK_AVATAR}
               component={PickAvatarScreen}
             />
-            <Stack.Screen name={ScreenName.HOME} component={HomeScreen} />
             <Stack.Screen name={ScreenName.DRAFT} component={DraftScreen} />
           </Stack.Navigator>
         </NavigationContainer>

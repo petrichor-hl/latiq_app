@@ -11,7 +11,11 @@ export type ParamList = {
 
 export const refNavigation = createNavigationContainerRef<ParamList>();
 
-export const navigate = <T = {}>(name: string, params?: T) => {
+export const navigate = async <T = {}>(name: string, params?: T) => {
+  if (!refNavigation.isReady()) {
+    await new Promise(resolve => setTimeout(resolve, 100));
+  }
+
   // refNavigation.dispatch(
   //   CommonActions.navigate({ name, params: { ...params } }),
   // );
