@@ -11,7 +11,7 @@ export type ParamList = {
 
 export const refNavigation = createNavigationContainerRef<ParamList>();
 
-export const navigate = async <T = {}>(name: string, params?: T) => {
+export const navigate = async <T>(name: string, params?: T) => {
   if (!refNavigation.isReady()) {
     await new Promise(resolve => setTimeout(resolve, 100));
   }
@@ -25,6 +25,24 @@ export const navigate = async <T = {}>(name: string, params?: T) => {
       ...params,
     }),
   );
+};
+
+export const reset = async <T>(name: string, params?: T) => {
+  if (!refNavigation.isReady()) {
+    await new Promise(resolve => setTimeout(resolve, 100));
+  }
+
+  refNavigation.reset({
+    index: 0,
+    routes: [
+      {
+        name,
+        params: {
+          ...params,
+        },
+      },
+    ],
+  });
 };
 
 export const goBack = () => {

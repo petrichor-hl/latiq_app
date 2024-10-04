@@ -6,11 +6,11 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { ColorPalette } from '../../../base/constants/color-palette';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { LoginInfo, loginSchema } from './login.form';
+import { ColorPalette } from '../../../base/constants/color-palette';
 import { AuthService } from '../../../services/features/auth.services';
 
 export interface LoginScreenProps {}
@@ -33,7 +33,6 @@ export const LoginScreen = () => {
   });
 
   const onSubmit = async (loginInfo: LoginInfo) => {
-    // console.log(loginInfo);
     await AuthService.login(loginInfo);
   };
 

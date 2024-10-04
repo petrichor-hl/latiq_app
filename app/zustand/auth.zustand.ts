@@ -9,6 +9,7 @@ interface AuthState {
 
 interface AuthAction {
   updateAuth: (authState: AuthState) => void;
+  clearToken: () => void;
 }
 
 export const storage = new MMKV();
@@ -31,6 +32,7 @@ export const zustandAuth = create<AuthState & AuthAction>()(
       accessToken: '',
       refreshToken: '',
       updateAuth: (authState: AuthState) => set(authState),
+      clearToken: () => set({ accessToken: '', refreshToken: '' }),
     }),
     {
       name: 'auth-storage',
