@@ -8,12 +8,29 @@ import { ApiClient } from '../services/api-client/api-client';
 import { Endpoints } from '../base/constants/endpoints';
 import { zustandAuth } from '../zustand/auth.zustand';
 import { AuthService } from '../services/features/auth.services';
+import { SoundName } from '../base/constants/sound-name';
+import Sound from 'react-native-sound';
 
 export interface HomeScreenProps {}
+
+export const buttonClickSound = new Sound(
+  SoundName.ButtonClick,
+  Sound.MAIN_BUNDLE,
+  error => {
+    if (error) {
+      console.log('failed to load the sound', error);
+      return;
+    }
+  },
+);
 
 export const HomeScreen = () => {
   const [number, onChangeNumber] = useState('');
   const insets = useSafeAreaInsets();
+
+  const playSound = () => {
+    buttonClickSound.play();
+  };
 
   return (
     <View style={{ flex: 1 }}>
@@ -70,6 +87,8 @@ export const HomeScreen = () => {
           onPress={() => AuthService.logout()}
           title={Endpoints.Account.LOGOUT}
         />
+
+        <Button onPress={() => playSound()} title={'Sound'} />
       </View>
       <View
         style={[
