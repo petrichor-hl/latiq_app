@@ -14,6 +14,7 @@ import { MenuProvider } from 'react-native-popup-menu';
 import { ColorPalette } from './app/base/constants/color-palette';
 import { LoginScreen } from './app/screens/auth/login/login.screen';
 import { SplashScreen } from './app/screens/splash.screen';
+import { SignUpScreen } from './app/screens/auth/signup/signup.screen';
 
 function App(): React.JSX.Element {
   useEffect(() => {
@@ -37,6 +38,7 @@ function App(): React.JSX.Element {
             }}>
             <Stack.Screen name={ScreenName.SPLASH} component={SplashScreen} />
             <Stack.Screen name={ScreenName.LOGIN} component={LoginScreen} />
+            <Stack.Screen name={ScreenName.SIGNUP} component={SignUpScreen} />
             <Stack.Screen name={ScreenName.HOME} component={HomeScreen} />
             <Stack.Screen
               name={ScreenName.PICK_AVATAR}

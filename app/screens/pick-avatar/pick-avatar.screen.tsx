@@ -11,7 +11,7 @@ import { SvgXml } from 'react-native-svg';
 import { ColorPalette } from '../../base/constants/color-palette';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { goBack } from '../../navigation/navation.config';
+import { goBack, navigate } from '../../navigation/navation.config';
 import { WIDTH } from '../../base/constants/size-screen';
 import {
   Menu,
@@ -23,12 +23,13 @@ import {
   avatarCollectionsList,
   IAvatarCollection,
 } from './pick-avatar.constants';
+import { ScreenName } from '../../base/constants/screen-name';
 
 export interface PickAvatarScreenProps {}
 
 export const PickAvatarScreen = () => {
   const insets = useSafeAreaInsets();
-  const [collection, setCollection] = useState(avatarCollectionsList[11]);
+  const [collectionIndex, setCollectionIndex] = useState(11);
   const [isOpenMenu, setIsOpenMenu] = useState(false);
 
   const renderMenuTrigger = () => {
@@ -39,7 +40,9 @@ export const PickAvatarScreen = () => {
             styles.menuTrigger,
             isOpenMenu && styles.menuTriggerOpenedMenu,
           ]}>
-          <Text style={styles.selectedCollectionTxt}>{collection.label}</Text>
+          <Text style={styles.selectedCollectionTxt}>
+            {avatarCollectionsList[collectionIndex].label}
+          </Text>
           <Ionicons name={'caret-down'} size={18} color={ColorPalette.white} />
         </View>
       </View>
@@ -56,7 +59,7 @@ export const PickAvatarScreen = () => {
 
   const renderMenuOption = (option: IAvatarCollection, index: number) => {
     return (
-      <MenuOption key={index} value={option} style={styles.menuOption}>
+      <MenuOption key={index} value={index} style={styles.menuOption}>
         <Image
           source={option.assetName}
           style={{ height: 34, width: 34, marginRight: 16 }}
@@ -77,7 +80,9 @@ export const PickAvatarScreen = () => {
           />
         </TouchableOpacity>
         <Menu
-          onSelect={selectedOption => setCollection(selectedOption)}
+          onSelect={selectedOptionIndex =>
+            setCollectionIndex(selectedOptionIndex)
+          }
           onOpen={() => setIsOpenMenu(true)}
           onClose={() => setIsOpenMenu(false)}>
           <MenuTrigger
@@ -91,29 +96,29 @@ export const PickAvatarScreen = () => {
             children={renderMenuOptions()}
           />
         </Menu>
-        <TouchableOpacity onPress={() => {}}>
-          <Ionicons
-            name={'checkmark-done'}
-            size={44}
-            color={ColorPalette.primary}
-          />
-        </TouchableOpacity>
+        <View style={{ width: 44 }} />
       </View>
       <ScrollView
         contentContainerStyle={{
           paddingBottom: insets.bottom,
         }}>
         <View style={styles.gridAvatar}>
-          {collection.avatarXml.map(index => {
-            return (
-              <TouchableOpacity
-                onPress={() => {}}
-                key={index}
-                activeOpacity={0.6}>
-                <SvgXml xml={index} />
-              </TouchableOpacity>
-            );
-          })}
+          {avatarCollectionsList[collectionIndex].avatarXml.map(
+            (stringXml, index) => {
+              return (
+                <TouchableOpacity
+                  onPress={() =>
+                    navigate<any>(ScreenName.SIGNUP, {
+                      avatar: `${collectionIndex}-${index}`,
+                    })
+                  }
+                  key={index}
+                  activeOpacity={0.6}>
+                  <SvgXml xml={stringXml} />
+                </TouchableOpacity>
+              );
+            },
+          )}
         </View>
       </ScrollView>
     </View>

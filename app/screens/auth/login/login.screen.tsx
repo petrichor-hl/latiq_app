@@ -1,24 +1,26 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
+  ImageBackground,
   StyleSheet,
   Text,
-  TextInput,
   TouchableOpacity,
-  View,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Controller, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { LoginInfo, loginSchema } from './login.form';
+import { LoginInfo, loginSchema } from '../auth.form';
 import { ColorPalette } from '../../../base/constants/color-palette';
 import { AuthService } from '../../../services/features/auth.services';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import { push } from '../../../navigation/navation.config';
+import { SignUpScreenProps } from '../signup/signup.screen';
+import { ScreenName } from '../../../base/constants/screen-name';
+import { AppTextInput } from '../../../base/components/app-text-input.component';
 
 export interface LoginScreenProps {}
 
 export const LoginScreen = () => {
   const insets = useSafeAreaInsets();
-  const [isEmailFocus, setEmailFocus] = useState(false);
-  const [isPasswordFocus, setPasswordFocus] = useState(false);
 
   const {
     control,
@@ -37,47 +39,29 @@ export const LoginScreen = () => {
   };
 
   return (
-    <View
+    <ImageBackground
+      source={require('../../../assets/images/png/background.png')}
+      resizeMode="cover"
       style={[
         styles.container,
         { paddingTop: insets.top, paddingBottom: insets.bottom },
       ]}>
-      <Controller
-        name="email"
-        control={control}
-        render={({ field }) => (
-          <TextInput
-            placeholder="email"
-            value={field.value}
-            onChangeText={field.onChange}
-            onFocus={() => setEmailFocus(true)}
-            onBlur={() => setEmailFocus(false)}
-            style={[styles.textInput, isEmailFocus && styles.textInputFocused]}
-            autoCapitalize={'none'}
-            autoCorrect={false}
-          />
-        )}
-      />
+      <AppTextInput name="email" control={control} />
 
-      <Controller
+      <AppTextInput
         name="password"
         control={control}
-        render={({ field }) => (
-          <TextInput
-            placeholder="password"
-            value={field.value}
-            onChangeText={field.onChange}
-            onFocus={() => setPasswordFocus(true)}
-            onBlur={() => setPasswordFocus(false)}
-            style={[
-              styles.textInput,
-              isPasswordFocus && styles.textInputFocused,
-            ]}
-            autoCapitalize={'none'}
-            autoCorrect={false}
-          />
-        )}
+        placeHoder="mật khẩu"
+        secureTextEntry
+        canSwitchSecure
       />
+
+      <TouchableOpacity
+        hitSlop={14}
+        onPress={() => {}}
+        style={styles.alignSeftFlexStart}>
+        <Text style={styles.btnTitle}>Quên mật khẩu</Text>
+      </TouchableOpacity>
 
       <TouchableOpacity
         onPress={handleSubmit(onSubmit)}
@@ -89,7 +73,19 @@ export const LoginScreen = () => {
         ]}>
         <Text style={styles.btnTitle}>ĐĂNG NHẬP</Text>
       </TouchableOpacity>
-    </View>
+
+      <Text style={{ color: ColorPalette.white }}>Hoặc</Text>
+
+      <TouchableOpacity
+        onPress={() => push<SignUpScreenProps>(ScreenName.SIGNUP)}
+        hitSlop={18}
+        style={{ flexDirection: 'row', alignItems: 'center' }}>
+        <Text style={[styles.btnTitle, { fontSize: 16 }]}>
+          Tạo tài khoản mới{' '}
+        </Text>
+        <Ionicons name={'arrow-forward'} size={20} color={ColorPalette.white} />
+      </TouchableOpacity>
+    </ImageBackground>
   );
 };
 
@@ -98,9 +94,8 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: ColorPalette.secondary,
     paddingHorizontal: 20,
-    rowGap: 16,
+    rowGap: 14,
   },
   textInput: {
     height: 48,
@@ -114,6 +109,9 @@ const styles = StyleSheet.create({
     borderWidth: 3,
     borderColor: ColorPalette.primary,
     paddingHorizontal: 13,
+  },
+  alignSeftFlexStart: {
+    alignSelf: 'flex-start',
   },
   btnTitle: {
     fontWeight: '700',

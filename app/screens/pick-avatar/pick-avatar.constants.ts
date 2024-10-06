@@ -172,14 +172,7 @@ export const avatarCollectionsList: IAvatarCollection[] = [
         seed: `${index}`,
         size: (WIDTH - 10 * 2 - 10 * 2) / 3,
         radius: 6,
-        backgroundColor: [
-          'd1d4f9',
-          'd84be5',
-          'b6e3f4',
-          'd9915b',
-          'f6d594',
-          'fcbc34',
-        ],
+        backgroundColor: ['d1d4f9', 'd84be5', 'b6e3f4', 'f6d594', 'fcbc34'],
         backgroundType: ['gradientLinear'],
       }).toString();
     }),

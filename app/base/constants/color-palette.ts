@@ -8,7 +8,7 @@ export const ColorPalette = {
   white: '#FFF',
   transparent: 'transparent',
 
-  disableBg: '#a1a1aa',
+  disableBg: '#a1a1aa', // zinc[400]
 
   slate: {
     50: '#f8fafc',
