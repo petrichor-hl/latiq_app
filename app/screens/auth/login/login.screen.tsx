@@ -1,6 +1,9 @@
 import React from 'react';
 import {
+  Image,
   ImageBackground,
+  KeyboardAvoidingView,
+  Platform,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -42,19 +45,25 @@ export const LoginScreen = () => {
     <ImageBackground
       source={require('../../../assets/images/png/background.png')}
       resizeMode="cover"
-      style={[
-        styles.container,
-        { paddingTop: insets.top, paddingBottom: insets.bottom },
-      ]}>
-      <AppTextInput name="email" control={control} />
-
-      <AppTextInput
-        name="password"
-        control={control}
-        placeHoder="mật khẩu"
-        secureTextEntry
-        canSwitchSecure
+      style={[styles.container, { paddingBottom: insets.bottom }]}>
+      <Image
+        source={require('../../../assets/images/png/latiq_logo.png')}
+        resizeMode="contain"
+        style={styles.logoLaTiQ}
       />
+      <KeyboardAvoidingView
+        style={{ alignSelf: 'stretch', rowGap: 14 }}
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+        <AppTextInput name="email" control={control} />
+
+        <AppTextInput
+          name="password"
+          control={control}
+          placeHoder="mật khẩu"
+          secureTextEntry
+          canSwitchSecure
+        />
+      </KeyboardAvoidingView>
 
       <TouchableOpacity
         hitSlop={14}
@@ -96,6 +105,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 20,
     rowGap: 14,
+  },
+  logoLaTiQ: {
+    height: 200,
+    width: 230,
+    marginBottom: 30,
   },
   textInput: {
     height: 48,
