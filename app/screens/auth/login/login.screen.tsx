@@ -43,7 +43,7 @@ export const LoginScreen = () => {
 
   return (
     <ImageBackground
-      source={require('../../../assets/images/png/background.png')}
+      source={require('../../../assets/images/png/background-0.png')}
       resizeMode="cover"
       style={[styles.container, { paddingBottom: insets.bottom }]}>
       <Image

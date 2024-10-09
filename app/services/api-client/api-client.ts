@@ -19,6 +19,8 @@ export const ApiClient = <ReqType, ResType>(request: ApiRequest<ReqType>) => {
       showLoading();
     }
 
+    // await new Promise(resolve => setTimeout(resolve, 2000));
+
     const nameUrlLog = `[${method.toUpperCase()}] - ${endpoint}`;
     console.log(`${nameUrlLog} - ⏰`);
 

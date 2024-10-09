@@ -7,24 +7,33 @@ import { zustandAuth } from '../zustand/auth.zustand';
 import { reset } from '../navigation/navation.config';
 import { ScreenName } from '../base/constants/screen-name';
 import { LoginScreenProps } from './auth/login/login.screen';
+import { UserService } from '../services/features/user.services';
+import { HomeScreenProps } from './home/home.screen';
+import { hideLoading, showLoading } from '../zustand/loading.zustand';
 
 export const SplashScreen = () => {
   useDidMount(() => {
     const checkLoginStatus = async () => {
+      showLoading();
       const localToken = {
         accessToken: zustandAuth.getState().accessToken,
         refreshToken: zustandAuth.getState().refreshToken,
       };
 
       if (localToken.accessToken !== '' && localToken.refreshToken !== '') {
-        const isAuthenticated = await AuthService.refreshToken(localToken);
+        const isAuthenticated = await AuthService.refreshToken(
+          localToken,
+          false,
+        );
 
         if (isAuthenticated) {
-          reset<LoginScreenProps>(ScreenName.HOME);
+          await UserService.getProfile(false);
+          reset<HomeScreenProps>(ScreenName.HOME);
         }
       } else {
         reset<LoginScreenProps>(ScreenName.LOGIN);
       }
+      hideLoading();
     };
 
     checkLoginStatus();

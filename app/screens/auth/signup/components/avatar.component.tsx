@@ -29,7 +29,7 @@ export const Avatar = (props: AvatarProps) => {
       onPress={() => push<PickAvatarScreenProps>(ScreenName.PICK_AVATAR)}
       style={styles.avatarImg}>
       <SvgXml
-        xml={avatarCollectionsList[collectionNumber].avatarXml[seedNumber]}
+        xml={avatarCollectionsList[collectionNumber].avatarXml(160)[seedNumber]}
       />
       <View style={styles.editIcon}>
         <Ionicons name={'brush'} size={20} color={ColorPalette.black} />
@@ -47,7 +47,6 @@ const styles = StyleSheet.create({
     marginTop: 30,
     marginBottom: 30,
     borderRadius: 16,
-    transform: [{ scale: 1.2 }],
   },
   editIcon: {
     position: 'absolute',

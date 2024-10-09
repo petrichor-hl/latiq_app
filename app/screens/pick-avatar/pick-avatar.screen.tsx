@@ -103,8 +103,9 @@ export const PickAvatarScreen = () => {
           paddingBottom: insets.bottom,
         }}>
         <View style={styles.gridAvatar}>
-          {avatarCollectionsList[collectionIndex].avatarXml.map(
-            (stringXml, index) => {
+          {avatarCollectionsList[collectionIndex]
+            .avatarXml((WIDTH - 10 * 2 - 10 * 2) / 3)
+            .map((stringXml, index) => {
               return (
                 <TouchableOpacity
                   onPress={() =>
@@ -117,8 +118,7 @@ export const PickAvatarScreen = () => {
                   <SvgXml xml={stringXml} />
                 </TouchableOpacity>
               );
-            },
-          )}
+            })}
         </View>
       </ScrollView>
     </View>

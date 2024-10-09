@@ -11,4 +11,7 @@ export const Endpoints = {
     GENERATE_NEW_JWT_TOKEN: '/Account/generate-new-jwt-token',
     LOGOUT: '/Account/logout',
   },
+  User: {
+    GET_PROFILE: '/User/get-profile',
+  },
 };

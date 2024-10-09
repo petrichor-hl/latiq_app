@@ -6,7 +6,7 @@ import { DraftScreen } from './app/screens/draft.screen';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { refNavigation } from './app/navigation/navation.config';
-import { HomeScreen } from './app/screens/home.screen';
+import { HomeScreen } from './app/screens/home/home.screen';
 import { GlobalModal } from './app/base/components/global-modal.component';
 import { ScreenName } from './app/base/constants/screen-name';
 import { PickAvatarScreen } from './app/screens/pick-avatar/pick-avatar.screen';

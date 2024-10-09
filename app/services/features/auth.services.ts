@@ -5,11 +5,13 @@ import { LoginInfo, SignUpInfo } from '../../screens/auth/auth.form';
 import { zustandAuth } from '../../zustand/auth.zustand';
 import { ApiClient } from '../api-client/api-client';
 import { ScreenName } from '../../base/constants/screen-name';
-import { HomeScreenProps } from '../../screens/home.screen';
+import { HomeScreenProps } from '../../screens/home/home.screen';
 import { LoginScreenProps } from '../../screens/auth/login/login.screen';
 import { LoginResponse } from '../../screens/auth/auth.type';
 import { zustandGlobalModal } from '../../zustand/modal.zustand';
 import { ColorPalette } from '../../base/constants/color-palette';
+import { UserService } from './user.services';
+import { hideLoading, showLoading } from '../../zustand/loading.zustand';
 
 interface JwtToken {
   accessToken: string;
@@ -39,11 +41,13 @@ const printToken = (token: JwtToken) => {
 
 export const AuthService = {
   login: async (payload: LoginInfo) => {
+    showLoading();
     try {
       const response = await ApiClient<LoginInfo, LoginResponse>({
         endpoint: Endpoints.Account.LOGIN,
         method: 'post',
         data: payload,
+        loading: false,
       });
       zustandAuth.getState().updateAuth({
         accessToken: response.accessToken,
@@ -53,10 +57,12 @@ export const AuthService = {
         accessToken: response.accessToken,
         refreshToken: response.refreshToken,
       });
+      await UserService.getProfile(false);
       reset<HomeScreenProps>(ScreenName.HOME);
     } catch {
       console.log('Login Failed');
     }
+    hideLoading();
   },
   signup: async (payload: SignUpInfo) => {
     try {
@@ -106,12 +112,16 @@ export const AuthService = {
       console.log('Logout Failed');
     }
   },
-  refreshToken: async (payload: JwtToken): Promise<boolean> => {
+  refreshToken: async (
+    payload: JwtToken,
+    isShowLoading?: boolean,
+  ): Promise<boolean> => {
     try {
       const response = await ApiClient<JwtToken, JwtToken>({
         endpoint: Endpoints.Account.GENERATE_NEW_JWT_TOKEN,
         method: 'post',
         data: payload,
+        loading: isShowLoading,
       });
       zustandAuth.getState().updateAuth({
         accessToken: response.accessToken,

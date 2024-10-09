@@ -60,7 +60,7 @@ export const SignUpScreen = () => {
 
   return (
     <ImageBackground
-      source={require('../../../assets/images/png/background.png')}
+      source={require('../../../assets/images/png/background-0.png')}
       resizeMode="cover"
       style={{ width: WIDTH, height: HEIGHT }}>
       <TouchableOpacity
