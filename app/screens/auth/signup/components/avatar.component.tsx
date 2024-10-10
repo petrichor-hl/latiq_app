@@ -27,10 +27,6 @@ interface AvatarProps {
 export const Avatar = (props: AvatarProps) => {
   const { control } = props;
 
-  // const avatar: string = useWatch({
-  //   control,
-  //   name: 'avatar', // without supply name will watch the entire form, or ['firstName', 'lastName'] to watch both
-  // });
   const { field } = useController({
     control,
     name: 'avatar',
@@ -45,6 +41,7 @@ export const Avatar = (props: AvatarProps) => {
       activeOpacity={0.5}
       onPress={() =>
         push<PickAvatarScreenProps>(PickAvatarScreen, {
+          collectionNumber,
           onPickAvatar: avatar => field.onChange(avatar),
         })
       }
@@ -66,7 +63,7 @@ const styles = StyleSheet.create({
     borderWidth: 4,
     alignSelf: 'center',
     marginTop: 30,
-    marginBottom: 30,
+    marginBottom: 10,
     borderRadius: 16,
   },
   editIcon: {
@@ -76,13 +73,5 @@ const styles = StyleSheet.create({
     backgroundColor: ColorPalette.white,
     padding: 8,
     borderRadius: 18,
-  },
-  textInput: {
-    height: 48,
-    paddingHorizontal: 16,
-    paddingVertical: 14,
-    backgroundColor: ColorPalette.white,
-    alignSelf: 'stretch',
-    borderRadius: 8,
   },
 });

@@ -1,18 +1,6 @@
 import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  Button,
-  Keyboard,
-  TextInput,
-} from 'react-native';
-import { RouteProp, useRoute } from '@react-navigation/native';
-import {
-  navigate,
-  ParamList,
-  refNavigation,
-} from '../navigation/navation.config';
+import { View, StyleSheet, Button, Keyboard, TextInput } from 'react-native';
+import { refNavigation } from '../navigation/navation.config';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
@@ -24,11 +12,11 @@ import { SvgXml } from 'react-native-svg';
 import { Endpoints } from '../base/constants/endpoints';
 import { useKeyboardAwareInsets } from '../base/keyboard/use-keyboard-aware-insets.hook';
 import { ApiClient } from '../services/api-client/api-client';
-import { AuthService } from '../services/features/auth.services';
 import { zustandAuth } from '../zustand/auth.zustand';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { SoundName } from '../base/constants/sound-name';
 import Sound from 'react-native-sound';
+import { AuthService } from '../services/features/auth.services';
 
 export interface DraftScreenProps {
   text: string;
@@ -46,9 +34,6 @@ export const buttonClickSound = new Sound(
 );
 
 export const DraftScreen = () => {
-  const route = useRoute<RouteProp<ParamList, 'Draft'>>();
-  const { text } = route.params;
-
   const [number, onChangeNumber] = useState('');
   const insets = useSafeAreaInsets();
 
@@ -73,12 +58,6 @@ export const DraftScreen = () => {
 
   return (
     <View style={styles.container}>
-      <Text
-        onPress={() => {
-          refNavigation.current?.canGoBack && refNavigation.goBack();
-        }}>
-        {text}
-      </Text>
       <View style={styles.row}>
         <FontAwesome name="rocket" size={30} color="#090" />
         <FontAwesome5
@@ -130,11 +109,6 @@ export const DraftScreen = () => {
           alignItems: 'center',
         }}>
         <Button onPress={() => Keyboard.dismiss()} title="dismiss keyboard" />
-        <Button
-          onPress={() => navigate('Draft', { text: 'DRAFT --> HELLO THERE' })}
-          title="open second screen"
-        />
-
         <Button
           onPress={() =>
             zustandAuth.getState().updateAuth({

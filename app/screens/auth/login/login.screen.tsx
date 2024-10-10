@@ -13,11 +13,11 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { LoginInfo, loginSchema } from '../auth.form';
 import { ColorPalette } from '../../../base/constants/color-palette';
-import { AuthService } from '../../../services/features/auth.services';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { push } from '../../../navigation/navation.config';
 import { SignUpScreen, SignUpScreenProps } from '../signup/signup.screen';
 import { AppTextInput } from '../../../base/components/app-text-input.component';
+import { AuthService } from '../../../services/features/auth.services';
 
 export interface LoginScreenProps {}
 
@@ -42,7 +42,7 @@ export const LoginScreen = () => {
 
   return (
     <ImageBackground
-      source={require('../../../assets/images/png/background-0.png')}
+      source={require('../../../assets/images/background/background-0.png')}
       resizeMode="cover"
       style={[styles.container, { paddingBottom: insets.bottom }]}>
       <Image

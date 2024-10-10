@@ -48,12 +48,10 @@ export const SignUpScreen = () => {
 
   return (
     <ImageBackground
-      source={require('../../../assets/images/png/background-0.png')}
+      source={require('../../../assets/images/background/background-0.png')}
       resizeMode="cover"
-      style={{ width: WIDTH, height: HEIGHT }}>
-      <TouchableOpacity
-        onPress={() => goBack()}
-        style={[styles.backBtn, { marginTop: insets.top }]}>
+      style={{ width: WIDTH, height: HEIGHT, paddingTop: insets.top }}>
+      <TouchableOpacity onPress={() => goBack()} style={styles.backBtn}>
         <Ionicons name={'arrow-undo'} size={44} color={ColorPalette.primary} />
       </TouchableOpacity>
       <KeyboardAvoidingView
@@ -94,7 +92,6 @@ export const SignUpScreen = () => {
             canSwitchSecure
             error={errors.confirmPassword}
           />
-
           <TouchableOpacity
             onPress={handleSubmit(onSubmit)}
             activeOpacity={0.5}
@@ -119,37 +116,6 @@ const styles = StyleSheet.create({
     rowGap: 16,
     paddingHorizontal: 20,
   },
-  avatarImg: {
-    padding: 6,
-    borderColor: ColorPalette.white,
-    borderWidth: 4,
-    alignSelf: 'center',
-    marginTop: 30,
-    marginBottom: 30,
-    borderRadius: 16,
-    transform: [{ scale: 1.2 }],
-  },
-  editIcon: {
-    position: 'absolute',
-    right: -14,
-    top: -14,
-    backgroundColor: ColorPalette.white,
-    padding: 8,
-    borderRadius: 18,
-  },
-  textInput: {
-    height: 48,
-    paddingHorizontal: 16,
-    paddingVertical: 14,
-    backgroundColor: ColorPalette.white,
-    alignSelf: 'stretch',
-    borderRadius: 8,
-  },
-  textInputFocused: {
-    borderWidth: 3,
-    borderColor: ColorPalette.primary,
-    paddingHorizontal: 13,
-  },
   btnTitle: {
     fontWeight: '700',
     color: ColorPalette.white,
@@ -158,6 +124,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     paddingVertical: 14,
     paddingHorizontal: 20,
+    marginTop: 20,
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: ColorPalette.primary,

@@ -22,6 +22,10 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { RoomCodeInput } from './components/room-code-input.component';
 import { SlideIn } from './components/slide-in.component';
 import { UserService } from '../../services/features/user.services';
+import {
+  MakeRoomScreen,
+  MakeRoomScreenProps,
+} from '../make-room/make-room.screen';
 
 export interface HomeScreenProps {}
 
@@ -35,7 +39,7 @@ export const HomeScreen = () => {
 
   return (
     <ImageBackground
-      source={require('../../assets/images/png/background-3.png')}
+      source={require('../../assets/images/background/background-2.png')}
       resizeMode="cover"
       style={[
         styles.container,
@@ -83,7 +87,7 @@ export const HomeScreen = () => {
       <SlideIn style={styles.expandWidth} delay={600}>
         <TouchableOpacity
           activeOpacity={0.5}
-          onPress={() => {}}
+          onPress={() => push<MakeRoomScreenProps>(MakeRoomScreen)}
           style={styles.appBtn}>
           <Text style={styles.btnTitle}>TẠO PHÒNG</Text>
         </TouchableOpacity>

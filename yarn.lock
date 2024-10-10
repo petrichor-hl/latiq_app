@@ -7183,6 +7183,7 @@ __metadata:
     react: 18.2.0
     react-hook-form: ^7.53.0
     react-native: 0.74.5
+    react-native-fast-image: ^8.6.3
     react-native-keyboard-aware-scroll-view: ^0.9.5
     react-native-mmkv: ^2.6.0
     react-native-popup-menu: ^0.16.1
@@ -8623,6 +8624,16 @@ __metadata:
   version: 18.3.1
   resolution: "react-is@npm:18.3.1"
   checksum: e20fe84c86ff172fc8d898251b7cc2c43645d108bf96d0b8edf39b98f9a2cae97b40520ee7ed8ee0085ccc94736c4886294456033304151c3f94978cec03df21
+  languageName: node
+  linkType: hard
+
+"react-native-fast-image@npm:^8.6.3":
+  version: 8.6.3
+  resolution: "react-native-fast-image@npm:8.6.3"
+  peerDependencies:
+    react: ^17 || ^18
+    react-native: ">=0.60.0"
+  checksum: 29289cb6b2eae0983c8922b22e2d9de3be07322bb7991c5def19f95eadefaedb0e308ff0b38cc1d0444e8bd4fe94a7621a99a2d3d9298100bcb60b3144677234
   languageName: node
   linkType: hard
 

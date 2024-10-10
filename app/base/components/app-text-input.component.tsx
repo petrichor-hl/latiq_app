@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Control, FieldError, useController } from 'react-hook-form';
 import {
+  KeyboardType,
   StyleSheet,
   Text,
   TextInput,
@@ -20,9 +21,9 @@ interface AppTextInputProps {
   name: string;
   control: Control<any, any>;
   placeHoder?: string;
-  defaultValue?: string;
   secureTextEntry?: boolean;
   canSwitchSecure?: boolean;
+  keyboardType?: KeyboardType;
   error?: FieldError;
 }
 
@@ -31,16 +32,15 @@ export const AppTextInput = (props: AppTextInputProps) => {
     name,
     control,
     placeHoder = name,
-    defaultValue = '',
     secureTextEntry = false,
     canSwitchSecure = secureTextEntry,
+    keyboardType,
     error,
   } = props;
 
   const { field } = useController({
     name,
     control,
-    defaultValue,
   });
 
   const [isHide, setHide] = useState(true);
@@ -86,6 +86,7 @@ export const AppTextInput = (props: AppTextInputProps) => {
           autoCapitalize={'none'}
           autoCorrect={false}
           secureTextEntry={secureTextEntry && isHide}
+          keyboardType={keyboardType}
         />
         {canSwitch && field.value && (
           <TouchableOpacity

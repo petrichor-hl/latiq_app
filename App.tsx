@@ -11,6 +11,7 @@ import { MenuProvider } from 'react-native-popup-menu';
 import { ColorPalette } from './app/base/constants/color-palette';
 import { SplashScreen } from './app/screens/splash.screen';
 import { ScreenWrapper } from './app/navigation/screen-wrapper';
+import { HomeScreen } from './app/screens/home/home.screen';
 
 const ignoreWarnings = [
   'Non-serializable values were found in the navigation state',
@@ -47,6 +48,7 @@ function App(): React.JSX.Element {
             <Stack.Screen
               name={ScreenName.SCREEN_WRAPPER}
               component={ScreenWrapper}
+              initialParams={{ screen: HomeScreen }}
             />
           </Stack.Navigator>
         </NavigationContainer>

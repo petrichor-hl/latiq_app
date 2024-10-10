@@ -2,13 +2,13 @@ import React from 'react';
 import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import { ColorPalette } from '../base/constants/color-palette';
 import { useDidMount } from 'rooks';
-import { AuthService } from '../services/features/auth.services';
 import { zustandAuth } from '../zustand/auth.zustand';
 import { reset } from '../navigation/navation.config';
 import { LoginScreen, LoginScreenProps } from './auth/login/login.screen';
 import { UserService } from '../services/features/user.services';
 import { HomeScreen, HomeScreenProps } from './home/home.screen';
 import { hideLoading, showLoading } from '../zustand/loading.zustand';
+import { AuthService } from '../services/features/auth.services';
 
 export const SplashScreen = () => {
   useDidMount(() => {
