@@ -4,9 +4,11 @@ import { reset } from '../../navigation/navation.config';
 import { LoginInfo, SignUpInfo } from '../../screens/auth/auth.form';
 import { zustandAuth } from '../../zustand/auth.zustand';
 import { ApiClient } from '../api-client/api-client';
-import { ScreenName } from '../../base/constants/screen-name';
-import { HomeScreenProps } from '../../screens/home/home.screen';
-import { LoginScreenProps } from '../../screens/auth/login/login.screen';
+import { HomeScreen, HomeScreenProps } from '../../screens/home/home.screen';
+import {
+  LoginScreen,
+  LoginScreenProps,
+} from '../../screens/auth/login/login.screen';
 import { LoginResponse } from '../../screens/auth/auth.type';
 import { zustandGlobalModal } from '../../zustand/modal.zustand';
 import { ColorPalette } from '../../base/constants/color-palette';
@@ -58,7 +60,7 @@ export const AuthService = {
         refreshToken: response.refreshToken,
       });
       await UserService.getProfile(false);
-      reset<HomeScreenProps>(ScreenName.HOME);
+      reset<HomeScreenProps>(HomeScreen);
     } catch {
       console.log('Login Failed');
     }
@@ -80,7 +82,7 @@ export const AuthService = {
             title: 'OK',
             onPress: () => {
               zustandGlobalModal.getState().hide();
-              reset<LoginScreenProps>(ScreenName.LOGIN);
+              reset<LoginScreenProps>(LoginScreen);
             },
             buttonStyle: {
               title: {
@@ -107,7 +109,7 @@ export const AuthService = {
         method: 'get',
       });
       zustandAuth.getState().clearToken();
-      reset<LoginScreenProps>(ScreenName.LOGIN);
+      reset<LoginScreenProps>(LoginScreen);
     } catch {
       console.log('Logout Failed');
     }

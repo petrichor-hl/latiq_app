@@ -2,7 +2,6 @@ import React from 'react';
 import {
   StyleSheet,
   ImageBackground,
-  StatusBar,
   TouchableOpacity,
   Text,
   View,
@@ -10,25 +9,23 @@ import {
   Platform,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useDidMount } from 'rooks';
 import { SvgXml } from 'react-native-svg';
 import { ColorPalette } from '../../base/constants/color-palette';
-import { ScreenName } from '../../base/constants/screen-name';
 import { push } from '../../navigation/navation.config';
 import { avatarCollectionsList } from '../pick-avatar/pick-avatar.constants';
-import { PickAvatarScreenProps } from '../pick-avatar/pick-avatar.screen';
+import {
+  PickAvatarScreen,
+  PickAvatarScreenProps,
+} from '../pick-avatar/pick-avatar.screen';
 import { zustandUser } from '../../zustand/user.zustand';
-import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { RoomCodeInput } from './components/room-code-input.component';
 import { SlideIn } from './components/slide-in.component';
+import { UserService } from '../../services/features/user.services';
 
 export interface HomeScreenProps {}
 
 export const HomeScreen = () => {
-  useDidMount(() => {
-    StatusBar.setBarStyle('light-content');
-  });
   const insets = useSafeAreaInsets();
   const { user } = zustandUser();
 
@@ -47,7 +44,12 @@ export const HomeScreen = () => {
       <SlideIn style={styles.expandWidth}>
         <TouchableOpacity
           activeOpacity={0.5}
-          onPress={() => push<PickAvatarScreenProps>(ScreenName.PICK_AVATAR)}
+          onPress={() =>
+            push<PickAvatarScreenProps>(PickAvatarScreen, {
+              collectionNumber: collectionNumber,
+              onPickAvatar: avatar => UserService.updateProfile({ avatar }),
+            })
+          }
           style={styles.avatarImg}>
           <SvgXml
             xml={
@@ -71,8 +73,8 @@ export const HomeScreen = () => {
             <TouchableOpacity
               activeOpacity={0.5}
               onPress={() => {}}
-              style={[styles.appBtn, { width: 80 }]}>
-              <FontAwesome6 name="door-open" size={24} />
+              style={[styles.appBtn, styles.joinRoomBtn]}>
+              <Ionicons name="arrow-forward-circle-outline" size={32} />
             </TouchableOpacity>
           </View>
         </SlideIn>
@@ -146,5 +148,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: ColorPalette.primary,
+  },
+  joinRoomBtn: {
+    width: 80,
   },
 });

@@ -8,8 +8,10 @@ import { Endpoints } from '../../base/constants/endpoints';
 import { JwtToken } from '../../base/model/jwt-token';
 import { CLIENT_ERROR, SERVER_ERROR, TIMEOUT_ERROR } from 'apisauce';
 import { reset } from '../../navigation/navation.config';
-import { LoginScreenProps } from '../../screens/auth/login/login.screen';
-import { ScreenName } from '../../base/constants/screen-name';
+import {
+  LoginScreen,
+  LoginScreenProps,
+} from '../../screens/auth/login/login.screen';
 
 export const ApiClient = <ReqType, ResType>(request: ApiRequest<ReqType>) => {
   return new Promise<ResType>(async (resolve, reject) => {
@@ -56,7 +58,7 @@ export const ApiClient = <ReqType, ResType>(request: ApiRequest<ReqType>) => {
                 title: 'Đăng nhập lại',
                 onPress: () => {
                   zustandGlobalModal.getState().hide();
-                  reset<LoginScreenProps>(ScreenName.LOGIN);
+                  reset<LoginScreenProps>(LoginScreen);
                 },
                 buttonStyle: {
                   title: {

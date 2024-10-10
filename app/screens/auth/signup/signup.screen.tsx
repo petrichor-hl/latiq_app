@@ -15,31 +15,19 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { SignUpInfo, signUpSchema } from '../auth.form';
 import { ColorPalette } from '../../../base/constants/color-palette';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { goBack, ParamList } from '../../../navigation/navation.config';
+import { goBack } from '../../../navigation/navation.config';
 import { HEIGHT, WIDTH } from '../../../base/constants/size-screen';
-import { RouteProp, useRoute } from '@react-navigation/native';
-import { useDidUpdate } from 'rooks';
 import { AuthService } from '../../../services/features/auth.services';
 import { Avatar } from './components/avatar.component';
 
-export interface SignUpScreenProps {
-  avatar?: string;
-}
+export interface SignUpScreenProps {}
 
 export const SignUpScreen = () => {
   const insets = useSafeAreaInsets();
-  const route = useRoute<RouteProp<ParamList, 'SignUp'>>();
-
-  useDidUpdate(() => {
-    if (route.params?.avatar) {
-      setValue('avatar', route.params?.avatar);
-    }
-  }, [route.params?.avatar]);
 
   const {
     control,
     handleSubmit,
-    setValue,
     formState: { errors },
   } = useForm<SignUpInfo>({
     mode: 'onSubmit',

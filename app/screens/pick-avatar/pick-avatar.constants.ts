@@ -29,6 +29,83 @@ export interface IAvatarCollection {
 
 export const avatarCollectionsList: IAvatarCollection[] = [
   {
+    label: 'Lorelei',
+    assetName: require('../../assets/images/png/lorelei-0.png'),
+    avatarXml: size =>
+      range(1, 13).map(index => {
+        return createAvatar(lorelei, {
+          seed: `${index}`,
+          size,
+          radius: 6,
+          backgroundColor: ['d1d4f9', 'ffd5dc'],
+          backgroundType: ['gradientLinear'],
+        }).toString();
+      }),
+  },
+  {
+    label: 'Lorelei Neutral',
+    assetName: require('../../assets/images/png/loreleiNeutral-0.png'),
+    avatarXml: size =>
+      range(1, 13).map(index => {
+        return createAvatar(loreleiNeutral, {
+          seed: `${index}`,
+          size,
+          radius: 6,
+          backgroundColor: ['d1d4f9', 'ffffff', 'ffd5dc'],
+          backgroundType: ['gradientLinear'],
+        }).toString();
+      }),
+  },
+  {
+    label: 'Micah',
+    assetName: require('../../assets/images/png/micah-0.png'),
+    avatarXml: size =>
+      range(1, 13).map(index => {
+        return createAvatar(micah, {
+          seed: `${index}`,
+          size,
+          radius: 6,
+        }).toString();
+      }),
+  },
+  {
+    label: 'Big Smile',
+    assetName: require('../../assets/images/png/bigSmile-0.png'),
+    avatarXml: size =>
+      range(1, 13).map(index => {
+        return createAvatar(bigSmile, {
+          seed: `${index}`,
+          size,
+          radius: 6,
+          backgroundColor: [
+            '94a3b8',
+            'a8a29e',
+            'ef4444',
+            'ea580c',
+            'ffffff',
+            'fbbf24',
+            '22d3ee',
+            'f43f5e',
+          ],
+          backgroundType: ['gradientLinear'],
+        }).toString();
+      }),
+  },
+  {
+    label: 'Thumbs',
+    assetName: require('../../assets/images/png/thumbs-0.png'),
+    avatarXml: size =>
+      range(1, 13).map(index => {
+        return createAvatar(thumbs, {
+          seed: `${index}`,
+          size,
+          radius: 6,
+          backgroundColor: ['d1d4f9', 'ffd5dc'],
+          backgroundType: ['gradientLinear'],
+        }).toString();
+      }),
+  },
+  {
     label: 'Adventurer',
     assetName: require('../../assets/images/png/adventurer-0.png'),
     avatarXml: size =>
@@ -94,29 +171,7 @@ export const avatarCollectionsList: IAvatarCollection[] = [
         }).toString();
       }),
   },
-  {
-    label: 'Big Smile',
-    assetName: require('../../assets/images/png/bigSmile-0.png'),
-    avatarXml: size =>
-      range(1, 13).map(index => {
-        return createAvatar(bigSmile, {
-          seed: `${index}`,
-          size,
-          radius: 6,
-          backgroundColor: [
-            '94a3b8',
-            'a8a29e',
-            'ef4444',
-            'ea580c',
-            'ffffff',
-            'fbbf24',
-            '22d3ee',
-            'f43f5e',
-          ],
-          backgroundType: ['gradientLinear'],
-        }).toString();
-      }),
-  },
+
   {
     label: 'Bottts Neutral',
     assetName: require('../../assets/images/png/botttsNeutral-0.png'),
@@ -208,46 +263,6 @@ export const avatarCollectionsList: IAvatarCollection[] = [
       }),
   },
   {
-    label: 'Lorelei',
-    assetName: require('../../assets/images/png/lorelei-0.png'),
-    avatarXml: size =>
-      range(1, 13).map(index => {
-        return createAvatar(lorelei, {
-          seed: `${index}`,
-          size,
-          radius: 6,
-          backgroundColor: ['d1d4f9', 'ffd5dc'],
-          backgroundType: ['gradientLinear'],
-        }).toString();
-      }),
-  },
-  {
-    label: 'Lorelei Neutral',
-    assetName: require('../../assets/images/png/loreleiNeutral-0.png'),
-    avatarXml: size =>
-      range(1, 13).map(index => {
-        return createAvatar(loreleiNeutral, {
-          seed: `${index}`,
-          size,
-          radius: 6,
-          backgroundColor: ['d1d4f9', 'ffffff', 'ffd5dc'],
-          backgroundType: ['gradientLinear'],
-        }).toString();
-      }),
-  },
-  {
-    label: 'Micah',
-    assetName: require('../../assets/images/png/micah-0.png'),
-    avatarXml: size =>
-      range(1, 13).map(index => {
-        return createAvatar(micah, {
-          seed: `${index}`,
-          size,
-          radius: 6,
-        }).toString();
-      }),
-  },
-  {
     label: 'Notionists',
     assetName: require('../../assets/images/png/notionists-0.png'),
     avatarXml: size =>
@@ -270,20 +285,6 @@ export const avatarCollectionsList: IAvatarCollection[] = [
           size,
           radius: 6,
           backgroundColor: ['ffffff'],
-        }).toString();
-      }),
-  },
-  {
-    label: 'Thumbs',
-    assetName: require('../../assets/images/png/thumbs-0.png'),
-    avatarXml: size =>
-      range(1, 13).map(index => {
-        return createAvatar(thumbs, {
-          seed: `${index}`,
-          size,
-          radius: 6,
-          backgroundColor: ['d1d4f9', 'ffd5dc'],
-          backgroundType: ['gradientLinear'],
         }).toString();
       }),
   },

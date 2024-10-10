@@ -5,10 +5,9 @@ import { useDidMount } from 'rooks';
 import { AuthService } from '../services/features/auth.services';
 import { zustandAuth } from '../zustand/auth.zustand';
 import { reset } from '../navigation/navation.config';
-import { ScreenName } from '../base/constants/screen-name';
-import { LoginScreenProps } from './auth/login/login.screen';
+import { LoginScreen, LoginScreenProps } from './auth/login/login.screen';
 import { UserService } from '../services/features/user.services';
-import { HomeScreenProps } from './home/home.screen';
+import { HomeScreen, HomeScreenProps } from './home/home.screen';
 import { hideLoading, showLoading } from '../zustand/loading.zustand';
 
 export const SplashScreen = () => {
@@ -28,10 +27,10 @@ export const SplashScreen = () => {
 
         if (isAuthenticated) {
           await UserService.getProfile(false);
-          reset<HomeScreenProps>(ScreenName.HOME);
+          reset<HomeScreenProps>(HomeScreen);
         }
       } else {
-        reset<LoginScreenProps>(ScreenName.LOGIN);
+        reset<LoginScreenProps>(LoginScreen);
       }
       hideLoading();
     };

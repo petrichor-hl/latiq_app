@@ -1,32 +1,53 @@
 import React from 'react';
-import { Control, useWatch } from 'react-hook-form';
+import { Control, useController } from 'react-hook-form';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { SvgXml } from 'react-native-svg';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { ColorPalette } from '../../../../base/constants/color-palette';
-import { ScreenName } from '../../../../base/constants/screen-name';
 import { push } from '../../../../navigation/navation.config';
 import { avatarCollectionsList } from '../../../pick-avatar/pick-avatar.constants';
-import { PickAvatarScreenProps } from '../../../pick-avatar/pick-avatar.screen';
+import {
+  PickAvatarScreen,
+  PickAvatarScreenProps,
+} from '../../../pick-avatar/pick-avatar.screen';
 
 interface AvatarProps {
-  control: Control<any, any>;
+  control: Control<
+    {
+      avatar: string;
+      email: string;
+      password: string;
+      nickName: string;
+      confirmPassword: string;
+    },
+    any
+  >;
 }
 
 export const Avatar = (props: AvatarProps) => {
   const { control } = props;
 
-  const avatar: string = useWatch({
+  // const avatar: string = useWatch({
+  //   control,
+  //   name: 'avatar', // without supply name will watch the entire form, or ['firstName', 'lastName'] to watch both
+  // });
+  const { field } = useController({
     control,
-    name: 'avatar', // without supply name will watch the entire form, or ['firstName', 'lastName'] to watch both
+    name: 'avatar',
   });
 
-  const [collectionNumber, seedNumber] = avatar.split('-').map(e => Number(e));
+  const [collectionNumber, seedNumber] = field.value
+    .split('-')
+    .map(e => Number(e));
 
   return (
     <TouchableOpacity
       activeOpacity={0.5}
-      onPress={() => push<PickAvatarScreenProps>(ScreenName.PICK_AVATAR)}
+      onPress={() =>
+        push<PickAvatarScreenProps>(PickAvatarScreen, {
+          onPickAvatar: avatar => field.onChange(avatar),
+        })
+      }
       style={styles.avatarImg}>
       <SvgXml
         xml={avatarCollectionsList[collectionNumber].avatarXml(160)[seedNumber]}

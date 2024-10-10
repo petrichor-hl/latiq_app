@@ -2,19 +2,26 @@ import React, { useEffect } from 'react';
 import { Appearance, Platform, StatusBar } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { GlobalLoading } from './app/base/components/global-loading.component';
-import { DraftScreen } from './app/screens/draft.screen';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { refNavigation } from './app/navigation/navation.config';
-import { HomeScreen } from './app/screens/home/home.screen';
 import { GlobalModal } from './app/base/components/global-modal.component';
 import { ScreenName } from './app/base/constants/screen-name';
-import { PickAvatarScreen } from './app/screens/pick-avatar/pick-avatar.screen';
 import { MenuProvider } from 'react-native-popup-menu';
 import { ColorPalette } from './app/base/constants/color-palette';
-import { LoginScreen } from './app/screens/auth/login/login.screen';
 import { SplashScreen } from './app/screens/splash.screen';
-import { SignUpScreen } from './app/screens/auth/signup/signup.screen';
+import { ScreenWrapper } from './app/navigation/screen-wrapper';
+
+const ignoreWarnings = [
+  'Non-serializable values were found in the navigation state',
+];
+
+const originalWarn = console.warn;
+console.warn = (...args) => {
+  if (!ignoreWarnings.some(warning => args[0].includes(warning))) {
+    originalWarn(...args);
+  }
+};
 
 function App(): React.JSX.Element {
   useEffect(() => {
@@ -37,14 +44,10 @@ function App(): React.JSX.Element {
               orientation: 'portrait',
             }}>
             <Stack.Screen name={ScreenName.SPLASH} component={SplashScreen} />
-            <Stack.Screen name={ScreenName.LOGIN} component={LoginScreen} />
-            <Stack.Screen name={ScreenName.SIGNUP} component={SignUpScreen} />
-            <Stack.Screen name={ScreenName.HOME} component={HomeScreen} />
             <Stack.Screen
-              name={ScreenName.PICK_AVATAR}
-              component={PickAvatarScreen}
+              name={ScreenName.SCREEN_WRAPPER}
+              component={ScreenWrapper}
             />
-            <Stack.Screen name={ScreenName.DRAFT} component={DraftScreen} />
           </Stack.Navigator>
         </NavigationContainer>
       </MenuProvider>

@@ -16,8 +16,7 @@ import { ColorPalette } from '../../../base/constants/color-palette';
 import { AuthService } from '../../../services/features/auth.services';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { push } from '../../../navigation/navation.config';
-import { SignUpScreenProps } from '../signup/signup.screen';
-import { ScreenName } from '../../../base/constants/screen-name';
+import { SignUpScreen, SignUpScreenProps } from '../signup/signup.screen';
 import { AppTextInput } from '../../../base/components/app-text-input.component';
 
 export interface LoginScreenProps {}
@@ -86,7 +85,7 @@ export const LoginScreen = () => {
       <Text style={{ color: ColorPalette.white }}>Hoặc</Text>
 
       <TouchableOpacity
-        onPress={() => push<SignUpScreenProps>(ScreenName.SIGNUP)}
+        onPress={() => push<SignUpScreenProps>(SignUpScreen)}
         hitSlop={18}
         style={{ flexDirection: 'row', alignItems: 'center' }}>
         <Text style={[styles.btnTitle, { fontSize: 16 }]}>

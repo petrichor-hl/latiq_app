@@ -13,5 +13,6 @@ export const Endpoints = {
   },
   User: {
     GET_PROFILE: '/User/get-profile',
+    UPDATE_PROFILE: '/User/update-profile',
   },
 };

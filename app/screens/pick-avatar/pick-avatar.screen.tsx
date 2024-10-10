@@ -11,7 +11,7 @@ import { SvgXml } from 'react-native-svg';
 import { ColorPalette } from '../../base/constants/color-palette';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { goBack, navigate } from '../../navigation/navation.config';
+import { goBack } from '../../navigation/navation.config';
 import { WIDTH } from '../../base/constants/size-screen';
 import {
   Menu,
@@ -23,13 +23,17 @@ import {
   avatarCollectionsList,
   IAvatarCollection,
 } from './pick-avatar.constants';
-import { ScreenName } from '../../base/constants/screen-name';
 
-export interface PickAvatarScreenProps {}
+export interface PickAvatarScreenProps {
+  onPickAvatar: (avatar: string) => void;
+  collectionNumber?: number;
+}
 
-export const PickAvatarScreen = () => {
+export const PickAvatarScreen = (props: PickAvatarScreenProps) => {
+  const { onPickAvatar, collectionNumber = 0 } = props;
+
   const insets = useSafeAreaInsets();
-  const [collectionIndex, setCollectionIndex] = useState(11);
+  const [collectionIndex, setCollectionIndex] = useState(collectionNumber);
   const [isOpenMenu, setIsOpenMenu] = useState(false);
 
   const renderMenuTrigger = () => {
@@ -108,11 +112,10 @@ export const PickAvatarScreen = () => {
             .map((stringXml, index) => {
               return (
                 <TouchableOpacity
-                  onPress={() =>
-                    navigate<any>(ScreenName.SIGNUP, {
-                      avatar: `${collectionIndex}-${index}`,
-                    })
-                  }
+                  onPress={() => {
+                    onPickAvatar(`${collectionIndex}-${index}`);
+                    goBack();
+                  }}
                   key={index}
                   activeOpacity={0.6}>
                   <SvgXml xml={stringXml} />
