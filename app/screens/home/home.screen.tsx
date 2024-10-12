@@ -26,6 +26,10 @@ import {
   MakeRoomScreen,
   MakeRoomScreenProps,
 } from '../make-room/make-room.screen';
+import {
+  GamePlayScreen,
+  GamePlayScreenProps,
+} from '../game-play/game-play.screen';
 
 export interface HomeScreenProps {}
 
@@ -98,6 +102,14 @@ export const HomeScreen = () => {
           onPress={() => {}}
           style={[styles.appBtn, { backgroundColor: ColorPalette.secondary }]}>
           <Text style={styles.btnTitle}>PHÒNG SẴN CÓ</Text>
+        </TouchableOpacity>
+      </SlideIn>
+      <SlideIn style={styles.expandWidth} delay={1000}>
+        <TouchableOpacity
+          activeOpacity={0.5}
+          onPress={() => push<GamePlayScreenProps>(GamePlayScreen)}
+          style={[styles.appBtn, { backgroundColor: ColorPalette.rose[600] }]}>
+          <Text style={styles.btnTitle}>TEST PAINT</Text>
         </TouchableOpacity>
       </SlideIn>
     </ImageBackground>
