@@ -12,6 +12,7 @@ import { ColorPalette } from './app/base/constants/color-palette';
 import { SplashScreen } from './app/screens/splash.screen';
 import { ScreenWrapper } from './app/navigation/screen-wrapper';
 import { HomeScreen } from './app/screens/home/home.screen';
+import 'react-native-url-polyfill/auto';
 
 const ignoreWarnings = [
   'Non-serializable values were found in the navigation state',
@@ -24,7 +25,7 @@ console.warn = (...args) => {
   }
 };
 
-function App(): React.JSX.Element {
+const App = (): React.JSX.Element => {
   useEffect(() => {
     Appearance.setColorScheme('light');
     Platform.OS === 'android' && StatusBar.setTranslucent(true);
@@ -57,6 +58,6 @@ function App(): React.JSX.Element {
       <GlobalModal />
     </SafeAreaProvider>
   );
-}
+};
 
 export default App;

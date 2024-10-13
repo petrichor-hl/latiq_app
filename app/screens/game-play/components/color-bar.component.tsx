@@ -28,7 +28,6 @@ const styles = StyleSheet.create({
   defaultCtn: {
     flexDirection: 'row',
     gap: 10,
-    padding: 10,
   },
   colorBtn: {
     height: 30,
