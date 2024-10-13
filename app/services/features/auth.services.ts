@@ -42,7 +42,7 @@ const printToken = (token: JwtToken) => {
 };
 
 export const AuthService = {
-  login: async (payload: LoginInfo) => {
+  login: async (payload: LoginInfo): Promise<boolean> => {
     showLoading();
     try {
       const response = await ApiClient<LoginInfo, LoginResponse>({
@@ -61,10 +61,13 @@ export const AuthService = {
       });
       await UserService.getProfile(false);
       reset<HomeScreenProps>(HomeScreen);
+      return true;
     } catch {
       console.log('Login Failed');
+      return false;
+    } finally {
+      hideLoading();
     }
-    hideLoading();
   },
   signup: async (payload: SignUpInfo) => {
     try {

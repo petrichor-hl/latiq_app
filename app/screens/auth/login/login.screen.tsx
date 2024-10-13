@@ -18,12 +18,15 @@ import { push } from '../../../navigation/navation.config';
 import { SignUpScreen, SignUpScreenProps } from '../signup/signup.screen';
 import { AppTextInput } from '../../../base/components/app-text-input.component';
 import { AuthService } from '../../../services/features/auth.services';
+import { zustandSignalR } from '../../../zustand/signal-r.zustand';
+import { zustandGlobalModal } from '../../../zustand/modal.zustand';
+import { zustandAuth } from '../../../zustand/auth.zustand';
 
 export interface LoginScreenProps {}
 
 export const LoginScreen = () => {
   const insets = useSafeAreaInsets();
-
+  const initializeConnection = zustandSignalR.getState().initializeConnection;
   const {
     control,
     handleSubmit,
@@ -37,7 +40,35 @@ export const LoginScreen = () => {
   });
 
   const onSubmit = async (loginInfo: LoginInfo) => {
-    await AuthService.login(loginInfo);
+    const isLogged = await AuthService.login(loginInfo);
+    if (isLogged) {
+      await initializeConnection(zustandAuth.getState().accessToken);
+      if (!zustandSignalR.getState().isConnected) {
+        zustandGlobalModal.getState().show({
+          title: '- THÔNG BÁO -',
+          content: 'Không thể tạo kết nối thời gian thực đến máy chủ',
+          buttons: [
+            {
+              title: 'OK',
+              onPress: () => {
+                zustandGlobalModal.getState().hide();
+              },
+              buttonStyle: {
+                title: {
+                  color: ColorPalette.white,
+                  fontSize: 15,
+                  fontWeight: '700',
+                },
+                container: {
+                  backgroundColor: ColorPalette.primary,
+                  borderRadius: 8,
+                },
+              },
+            },
+          ],
+        });
+      }
+    }
   };
 
   return (
