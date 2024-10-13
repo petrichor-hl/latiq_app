@@ -5,18 +5,20 @@ import {
   ImageBackground,
   PanResponder,
   TouchableOpacity,
+  Platform,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Canvas, { CanvasRenderingContext2D } from 'react-native-canvas';
 import { WIDTH } from '../../base/constants/size-screen';
 import { ColorPalette } from '../../base/constants/color-palette';
-import Slider from '@react-native-community/slider';
-import { useDidMount } from 'rooks';
+import { useDidMount, useWillUnmount } from 'rooks';
 import { ColorBar } from './components/color-bar.component';
 import Animated, { useSharedValue, withTiming } from 'react-native-reanimated';
 import { Spacer } from '../../base/components/spacer.component';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { Stack } from '../../base/types/stack';
+import { zustandSignalR } from '../../zustand/signal-r.zustand';
+import Slider from '@react-native-community/slider';
 
 export interface GamePlayScreenProps {}
 
@@ -27,6 +29,7 @@ interface Point {
 
 interface Path {
   color: string;
+  lineWidth: number;
   points: Point[];
 }
 
@@ -36,58 +39,33 @@ export const GamePlayScreen = (_props: GamePlayScreenProps) => {
 
   const canvasRef = useRef<Canvas | null>(null);
   const [strokeColor, setStrokeColor] = useState(ColorPalette.black);
+  const lineWidthRef = useRef(3.5);
 
   const pathStack = useRef(new Stack<Path>());
+  const { connection, isConnected } = zustandSignalR();
 
-  const panResponder = useMemo(
-    () =>
-      PanResponder.create({
-        onStartShouldSetPanResponder: () => true,
-        // Callback này được kích hoạt ngay khi người dùng bắt đầu chạm vào màn hình
-        onPanResponderStart: () => {
-          activeOpacity.value = withTiming(0.2);
-        },
-        // Callback này được kích hoạt ngay sau khi hệ thống quyết định rằng thao tác cảm ứng này sẽ được cấp quyền cho PanResponder
-        onPanResponderGrant: evt => {
-          const { locationX, locationY } = evt.nativeEvent;
+  useDidMount(async () => {
+    if (connection && isConnected) {
+      connection.on(
+        'BeginPath',
+        (lineColor: string, lineWidth: number, point: Point) => {
           const ctx = canvasRef.current?.getContext('2d');
           if (ctx) {
-            ctx.beginPath();
-            ctx.moveTo(locationX, locationY);
-            ctx.strokeStyle = strokeColor;
-            pathStack.current.push({
-              color: strokeColor,
-              points: [{ x: locationX, y: locationY }],
-            });
+            beginPath(ctx, lineColor, lineWidth, point.x, point.y);
           }
         },
-        onPanResponderMove: evt => {
-          const { locationX, locationY } = evt.nativeEvent;
-          const ctx = canvasRef.current?.getContext('2d');
-          if (ctx) {
-            draw(ctx, locationX, locationY);
-            pathStack.current
-              .peek()
-              ?.points.push({ x: locationX, y: locationY });
-          }
-        },
-        onPanResponderRelease: () => {
-          activeOpacity.value = withTiming(1);
-        },
-      }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [strokeColor],
-  );
-
-  const draw = (
-    ctx: CanvasRenderingContext2D,
-    locationX: number,
-    locationY: number,
-  ) => {
-    // console.log(`x = ${locationX}, y = ${locationY}`);
-    ctx.lineTo(locationX, locationY);
-    ctx.stroke();
-  };
+      );
+      connection.on('LineTo', (point: Point) => {
+        const ctx = canvasRef.current?.getContext('2d');
+        if (ctx) {
+          draw(ctx, point.x, point.y);
+        }
+      });
+      connection.on('Undo', () => {
+        undoDraw();
+      });
+    }
+  });
 
   useDidMount(() => {
     const canvas = canvasRef.current;
@@ -103,6 +81,85 @@ export const GamePlayScreen = (_props: GamePlayScreenProps) => {
     }
   });
 
+  useWillUnmount(() => {
+    if (connection && isConnected) {
+      connection.off('BeginPath');
+      connection.off('LineTo');
+      connection.off('Undo');
+    }
+  });
+
+  const panResponder = useMemo(
+    () =>
+      PanResponder.create({
+        onStartShouldSetPanResponder: () => true,
+        // Callback này được kích hoạt ngay khi người dùng bắt đầu chạm vào màn hình
+        onPanResponderStart: () => {
+          activeOpacity.value = withTiming(0.2);
+        },
+        // Callback này được kích hoạt ngay sau khi hệ thống quyết định rằng thao tác cảm ứng này sẽ được cấp quyền cho PanResponder
+        onPanResponderGrant: evt => {
+          const { locationX, locationY } = evt.nativeEvent;
+          const ctx = canvasRef.current?.getContext('2d');
+          if (ctx) {
+            connection?.invoke('BeginPath', strokeColor, lineWidthRef.current, {
+              x: locationX,
+              y: locationY,
+            });
+            beginPath(
+              ctx,
+              strokeColor,
+              lineWidthRef.current,
+              locationX,
+              locationY,
+            );
+          }
+        },
+        onPanResponderMove: evt => {
+          const { locationX, locationY } = evt.nativeEvent;
+          const ctx = canvasRef.current?.getContext('2d');
+          if (ctx) {
+            connection?.invoke('LineTo', { x: locationX, y: locationY });
+            draw(ctx, locationX, locationY);
+          }
+        },
+        onPanResponderRelease: () => {
+          activeOpacity.value = withTiming(1);
+        },
+      }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [strokeColor],
+  );
+
+  const beginPath = (
+    ctx: CanvasRenderingContext2D,
+    lineColor: string,
+    lineWidth: number,
+    locationX: number,
+    locationY: number,
+  ) => {
+    ctx.beginPath();
+    ctx.moveTo(locationX, locationY);
+    ctx.strokeStyle = lineColor;
+    ctx.lineWidth = lineWidth;
+
+    pathStack.current.push({
+      color: lineColor,
+      lineWidth: lineWidth,
+      points: [{ x: locationX, y: locationY }],
+    });
+  };
+
+  const draw = (
+    ctx: CanvasRenderingContext2D,
+    locationX: number,
+    locationY: number,
+  ) => {
+    ctx.lineTo(locationX, locationY);
+    ctx.stroke();
+    pathStack.current.peek()?.points.push({ x: locationX, y: locationY });
+  };
+
   const undoDraw = () => {
     const ctx = canvasRef.current?.getContext('2d');
     if (ctx && pathStack.current.pop()) {
@@ -112,6 +169,7 @@ export const GamePlayScreen = (_props: GamePlayScreenProps) => {
         ctx.beginPath();
         ctx.moveTo(points[0].x, points[0].y);
         ctx.strokeStyle = path.color;
+        ctx.lineWidth = path.lineWidth;
         for (let i = 1; i < points.length; ++i) {
           ctx.lineTo(points[i].x, points[i].y);
         }
@@ -136,23 +194,28 @@ export const GamePlayScreen = (_props: GamePlayScreenProps) => {
           style={[styles.topControlsCtn, { opacity: activeOpacity }]}>
           <ColorBar onColorPressed={color => setStrokeColor(color)} />
           <Spacer />
-          <TouchableOpacity onPress={undoDraw}>
-            <Ionicons name="arrow-undo-outline" size={32} />
+          <TouchableOpacity
+            onPress={() => {
+              undoDraw();
+              connection?.invoke('Undo');
+            }}>
+            <Ionicons
+              name="arrow-undo-outline"
+              size={32}
+              color={ColorPalette.black}
+            />
           </TouchableOpacity>
         </Animated.View>
         <Slider
           style={styles.sliderCtn}
           step={0.5}
-          value={3}
+          value={3.5}
           // vertical={true}  Note: Only for Window :)
           minimumValue={0}
           maximumValue={5}
-          lowerLimit={1}
+          lowerLimit={2}
           onSlidingComplete={value => {
-            const ctx = canvasRef.current?.getContext('2d');
-            if (ctx) {
-              ctx.lineWidth = value;
-            }
+            lineWidthRef.current = value;
           }}
           minimumTrackTintColor={strokeColor}
           maximumTrackTintColor={ColorPalette.gray[300]}
@@ -175,8 +238,8 @@ const styles = StyleSheet.create({
   },
   sliderCtn: {
     position: 'absolute',
-    right: 16,
-    bottom: 0,
+    right: Platform.OS === 'android' ? 4 : 16,
+    bottom: Platform.OS === 'android' ? 10 : 0,
     width: 200,
   },
 });

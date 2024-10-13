@@ -16,6 +16,7 @@ import 'react-native-url-polyfill/auto';
 
 const ignoreWarnings = [
   'Non-serializable values were found in the navigation state',
+  'Warning: No client method with the name',
 ];
 
 const originalWarn = console.warn;

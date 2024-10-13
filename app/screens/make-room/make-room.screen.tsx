@@ -19,11 +19,33 @@ import { Controller, useForm } from 'react-hook-form';
 import { AppTextInput } from '../../base/components/app-text-input.component';
 import { RoomService } from '../../services/features/room.services';
 import { TopicDropdown } from './components/topic-dropdown.component';
+import { useDidMount, useWillUnmount } from 'rooks';
+import { zustandSignalR } from '../../zustand/signal-r.zustand';
+import { zustandAuth } from '../../zustand/auth.zustand';
+import { Room } from './make-room.type';
 
 export interface MakeRoomScreenProps {}
 
 export const MakeRoomScreen = (_props: MakeRoomScreenProps) => {
   const insets = useSafeAreaInsets();
+  const { connection, isConnected, initializeConnection } = zustandSignalR();
+  useDidMount(async () => {
+    if (connection === undefined || !isConnected) {
+      await initializeConnection(zustandAuth.getState().accessToken);
+    }
+
+    if (connection && isConnected) {
+      connection.on('OnRoomCreated', (room: Room) => {
+        console.log('Room created:', room);
+      });
+    }
+  });
+
+  useWillUnmount(() => {
+    if (connection && isConnected) {
+      connection.off('OnRoomCreated');
+    }
+  });
 
   const {
     control,
