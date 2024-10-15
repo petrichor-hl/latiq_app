@@ -13,6 +13,7 @@ import { SplashScreen } from './app/screens/splash.screen';
 import { ScreenWrapper } from './app/navigation/screen-wrapper';
 import { HomeScreen } from './app/screens/home/home.screen';
 import 'react-native-url-polyfill/auto';
+import { CodePushContainer } from './app/codepush/code-push-container.component';
 
 const ignoreWarnings = [
   'Non-serializable values were found in the navigation state',
@@ -38,26 +39,28 @@ const App = (): React.JSX.Element => {
   const Stack = createNativeStackNavigator();
 
   return (
-    <SafeAreaProvider>
-      <MenuProvider>
-        <NavigationContainer ref={refNavigation}>
-          <Stack.Navigator
-            screenOptions={{
-              headerShown: false,
-              orientation: 'portrait',
-            }}>
-            <Stack.Screen name={ScreenName.SPLASH} component={SplashScreen} />
-            <Stack.Screen
-              name={ScreenName.SCREEN_WRAPPER}
-              component={ScreenWrapper}
-              initialParams={{ screen: HomeScreen }}
-            />
-          </Stack.Navigator>
-        </NavigationContainer>
-      </MenuProvider>
-      <GlobalLoading />
-      <GlobalModal />
-    </SafeAreaProvider>
+    <CodePushContainer>
+      <SafeAreaProvider>
+        <MenuProvider>
+          <NavigationContainer ref={refNavigation}>
+            <Stack.Navigator
+              screenOptions={{
+                headerShown: false,
+                orientation: 'portrait',
+              }}>
+              <Stack.Screen name={ScreenName.SPLASH} component={SplashScreen} />
+              <Stack.Screen
+                name={ScreenName.SCREEN_WRAPPER}
+                component={ScreenWrapper}
+                initialParams={{ screen: HomeScreen }}
+              />
+            </Stack.Navigator>
+          </NavigationContainer>
+          <GlobalModal />
+        </MenuProvider>
+        <GlobalLoading />
+      </SafeAreaProvider>
+    </CodePushContainer>
   );
 };
 

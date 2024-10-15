@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">latiq_app</string>
+    <string moduleConfig="true" name="CodePushDeploymentKey">0ovnaQoqsTM3jtj4qtnw3akHKFOaZu-A6Z_NCO</string>
 </resources>
