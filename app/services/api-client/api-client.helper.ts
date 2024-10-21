@@ -1,7 +1,7 @@
 import { create } from 'apisauce';
 import { zustandAuth } from '../../zustand/auth.zustand';
 import { AxiosRequestConfig } from 'axios';
-import { DEFAULT_TIMEOUT } from '../../configs/api.config';
+import { BASE_URL, DEFAULT_TIMEOUT } from '../../configs/api.config';
 
 export const createHeader = () => {
   const headers: AxiosRequestConfig['headers'] = {};
@@ -17,7 +17,7 @@ export const createHeader = () => {
 };
 
 export const api = create({
-  baseURL: 'http://192.168.1.12:5076/api',
+  baseURL: `${BASE_URL}/api`,
   withCredentials: false,
   timeout: DEFAULT_TIMEOUT,
 });

@@ -5,6 +5,7 @@ import {
 } from '@microsoft/signalr';
 import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
+import { BASE_URL } from '../configs/api.config';
 
 interface SignalRState {
   connection?: HubConnection;
@@ -22,7 +23,7 @@ export const zustandSignalR = create<SignalRState & SignalRAction>()(
     isConnected: false,
     initializeConnection: async accessToken => {
       let connection = new HubConnectionBuilder()
-        .withUrl('http://192.168.1.12:5076/global-hub', {
+        .withUrl(`${BASE_URL}/global-hub`, {
           accessTokenFactory: () => accessToken,
         })
         .withAutomaticReconnect()
