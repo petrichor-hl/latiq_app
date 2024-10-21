@@ -14,6 +14,9 @@ import { ScreenWrapper } from './app/navigation/screen-wrapper';
 import { HomeScreen } from './app/screens/home/home.screen';
 import 'react-native-url-polyfill/auto';
 import { CodePushContainer } from './app/codepush/code-push-container.component';
+import { registerGlobals } from 'react-native-webrtc';
+
+registerGlobals();
 
 const ignoreWarnings = [
   'Non-serializable values were found in the navigation state',

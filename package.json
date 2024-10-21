@@ -21,6 +21,7 @@
     "apisauce": "^3.0.1",
     "immer": "^10.1.1",
     "lodash": "^4.17.21",
+    "mediasoup-client": "^3.7.17",
     "react": "18.3.1",
     "react-hook-form": "^7.53.0",
     "react-native": "0.75.4",
@@ -37,8 +38,10 @@
     "react-native-svg": "^15.7.1",
     "react-native-url-polyfill": "^2.0.0",
     "react-native-vector-icons": "^10.2.0",
+    "react-native-webrtc": "^124.0.4",
     "react-native-webview": "^13.12.3",
     "rooks": "^7.14.1",
+    "socket.io-client": "^4.8.0",
     "zod": "^3.23.8",
     "zustand": "^5.0.0-rc.2"
   },

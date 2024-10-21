@@ -4,6 +4,10 @@
 <dict>
 	<key>CodePushDeploymentKey</key>
 	<string>iDVhcpHvAuRNVtIepFNhPsRK4jxWw4s7DzQ0jC</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Ứng dụng cần quyền truy cập Camera của bạn</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Ứng dụng cần quyền truy cập Microphone của bạn</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
