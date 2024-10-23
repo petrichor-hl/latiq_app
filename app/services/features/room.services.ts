@@ -1,6 +1,9 @@
 import { Endpoints } from '../../base/constants/endpoints';
 import { MakeRoomForm } from '../../screens/make-room/make-room.form';
-import { Room, Topic } from '../../screens/make-room/make-room.type';
+import {
+  PayloadGetRoomInfo,
+  Room,
+} from '../../screens/make-room/make-room.type';
 import { ApiClient } from '../api-client/api-client';
 
 export const RoomService = {
@@ -12,10 +15,11 @@ export const RoomService = {
       loading: isShowLoading,
     });
   },
-  getListTopic: async (isShowLoading?: boolean) => {
-    return await ApiClient<{}, Topic[]>({
+  getRoomInfo: async (payload: PayloadGetRoomInfo, isShowLoading?: boolean) => {
+    return await ApiClient<{}, Room>({
       method: 'get',
-      endpoint: Endpoints.Room.GET_LIST_TOPIC,
+      endpoint: Endpoints.Room.GET_ROOM,
+      data: payload,
       loading: isShowLoading,
     });
   },

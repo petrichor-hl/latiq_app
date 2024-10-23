@@ -23,8 +23,8 @@ import {
 import { WIDTH } from '../../../base/constants/size-screen';
 import { Control, useController } from 'react-hook-form';
 import { Topic } from '../make-room.type';
-import { RoomService } from '../../../services/features/room.services';
 import FastImage from 'react-native-fast-image';
+import { TopicService } from '../../../services/features/topic.services';
 
 interface TopicDropdownProps {
   control: Control<
@@ -73,7 +73,7 @@ export const TopicDropdown = (props: TopicDropdownProps) => {
   const renderMenuTrigger = () => {
     return (
       <Animated.View style={[styles.menuTriggerWrapper, borderColorAnimStyle]}>
-        <View style={[styles.menuTrigger]}>
+        <View style={styles.menuTrigger}>
           <Text
             style={{
               color: field.value ? ColorPalette.black : ColorPalette.gray[400],
@@ -116,7 +116,7 @@ export const TopicDropdown = (props: TopicDropdownProps) => {
         onPress={async () => {
           menuRef.current?.open();
           if (topics === null) {
-            setTopics(await RoomService.getListTopic(false));
+            setTopics(await TopicService.getListTopic(false));
           }
         }}>
         {selectedTopic ? (
@@ -138,7 +138,7 @@ export const TopicDropdown = (props: TopicDropdownProps) => {
         onOpen={async () => {
           handleFocus();
           if (topics === null) {
-            setTopics(await RoomService.getListTopic(false));
+            setTopics(await TopicService.getListTopic(false));
           }
         }}
         onClose={handleBlur}>
@@ -175,7 +175,7 @@ const styles = StyleSheet.create({
   },
   optionsContainer: {
     borderRadius: 4,
-    marginTop: 51,
+    marginTop: 53,
     width: WIDTH - 40,
     maxHeight: 310,
   },
