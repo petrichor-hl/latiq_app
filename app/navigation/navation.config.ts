@@ -66,3 +66,7 @@ export const reset = async <T>(
 export const goBack = () => {
   refNavigation.current?.canGoBack && refNavigation.goBack();
 };
+
+export const pop = (count?: number) => {
+  refNavigation.dispatch(StackActions.pop(count));
+};
