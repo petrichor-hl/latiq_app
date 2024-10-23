@@ -7,11 +7,15 @@ export interface Topic {
 }
 
 export interface Room {
-  roomId: number;
+  roomId: string;
   ownerId: string;
-  users: Omit<UserProfile, 'email'>[];
-  topicId: number;
+  topicId: Topic;
   round: number;
   capacity: number;
   isPublic: boolean;
+  users: UserProfile[];
+}
+
+export interface PayloadGetRoomInfo {
+  roomId: string;
 }

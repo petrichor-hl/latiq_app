@@ -12,40 +12,22 @@ import { ColorPalette } from '../../base/constants/color-palette';
 import { HEIGHT, WIDTH } from '../../base/constants/size-screen';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { goBack } from '../../navigation/navation.config';
+import { goBack, push } from '../../navigation/navation.config';
 import { MakeRoomForm, makeRoomSchema } from './make-room.form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Controller, useForm } from 'react-hook-form';
 import { AppTextInput } from '../../base/components/app-text-input.component';
 import { RoomService } from '../../services/features/room.services';
 import { TopicDropdown } from './components/topic-dropdown.component';
-import { useDidMount, useWillUnmount } from 'rooks';
-import { zustandSignalR } from '../../zustand/signal-r.zustand';
-import { zustandAuth } from '../../zustand/auth.zustand';
-import { Room } from './make-room.type';
+import {
+  WaitingRoomScreen,
+  WaitingRoomScreenProps,
+} from '../waiting-room/waiting-room.screen';
 
 export interface MakeRoomScreenProps {}
 
 export const MakeRoomScreen = (_props: MakeRoomScreenProps) => {
   const insets = useSafeAreaInsets();
-  const { connection, isConnected, initializeConnection } = zustandSignalR();
-  useDidMount(async () => {
-    if (connection === undefined || !isConnected) {
-      await initializeConnection(zustandAuth.getState().accessToken);
-    }
-
-    if (connection && isConnected) {
-      connection.on('OnRoomCreated', (room: Room) => {
-        console.log('Room created:', room);
-      });
-    }
-  });
-
-  useWillUnmount(() => {
-    if (connection && isConnected) {
-      connection.off('OnRoomCreated');
-    }
-  });
 
   const {
     control,
@@ -60,7 +42,8 @@ export const MakeRoomScreen = (_props: MakeRoomScreenProps) => {
   });
 
   const onSubmit = async (makeRoomForm: MakeRoomForm) => {
-    await RoomService.makeRoom(makeRoomForm);
+    const newRoomInfo = await RoomService.makeRoom(makeRoomForm);
+    push<WaitingRoomScreenProps>(WaitingRoomScreen, { roomInfo: newRoomInfo });
   };
 
   return (
@@ -98,7 +81,7 @@ export const MakeRoomScreen = (_props: MakeRoomScreenProps) => {
         name="isPublic"
         render={({ field }) => {
           return (
-            <View>
+            <View style={{ alignItems: 'flex-start' }}>
               <Text style={styles.titleTxt}>Khoá phòng</Text>
               <Switch
                 trackColor={{

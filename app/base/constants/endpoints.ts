@@ -17,6 +17,9 @@ export const Endpoints = {
   },
   Room: {
     MAKE_ROOM: '/Room/make-room',
+    GET_ROOM: '/Room',
+  },
+  Topic: {
     GET_LIST_TOPIC: '/Topic',
   },
 };

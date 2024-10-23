@@ -76,15 +76,7 @@ export const HomeScreen = () => {
         style={styles.expandWidth}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
         <SlideIn style={styles.expandWidth} delay={400}>
-          <View style={styles.rowCtn}>
-            <RoomCodeInput />
-            <TouchableOpacity
-              activeOpacity={0.5}
-              onPress={() => {}}
-              style={[styles.appBtn, styles.joinRoomBtn]}>
-              <Ionicons name="arrow-forward-circle-outline" size={32} />
-            </TouchableOpacity>
-          </View>
+          <RoomCodeInput />
         </SlideIn>
       </KeyboardAvoidingView>
 
@@ -127,11 +119,6 @@ const styles = StyleSheet.create({
   expandWidth: {
     width: '100%',
   },
-  rowCtn: {
-    flexDirection: 'row',
-    columnGap: 12,
-    alignItems: 'center',
-  },
   avatarImg: {
     padding: 6,
     borderColor: ColorPalette.white,
@@ -164,8 +151,5 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: ColorPalette.primary,
-  },
-  joinRoomBtn: {
-    width: 80,
   },
 });

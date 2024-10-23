@@ -1,5 +1,11 @@
 import React, { useState } from 'react';
-import { StyleSheet, TextInput } from 'react-native';
+import {
+  Platform,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import Animated, {
   interpolateColor,
   useAnimatedStyle,
@@ -7,16 +13,13 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated';
 import { ColorPalette } from '../../../base/constants/color-palette';
-
-// interface AppTextInputProps {
-//   name: string;
-//   control: Control<any, any>;
-//   placeHoder?: string;
-//   defaultValue?: string;
-//   secureTextEntry?: boolean;
-//   canSwitchSecure?: boolean;
-//   error?: FieldError;
-// }
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import { RoomService } from '../../../services/features/room.services';
+import { push } from '../../../navigation/navation.config';
+import {
+  WaitingRoomScreen,
+  WaitingRoomScreenProps,
+} from '../../waiting-room/waiting-room.screen';
 
 export const RoomCodeInput = () => {
   const [code, setCode] = useState('');
@@ -41,24 +44,46 @@ export const RoomCodeInput = () => {
     };
   });
 
+  const onSubmitRoomCode = async () => {
+    const roomInfo = await RoomService.getRoomInfo({ roomId: code });
+    push<WaitingRoomScreenProps>(WaitingRoomScreen, { roomInfo });
+  };
+
   return (
-    <Animated.View style={[styles.textInputWrap, borderColorAnimStyle]}>
-      <TextInput
-        placeholder={'Nhập mã phòng'}
-        placeholderTextColor={ColorPalette.gray[400]}
-        value={code}
-        onChangeText={setCode}
-        onFocus={() => handleFocus()}
-        onBlur={() => handleBlur()}
-        style={styles.textInput}
-        autoCapitalize={'characters'}
-        autoCorrect={false}
-      />
-    </Animated.View>
+    <View style={styles.rowCtn}>
+      <Animated.View style={[styles.textInputWrap, borderColorAnimStyle]}>
+        <TextInput
+          placeholder={'Nhập mã phòng'}
+          placeholderTextColor={ColorPalette.gray[400]}
+          value={code}
+          onChangeText={setCode}
+          onFocus={() => handleFocus()}
+          onBlur={() => handleBlur()}
+          style={styles.textInput}
+          autoCorrect={false}
+          keyboardType="number-pad"
+        />
+      </Animated.View>
+      <TouchableOpacity
+        activeOpacity={0.5}
+        onPress={onSubmitRoomCode}
+        style={[styles.appBtn, styles.joinRoomBtn]}>
+        <Ionicons
+          name="arrow-forward-circle-outline"
+          size={32}
+          color={ColorPalette.black}
+        />
+      </TouchableOpacity>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
+  rowCtn: {
+    flexDirection: 'row',
+    columnGap: 12,
+    alignItems: 'center',
+  },
   textInputWrap: {
     flex: 1,
     borderRadius: 8,
@@ -74,13 +99,14 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     fontSize: 18,
   },
-  suffixIconBtn: {
-    marginRight: 13,
+  appBtn: {
+    height: Platform.OS === 'ios' ? 54 : 60,
+    borderRadius: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: ColorPalette.primary,
   },
-  errorMessage: {
-    color: ColorPalette.red[500],
-    fontSize: 15,
-    marginTop: 4,
-    fontWeight: 'bold',
+  joinRoomBtn: {
+    width: 80,
   },
 });
