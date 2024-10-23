@@ -2406,6 +2406,23 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@react-native-clipboard/clipboard@npm:^1.14.2":
+  version: 1.14.2
+  resolution: "@react-native-clipboard/clipboard@npm:1.14.2"
+  peerDependencies:
+    react: ">= 16.9.0"
+    react-native: ">= 0.61.5"
+    react-native-macos: ">= 0.61.0"
+    react-native-windows: ">= 0.61.0"
+  peerDependenciesMeta:
+    react-native-macos:
+      optional: true
+    react-native-windows:
+      optional: true
+  checksum: a14c7de784f78c360b41fc723221d1091ccf59dc12ff5dcadf11c7fe078ae081afa1b95f2fe3cf0d4fcd25bc0e2a04cc56fb85aff8437de19cb2eba7d95362df
+  languageName: node
+  linkType: hard
+
 "@react-native-community/blur@npm:^4.4.1":
   version: 4.4.1
   resolution: "@react-native-community/blur@npm:4.4.1"
@@ -7524,6 +7541,7 @@ __metadata:
     "@dicebear/core": ^9.2.2
     "@hookform/resolvers": ^3.9.0
     "@microsoft/signalr": ^8.0.7
+    "@react-native-clipboard/clipboard": ^1.14.2
     "@react-native-community/blur": ^4.4.1
     "@react-native-community/slider": ^4.5.3
     "@react-native/babel-preset": 0.75.4
@@ -7551,6 +7569,7 @@ __metadata:
     react-native-canvas: ^0.1.40
     react-native-code-push: 8.3.1
     react-native-fast-image: ^8.6.3
+    react-native-flash-message: ^0.4.2
     react-native-keyboard-aware-scroll-view: ^0.9.5
     react-native-mmkv: ^2.6.0
     react-native-popup-menu: ^0.16.1
@@ -7568,6 +7587,7 @@ __metadata:
     reactotron-react-native-mmkv: ^0.2.7
     rooks: ^7.14.1
     socket.io-client: ^4.8.0
+    toastify-react-native: ^5.0.2
     typescript: 5.0.4
     zod: ^3.23.8
     zustand: ^5.0.0-rc.2
@@ -9162,6 +9182,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-native-flash-message@npm:^0.4.2":
+  version: 0.4.2
+  resolution: "react-native-flash-message@npm:0.4.2"
+  dependencies:
+    prop-types: ^15.8.1
+    react-native-iphone-screen-helper: ^2.0.2
+  peerDependencies:
+    prop-types: ^15.0 || ^16.0
+    react: "*"
+    react-native: "*"
+  checksum: ab1e83db9f75888607cdeac8160194630a3e16f5e16133b6316d595b392b92f1c3b8e597e365636dcf3c622a4a5731753ce24fe9710867335c06ec0d212c5178
+  languageName: node
+  linkType: hard
+
 "react-native-flipper@npm:^0.164.0":
   version: 0.164.0
   resolution: "react-native-flipper@npm:0.164.0"
@@ -9169,6 +9203,15 @@ __metadata:
     react: ^16.8.0 || ^17.0.0 || ^18.0.0
     react-native: ">0.62.0"
   checksum: 8730d7349bec27a23558760320082bd89b07fb404a87bf039a8d852455f28e4d5419f093bb7900ff5f6d85488274cfb246278b6700878bcabe574d5aacd88dac
+  languageName: node
+  linkType: hard
+
+"react-native-iphone-screen-helper@npm:^2.0.2":
+  version: 2.1.2
+  resolution: "react-native-iphone-screen-helper@npm:2.1.2"
+  peerDependencies:
+    react-native: ">=0.42.0"
+  checksum: 20a59d0596d836b2a98eaedbf83662cbb318998c4de0d378c9a39d2ea33184c578e8aba0731acbc98b47d362b6ef7323b61c664715b011c7c6e39b926557ada7
   languageName: node
   linkType: hard
 
@@ -10643,6 +10686,18 @@ __metadata:
   dependencies:
     is-number: ^7.0.0
   checksum: f76fa01b3d5be85db6a2a143e24df9f60dd047d151062d0ba3df62953f2f697b16fe5dad9b0ac6191c7efc7b1d9dcaa4b768174b7b29da89d4428e64bc0a20ed
+  languageName: node
+  linkType: hard
+
+"toastify-react-native@npm:^5.0.2":
+  version: 5.0.2
+  resolution: "toastify-react-native@npm:5.0.2"
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+    react-native-modal: "*"
+    react-native-responsive-fontsize: "*"
+  checksum: 4af958e9907088e57cd584bf26c5aa38f3e20a918e905b1d4e61df1a37cf83d96bc9ece558a430de79594932cdadc95e2ae0ad0b9d71691d9c1dabda9172cc42
   languageName: node
   linkType: hard
 

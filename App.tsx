@@ -15,6 +15,7 @@ import { HomeScreen } from './app/screens/home/home.screen';
 import 'react-native-url-polyfill/auto';
 import { CodePushContainer } from './app/codepush/code-push-container.component';
 import { registerGlobals } from 'react-native-webrtc';
+import FlashMessage from 'react-native-flash-message';
 
 registerGlobals();
 
@@ -61,6 +62,7 @@ const App = (): React.JSX.Element => {
           </NavigationContainer>
           <GlobalModal />
         </MenuProvider>
+        <FlashMessage />
         <GlobalLoading />
       </SafeAreaProvider>
     </CodePushContainer>
