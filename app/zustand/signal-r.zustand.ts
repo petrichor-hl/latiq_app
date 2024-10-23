@@ -41,7 +41,7 @@ export const zustandSignalR = create<SignalRState & SignalRAction>()(
       }
     },
     stopConnection: async () => {
-      const { connection } = get();
+      const connection = get().connection;
       if (connection) {
         await connection.stop();
         set({ isConnected: false });
