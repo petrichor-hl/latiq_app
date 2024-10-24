@@ -6,16 +6,17 @@ import { pop } from '../../../navigation/navation.config';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { showMessage } from 'react-native-flash-message';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Room } from '../../make-room/make-room.type';
 
 interface RoomHeaderProps {
-  roomCode: string;
+  roomInfo: Room;
 }
 
 export const RoomHeader = (props: RoomHeaderProps) => {
-  const { roomCode } = props;
+  const { roomInfo } = props;
   const safeTop = useSafeAreaInsets().top;
   const copyToClipboard = () => {
-    Clipboard.setString(roomCode);
+    Clipboard.setString(roomInfo.roomId);
     showMessage({
       message: 'Đã sao chép Mã phòng',
       position: 'top',
@@ -33,8 +34,8 @@ export const RoomHeader = (props: RoomHeaderProps) => {
         <Ionicons name="arrow-undo" size={44} color={ColorPalette.primary} />
       </TouchableOpacity>
       <View style={{ alignItems: 'center' }}>
-        <Text style={styles.roomCodeTitle}>Mã phòng</Text>
-        <Text style={styles.roomCode}>{roomCode}</Text>
+        <Text style={styles.roomCodeTitle}>{roomInfo.topic.name}</Text>
+        <Text style={styles.roomCode}>{roomInfo.roomId}</Text>
       </View>
 
       <TouchableOpacity onPress={copyToClipboard} style={{ width: 44 }}>
@@ -55,12 +56,12 @@ const styles = StyleSheet.create({
   },
   roomCodeTitle: {
     color: ColorPalette.white,
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: 'bold',
   },
   roomCode: {
     color: ColorPalette.white,
-    fontSize: 20,
+    fontSize: 16,
     fontWeight: 'bold',
   },
 });

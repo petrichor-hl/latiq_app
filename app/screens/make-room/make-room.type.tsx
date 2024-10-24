@@ -9,7 +9,7 @@ export interface Topic {
 export interface Room {
   roomId: string;
   ownerId: string;
-  topicId: Topic;
+  topic: Topic;
   round: number;
   capacity: number;
   isPublic: boolean;

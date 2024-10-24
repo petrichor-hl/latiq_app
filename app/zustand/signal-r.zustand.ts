@@ -6,6 +6,7 @@ import {
 import { create } from 'zustand';
 import { immer } from 'zustand/middleware/immer';
 import { BASE_URL } from '../configs/api.config';
+import { zustandUser } from './user.zustand';
 
 interface SignalRState {
   connection?: HubConnection;
@@ -35,7 +36,11 @@ export const zustandSignalR = create<SignalRState & SignalRAction>()(
       try {
         await connection.start();
         set({ isConnected: true });
-        console.log('Connected to the SignalR hub');
+        console.log(
+          `\x1b[43m\x1b[30m==> ${
+            zustandUser.getState().user.email
+          } has connected to the SignalR hub\x1b[0m`,
+        );
       } catch (err) {
         console.error('Error while starting connection: ', err);
       }
@@ -45,7 +50,11 @@ export const zustandSignalR = create<SignalRState & SignalRAction>()(
       if (connection) {
         await connection.stop();
         set({ isConnected: false });
-        console.log('Disconnected from the SignalR hub');
+        console.log(
+          `\x1b[43m\x1b[30m==> ${
+            zustandUser.getState().user.email
+          } has disconnected from the SignalR hub\x1b[0m`,
+        );
       }
     },
   })),

@@ -45,8 +45,10 @@ export const RoomCodeInput = () => {
   });
 
   const onSubmitRoomCode = async () => {
-    const roomInfo = await RoomService.getRoomInfo({ roomId: code });
-    push<WaitingRoomScreenProps>(WaitingRoomScreen, { roomInfo });
+    if (code) {
+      const roomInfo = await RoomService.getRoomInfo({ roomId: code });
+      push<WaitingRoomScreenProps>(WaitingRoomScreen, { roomInfo });
+    }
   };
 
   return (
