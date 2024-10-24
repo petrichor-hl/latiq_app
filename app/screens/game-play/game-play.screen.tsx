@@ -174,26 +174,6 @@ export const GamePlayScreen = (_props: GamePlayScreenProps) => {
       track: videoTrack,
       ...VIDEO_PARAMS,
     });
-
-    audioProducer.on('trackended', () => {
-      console.log('audio track ended');
-      // close audio track
-    });
-
-    audioProducer.on('transportclose', () => {
-      console.log('audio transport ended');
-      // close audio track
-    });
-
-    videoProducer.on('trackended', () => {
-      console.log('video track ended');
-      // close video track
-    });
-
-    videoProducer.on('transportclose', () => {
-      console.log('video transport ended');
-      // close video track
-    });
   };
 
   useEffect(() => {

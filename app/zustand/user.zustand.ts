@@ -13,6 +13,7 @@ interface UserAction {
 export const zustandUser = create<UserState & UserAction>()(
   immer((set, _get) => ({
     user: {
+      id: '',
       email: '',
       nickName: '',
       avatar: '',
