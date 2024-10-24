@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import {
+  Keyboard,
   Platform,
   StyleSheet,
   TextInput,
@@ -46,8 +47,11 @@ export const RoomCodeInput = () => {
 
   const onSubmitRoomCode = async () => {
     if (code) {
+      Keyboard.dismiss();
       const roomInfo = await RoomService.getRoomInfo({ roomId: code });
-      push<WaitingRoomScreenProps>(WaitingRoomScreen, { roomInfo });
+      setTimeout(async () => {
+        push<WaitingRoomScreenProps>(WaitingRoomScreen, { roomInfo });
+      }, 500);
     }
   };
 

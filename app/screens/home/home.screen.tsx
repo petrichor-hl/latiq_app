@@ -30,6 +30,7 @@ import {
   GamePlayScreen,
   GamePlayScreenProps,
 } from '../game-play/game-play.screen';
+import { HEIGHT, WIDTH } from '../../base/constants/size-screen';
 
 export interface HomeScreenProps {}
 
@@ -72,14 +73,12 @@ export const HomeScreen = () => {
       <SlideIn delay={200}>
         <Text style={styles.welcomeTxt}>Xin chào, {user.nickName}</Text>
       </SlideIn>
-      <KeyboardAvoidingView
-        style={styles.expandWidth}
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+      <KeyboardAvoidingView style={styles.expandWidth} behavior="padding">
+        {/* Trong TH này: 'padding' work for both Android * iOS */}
         <SlideIn style={styles.expandWidth} delay={400}>
           <RoomCodeInput />
         </SlideIn>
       </KeyboardAvoidingView>
-
       <SlideIn style={styles.expandWidth} delay={600}>
         <TouchableOpacity
           activeOpacity={0.5}
@@ -110,7 +109,8 @@ export const HomeScreen = () => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    height: HEIGHT,
+    width: WIDTH,
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 20,
