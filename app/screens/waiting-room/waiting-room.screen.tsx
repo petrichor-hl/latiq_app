@@ -1,255 +1,105 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { ImageBackground, StyleSheet } from 'react-native';
+import React from 'react';
+import {
+  ImageBackground,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import { HEIGHT, WIDTH } from '../../base/constants/size-screen';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { zustandSignalR } from '../../zustand/signal-r.zustand';
 import { Room } from '../make-room/make-room.type';
 import { RoomHeader } from './components/room-header.component';
-import {
-  mediaDevices,
-  MediaStream,
-  MediaStreamTrack,
-} from 'react-native-webrtc';
-import { Spacer } from '../../base/components/spacer.component';
+import { MediaStream, RTCView } from 'react-native-webrtc';
 
-import { zustandMediaSoup } from '../../zustand/zustandMediaSoup.zustand';
-import {
-  InvalidStateError,
-  RtpCapabilities,
-  TransportOptions,
-  Device,
-  Transport,
-  Producer,
-} from 'mediasoup-client/lib/types';
-import * as mediasoupClient from 'mediasoup-client';
-import { VIDEO_PARAMS } from '../../configs/sfu-sever.config';
 import { BottomMedia } from './components/bottom-media.component';
+import { RoomInfo } from './components/room-info.component';
+import { SvgXml } from 'react-native-svg';
+import { avatarCollectionsList } from '../pick-avatar/pick-avatar.constants';
+import { useWaitingRoomSignalR } from './controllers/signal-r.controller';
+import { ColorPalette } from '../../base/constants/color-palette';
+import { useWaitingRoomMediaSoup } from './controllers/mediasoup.controller';
+import { CameraStatus } from './waiting-room.type';
 
 export interface WaitingRoomScreenProps {
   roomInfo: Room;
 }
 
+const VIDEO_WINDOW_SIZE = (WIDTH - 20 * 2 - 10) / 2;
+
 export const WaitingRoomScreen = (props: WaitingRoomScreenProps) => {
   const { roomInfo } = props;
 
   const insets = useSafeAreaInsets();
-  const { connection, isConnected, initializeConnection, stopConnection } =
-    zustandSignalR();
 
   const {
-    socket,
-    isConnected: socketConnected,
-    connect: socketConnect,
-    disconnect: socketDisconnect,
-    setProducerTransport,
-    setConsumerTransport,
-    setAudioProducer,
-    setVideoProducer,
-  } = zustandMediaSoup();
+    values: { localStream, localVideoConsumers },
+    actions: { getLocalSteam },
+  } = useWaitingRoomMediaSoup({ roomCode: roomInfo.roomId });
 
-  const [localStream, setLocalStream] = useState<MediaStream>();
-  const deviceRef = useRef<Device>();
-  const producerTransportRef = useRef<Transport>();
-  const consumerTransportRef = useRef<Transport>();
-  const audioProducerRef = useRef<Producer>();
-  const videoProducerRef = useRef<Producer>();
-  const audioTrackRef = useRef<MediaStreamTrack>();
-  const videoTrackRef = useRef<MediaStreamTrack>();
-
-  useEffect(() => {
-    if (!socketConnected) {
-      socketConnect();
-    } else {
-      mediaDevices
-        .getUserMedia({
-          audio: true,
-          video: true,
-        })
-        .then(streamSuccess)
-        .catch(error => {
-          console.log(error.message);
-        });
-    }
-
-    return () => {
-      if (socketConnected) {
-        console.log('socketDisconnect');
-        socketDisconnect();
-      }
-    };
-  }, [socketConnected]);
-
-  const streamSuccess = (stream: MediaStream) => {
-    setLocalStream(stream);
-    audioTrackRef.current = stream.getAudioTracks()[0];
-    videoTrackRef.current = stream.getVideoTracks()[0];
-    joinRoom();
-  };
-
-  const joinRoom = () => {
-    if (socket && socketConnected) {
-      socket.emit(
-        'joinRoom',
-        { roomName: roomInfo.roomId },
-        (serverRouterRtpCapabilities: RtpCapabilities) => {
-          createDevice(serverRouterRtpCapabilities);
-        },
-      );
-    }
-  };
-
-  const createDevice = async (serverRouterRtpCapabilities: RtpCapabilities) => {
-    try {
-      deviceRef.current = new mediasoupClient.Device();
-      await deviceRef.current?.load({
-        routerRtpCapabilities: serverRouterRtpCapabilities,
-      });
-      createReceiveTransport();
-      createSendTransport();
-    } catch (error: any) {
-      if (error instanceof InvalidStateError) {
-        console.warn('InvalidStateError occurred');
-      } else if (error instanceof TypeError) {
-        console.warn('TypeError occurred');
-      } else {
-        console.warn('An unknown error occurred');
-      }
-    }
-  };
-
-  const createSendTransport = () => {
-    socket?.emit(
-      'createWebRtcTransport',
-      { consumer: false },
-      (params: TransportOptions) => {
-        producerTransportRef.current =
-          deviceRef.current?.createSendTransport(params);
-        setProducerTransport(producerTransportRef.current);
-
-        producerTransportRef.current?.on(
-          'connect',
-          async ({ dtlsParameters }, callback, errback) => {
-            try {
-              socket.emit(
-                'transport-connect',
-                {
-                  dtlsParameters,
-                },
-                (isAlreadyMembers: boolean) => {
-                  if (isAlreadyMembers) {
-                    // getProducers();
-                  }
-                },
-              );
-
-              // Tell the transport that parameters were transmitted.
-              callback();
-            } catch (error: any) {
-              errback(error);
-            }
-          },
-        );
-
-        producerTransportRef.current?.on(
-          'produce',
-          async (parameters, callback, errback) => {
-            try {
-              socket.emit(
-                'transport-produce',
-                {
-                  kind: parameters.kind,
-                  rtpParameters: parameters.rtpParameters,
-                },
-                (newProducerId: string) => {
-                  callback({ id: newProducerId });
-                },
-              );
-            } catch (error: any) {
-              errback(error);
-            }
-          },
-        );
-
-        connectSendTransport();
-      },
-    );
-  };
-
-  const connectSendTransport = async () => {
-    console.log(producerTransportRef.current);
-
-    audioProducerRef.current = await producerTransportRef.current?.produce({
-      track: audioTrackRef.current,
-    });
-    setAudioProducer(audioProducerRef.current);
-
-    videoProducerRef.current = await producerTransportRef.current?.produce({
-      track: videoTrackRef.current,
-      ...VIDEO_PARAMS,
-    });
-    setVideoProducer(videoProducerRef.current);
-  };
-
-  const createReceiveTransport = () => {
-    socket?.emit(
-      'createWebRtcTransport',
-      { consumer: true },
-      (params: TransportOptions) => {
-        consumerTransportRef.current =
-          deviceRef.current?.createRecvTransport(params);
-        setConsumerTransport(consumerTransportRef.current);
-
-        consumerTransportRef.current?.on(
-          'connect',
-          async ({ dtlsParameters }, callback, errback) => {
-            try {
-              socket.emit('transport-recv-connect', {
-                dtlsParameters,
-              });
-              callback();
-            } catch (error: any) {
-              errback(error);
-            }
-          },
-        );
-      },
-    );
-  };
-
-  // useEffect(() => {
-  //   if (!isConnected) {
-  //     initializeConnection(zustandAuth.getState().accessToken);
-  //   } else {
-  //     connection?.invoke('JoinRoom', {
-  //       userEmail: zustandUser.getState().user.email,
-  //       roomId: roomInfo.roomId,
-  //     });
-
-  //     connection?.on('JoinRoom', (userProfile: UserProfile) => {
-  //       console.log(`${userProfile.email} just joined room`);
-  //     });
-
-  //     connection?.on('LeaveRoom', (userEmail: string) => {
-  //       console.log(`${userEmail} just left room`);
-  //     });
-  //   }
-
-  //   return () => {
-  //     if (isConnected) {
-  //       connection?.invoke('LeaveRoom');
-  //       setTimeout(() => stopConnection(), 1000);
-  //     }
-  //   };
-  // }, [isConnected]);
+  const {
+    values: { usersInRoom },
+  } = useWaitingRoomSignalR({
+    roomCode: roomInfo.roomId,
+    getLocalSteam,
+  });
 
   return (
     <ImageBackground
       source={require('../../assets/images/background/background-2.png')}
       resizeMode="cover"
       style={[styles.container, { paddingTop: insets.top }]}>
-      <RoomHeader roomInfo={roomInfo} />
-      <Spacer />
+      <RoomHeader roomCode={roomInfo.roomId} />
+      <RoomInfo topicName={roomInfo.topic.name} round={roomInfo.round} />
+      {usersInRoom.length === 0 ? (
+        <View style={styles.emptyRoomCtn}>
+          <Text style={styles.emptyRoomTxt}>
+            {'Hãy mời thêm bạn bè\nvào phòng nhé!'}
+          </Text>
+        </View>
+      ) : (
+        <ScrollView>
+          <View style={styles.gridVideo}>
+            {usersInRoom.map(user => {
+              if (
+                localVideoConsumers[user.userEmail] &&
+                user.cameraStatus === CameraStatus.On
+              ) {
+                const mediaStream = new MediaStream();
+                mediaStream.addTrack(localVideoConsumers[user.userEmail].track);
+                return (
+                  <View key={user.userEmail} style={styles.videoGridItem}>
+                    <RTCView
+                      streamURL={mediaStream.toURL()}
+                      style={{
+                        width: VIDEO_WINDOW_SIZE,
+                        height: VIDEO_WINDOW_SIZE,
+                      }}
+                      objectFit="cover"
+                    />
+                  </View>
+                );
+              } else {
+                const [collectionNumber, seedNumber] = user.userAvatar
+                  .split('-')
+                  .map(e => Number(e));
+                return (
+                  <SvgXml
+                    key={user.userEmail}
+                    xml={
+                      avatarCollectionsList[collectionNumber].avatarXml(
+                        VIDEO_WINDOW_SIZE,
+                      )[seedNumber]
+                    }
+                  />
+                );
+              }
+            })}
+          </View>
+        </ScrollView>
+      )}
+
       <BottomMedia localStream={localStream} />
     </ImageBackground>
   );
@@ -261,6 +111,28 @@ const styles = StyleSheet.create({
     rowGap: 16,
     width: WIDTH,
     height: HEIGHT,
+  },
+  emptyRoomCtn: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  emptyRoomTxt: {
+    fontSize: 20,
+    textAlign: 'center',
+    fontWeight: 'bold',
+    color: ColorPalette.white,
+  },
+  gridVideo: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 10,
     paddingHorizontal: 20,
+  },
+  videoGridItem: {
+    borderRadius: 6,
+    overflow: 'hidden',
+    width: VIDEO_WINDOW_SIZE,
+    height: VIDEO_WINDOW_SIZE,
   },
 });

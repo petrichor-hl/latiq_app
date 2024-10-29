@@ -1,5 +1,3 @@
-import { UserProfile } from '../../base/model/user-profile';
-
 export interface Topic {
   id: string;
   name: string;
@@ -13,7 +11,6 @@ export interface Room {
   round: number;
   capacity: number;
   isPublic: boolean;
-  users: UserProfile[];
 }
 
 export interface PayloadGetRoomInfo {

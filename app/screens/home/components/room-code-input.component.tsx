@@ -21,6 +21,7 @@ import {
   WaitingRoomScreen,
   WaitingRoomScreenProps,
 } from '../../waiting-room/waiting-room.screen';
+import { hideLoading, showLoading } from '../../../zustand/loading.zustand';
 
 export const RoomCodeInput = () => {
   const [code, setCode] = useState('');
@@ -47,11 +48,17 @@ export const RoomCodeInput = () => {
 
   const onSubmitRoomCode = async () => {
     if (code) {
+      showLoading();
       Keyboard.dismiss();
-      const roomInfo = await RoomService.getRoomInfo({ roomId: code });
-      setTimeout(async () => {
-        push<WaitingRoomScreenProps>(WaitingRoomScreen, { roomInfo });
-      }, 500);
+      try {
+        const roomInfo = await RoomService.getRoomInfo({ roomId: code }, false);
+        setTimeout(async () => {
+          hideLoading();
+          push<WaitingRoomScreenProps>(WaitingRoomScreen, { roomInfo });
+        }, 500);
+      } catch (error) {
+        hideLoading();
+      }
     }
   };
 

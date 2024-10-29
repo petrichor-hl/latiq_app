@@ -6,12 +6,13 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { MediaStream, RTCView } from 'react-native-webrtc';
 import { ColorPalette } from '../../../base/constants/color-palette';
 import { pop } from '../../../navigation/navation.config';
-import { WIDTH, HEIGHT } from '../../../base/constants/size-screen';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { zustandMediaSoup } from '../../../zustand/zustandMediaSoup.zustand';
 import { zustandUser } from '../../../zustand/user.zustand';
 import { SvgXml } from 'react-native-svg';
 import { avatarCollectionsList } from '../../pick-avatar/pick-avatar.constants';
+import { zustandSignalR } from '../../../zustand/signal-r.zustand';
+import { CameraStatus } from '../waiting-room.type';
 
 interface BottomMediaProps {
   localStream?: MediaStream;
@@ -26,7 +27,8 @@ export const BottomMedia = (props: BottomMediaProps) => {
     .map(e => Number(e));
 
   const insets = useSafeAreaInsets();
-  const { audioProducer, videoProducer } = zustandMediaSoup();
+  const { connection } = zustandSignalR();
+  const { socket, audioProducer, videoProducer } = zustandMediaSoup();
   const [isMicOff, toggleMic] = useState(false);
   const [isCameraOff, toggleCamera] = useState(false);
 
@@ -41,7 +43,7 @@ export const BottomMedia = (props: BottomMediaProps) => {
         },
       ]}>
       <View
-        style={styles.cameraCnt}
+        style={styles.cameraCtn}
         onLayout={e => {
           setVideoLayoutSize(e.nativeEvent.layout.width);
         }}>
@@ -74,12 +76,24 @@ export const BottomMedia = (props: BottomMediaProps) => {
               { backgroundColor: ColorPalette.blue[800] },
             ]}
             onPress={() => {
-              if (videoProducer?.paused) {
-                videoProducer?.resume();
-              } else {
-                videoProducer?.pause();
+              /* Trong file singal-r.controller.ts
+               * có đoạn setTimeout(getLocalSteam, 500);
+               * Lúc này videoProducer của camera chưa được khởi tạo
+               * Nên khi người dùng nhấn button này chúng ta không làm gì cả
+               * Để giảm các công việc thực thi
+               */
+              if (videoProducer) {
+                if (videoProducer.paused) {
+                  videoProducer.resume();
+                } else {
+                  videoProducer.pause();
+                }
+                connection?.invoke(
+                  'ChangeCameraStatus',
+                  videoProducer?.paused ? CameraStatus.Off : CameraStatus.On,
+                );
+                toggleCamera(videoProducer.paused);
               }
-              toggleCamera(!!videoProducer?.paused);
             }}>
             <Ionicons
               name={isCameraOff ? 'videocam-off' : 'videocam'}
@@ -93,12 +107,14 @@ export const BottomMedia = (props: BottomMediaProps) => {
               { backgroundColor: ColorPalette.green[700] },
             ]}
             onPress={() => {
-              if (audioProducer?.paused) {
-                audioProducer?.resume();
-              } else {
-                audioProducer?.pause();
+              if (audioProducer) {
+                if (audioProducer.paused) {
+                  audioProducer.resume();
+                } else {
+                  audioProducer.pause();
+                }
+                toggleMic(audioProducer.paused);
               }
-              toggleMic(!!audioProducer?.paused);
             }}>
             <Ionicons
               name={isMicOff ? 'mic-off' : 'mic'}
@@ -139,14 +155,7 @@ export const BottomMedia = (props: BottomMediaProps) => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    rowGap: 16,
-    width: WIDTH,
-    height: HEIGHT,
-    paddingHorizontal: 20,
-  },
-  cameraCnt: {
+  cameraCtn: {
     flex: 1,
     borderRadius: 8,
     overflow: 'hidden',
@@ -159,8 +168,6 @@ const styles = StyleSheet.create({
   bottomMediaControls: {
     flexDirection: 'row',
     columnGap: 12,
-    width: WIDTH,
-    alignSelf: 'center',
     backgroundColor: '#0009',
     padding: 20,
   },

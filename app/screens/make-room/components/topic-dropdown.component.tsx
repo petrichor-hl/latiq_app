@@ -115,9 +115,6 @@ export const TopicDropdown = (props: TopicDropdownProps) => {
         style={styles.topicImageWrapper}
         onPress={async () => {
           menuRef.current?.open();
-          if (topics === null) {
-            setTopics(await TopicService.getListTopic(false));
-          }
         }}>
         {selectedTopic ? (
           <FastImage
