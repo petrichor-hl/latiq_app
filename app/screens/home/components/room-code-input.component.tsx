@@ -51,7 +51,7 @@ export const RoomCodeInput = () => {
       showLoading();
       Keyboard.dismiss();
       try {
-        const roomInfo = await RoomService.getRoomInfo({ roomId: code }, false);
+        const roomInfo = await RoomService.getRoomInfo(code, false);
         setTimeout(async () => {
           hideLoading();
           push<WaitingRoomScreenProps>(WaitingRoomScreen, { roomInfo });

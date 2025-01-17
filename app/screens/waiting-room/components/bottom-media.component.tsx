@@ -28,7 +28,7 @@ export const BottomMedia = (props: BottomMediaProps) => {
 
   const insets = useSafeAreaInsets();
   const { connection } = zustandSignalR();
-  const { socket, audioProducer, videoProducer } = zustandMediaSoup();
+  const { audioProducer, videoProducer } = zustandMediaSoup();
   const [isMicOff, toggleMic] = useState(false);
   const [isCameraOff, toggleCamera] = useState(false);
 

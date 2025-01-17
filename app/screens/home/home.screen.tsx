@@ -6,7 +6,6 @@ import {
   Text,
   View,
   KeyboardAvoidingView,
-  Platform,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { SvgXml } from 'react-native-svg';
@@ -26,10 +25,6 @@ import {
   MakeRoomScreen,
   MakeRoomScreenProps,
 } from '../make-room/make-room.screen';
-import {
-  GamePlayScreen,
-  GamePlayScreenProps,
-} from '../game-play/game-play.screen';
 import { HEIGHT, WIDTH } from '../../base/constants/size-screen';
 
 export interface HomeScreenProps {}
@@ -98,9 +93,9 @@ export const HomeScreen = () => {
       <SlideIn style={styles.expandWidth} delay={1000}>
         <TouchableOpacity
           activeOpacity={0.5}
-          onPress={() => push<GamePlayScreenProps>(GamePlayScreen)}
+          // onPress={() => push<GamePlayScreenProps>(GamePlayScreen)}
           style={[styles.appBtn, { backgroundColor: ColorPalette.rose[600] }]}>
-          <Text style={styles.btnTitle}>TEST PAINT</Text>
+          <Text style={styles.btnTitle}>HỒ SƠ</Text>
         </TouchableOpacity>
       </SlideIn>
     </ImageBackground>

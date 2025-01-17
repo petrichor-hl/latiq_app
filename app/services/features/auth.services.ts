@@ -123,7 +123,7 @@ export const AuthService = {
   ): Promise<boolean> => {
     try {
       const response = await ApiClient<JwtToken, JwtToken>({
-        endpoint: Endpoints.Account.GENERATE_NEW_JWT_TOKEN,
+        endpoint: Endpoints.Account.REFRESH_TOKEN,
         method: 'post',
         data: payload,
         loading: isShowLoading,

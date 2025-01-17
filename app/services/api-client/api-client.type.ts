@@ -5,3 +5,14 @@ export interface ApiRequest<ReqType> {
   loading?: boolean;
   timeout?: number;
 }
+
+export interface ApiResult<T> {
+  succeeded: boolean;
+  result: T;
+  errors: ApiResultError[];
+}
+
+interface ApiResultError {
+  code: string;
+  message: string;
+}

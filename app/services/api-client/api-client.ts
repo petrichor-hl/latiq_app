@@ -3,7 +3,7 @@ import { zustandAuth } from '../../zustand/auth.zustand';
 import { hideLoading, showLoading } from '../../zustand/loading.zustand';
 import { zustandGlobalModal } from '../../zustand/modal.zustand';
 import { api, createHeader } from './api-client.helper';
-import { ApiRequest } from './api-client.type';
+import { ApiRequest, ApiResult } from './api-client.type';
 import { Endpoints } from '../../base/constants/endpoints';
 import { JwtToken } from '../../base/model/jwt-token';
 import { CLIENT_ERROR, SERVER_ERROR, TIMEOUT_ERROR } from 'apisauce';
@@ -33,23 +33,23 @@ export const ApiClient = <ReqType, ResType>(request: ApiRequest<ReqType>) => {
         U là kiểu của lỗi (error) hoặc thông tin phụ, mặc định giống với T nếu bạn không chỉ định.
         Ex: await api.post<TokenResponse, ErrorResponse>('/api/token', data);
         */
-      const response = await api[method]<ResType>(endpoint, data, {
+      const response = await api[method]<ApiResult<ResType>>(endpoint, data, {
         headers: createHeader(),
       });
 
       // ok - Boolean - True if the status code is in the 200's; false otherwise.
       if (response.ok && response.data) {
         console.log(`${nameUrlLog} - ✅`);
-        return resolve(response.data);
+        return resolve(response.data.result);
       }
 
       // CLIENT_ERROR
       if (response.problem === CLIENT_ERROR) {
         if (
-          endpoint === Endpoints.Account.GENERATE_NEW_JWT_TOKEN &&
+          endpoint === Endpoints.Account.REFRESH_TOKEN &&
           response.status === 400
         ) {
-          console.log(`${nameUrlLog} - GENERATE_NEW_JWT_TOKEN - ❌`);
+          console.log(`${nameUrlLog} - REFRESH_TOKEN - ❌`);
           zustandGlobalModal.getState().show({
             title: '- THÔNG BÁO -',
             content: `Phiên đăng nhập hết hạn.\ncode: ${response.status}`,
@@ -80,7 +80,7 @@ export const ApiClient = <ReqType, ResType>(request: ApiRequest<ReqType>) => {
         if (response.status === 401) {
           try {
             const responseNewToken = await ApiClient<JwtToken, JwtToken>({
-              endpoint: Endpoints.Account.GENERATE_NEW_JWT_TOKEN,
+              endpoint: Endpoints.Account.REFRESH_TOKEN,
               method: 'post',
               data: {
                 accessToken: zustandAuth.getState().accessToken,
@@ -95,12 +95,14 @@ export const ApiClient = <ReqType, ResType>(request: ApiRequest<ReqType>) => {
           } catch {
             console.log('ERORR: UNAUTHORIZED - GENERATE_NEW_JWT_TOKEN FAIL');
           }
-        } else {
+        }
+
+        if (response.status === 404) {
           console.log(`${nameUrlLog} - CLIENT_ERROR - ❌`);
           zustandGlobalModal.getState().show({
             title: '- THÔNG BÁO -',
             content:
-              `${response.data}\ncode ${response.status}` ||
+              `${response.data?.errors[0].message}\n${response.data?.errors[0].code}` ||
               `${response.status} - Yêu cầu lỗi`,
             buttons: [
               {

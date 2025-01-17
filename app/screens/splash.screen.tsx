@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
+import React from 'react';
+import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import { ColorPalette } from '../base/constants/color-palette';
 import { useDidMount } from 'rooks';
 import { zustandAuth } from '../zustand/auth.zustand';

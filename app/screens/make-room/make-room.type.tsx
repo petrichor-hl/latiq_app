@@ -12,7 +12,3 @@ export interface Room {
   capacity: number;
   isPublic: boolean;
 }
-
-export interface PayloadGetRoomInfo {
-  roomId: string;
-}

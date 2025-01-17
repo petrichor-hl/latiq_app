@@ -20,22 +20,9 @@ import { Stack } from '../../base/types/stack';
 import { zustandSignalR } from '../../zustand/signal-r.zustand';
 import Slider from '@react-native-community/slider';
 import { goBack } from '../../navigation/navation.config';
-import { io } from 'socket.io-client';
-import { SFU_SERVER_URL, VIDEO_PARAMS } from '../../configs/sfu-sever.config';
-import {
-  mediaDevices,
-  MediaStream,
-  MediaStreamTrack,
-} from 'react-native-webrtc';
-import {
-  Device,
-  InvalidStateError,
-  Producer,
-  RtpCapabilities,
-  Transport,
-  TransportOptions,
-} from 'mediasoup-client/lib/types';
-import * as mediasoupClient from 'mediasoup-client';
+import { zustandAuth } from '../../zustand/auth.zustand';
+import { zustandUser } from '../../zustand/user.zustand';
+import { CameraStatus } from '../waiting-room/waiting-room.type';
 
 export interface GamePlayScreenProps {}
 
@@ -50,15 +37,6 @@ interface Path {
   points: Point[];
 }
 
-const socket = io(SFU_SERVER_URL + '/mediasoup');
-let device: Device;
-let audioTrack: MediaStreamTrack;
-let videoTrack: MediaStreamTrack;
-
-let producerTransport: Transport;
-let audioProducer: Producer;
-let videoProducer: Producer;
-
 export const GamePlayScreen = (_props: GamePlayScreenProps) => {
   const insets = useSafeAreaInsets();
   const activeOpacity = useSharedValue<number>(1);
@@ -68,138 +46,14 @@ export const GamePlayScreen = (_props: GamePlayScreenProps) => {
   const lineWidthRef = useRef(3.5);
 
   const pathStack = useRef(new Stack<Path>());
-  const { connection, isConnected } = zustandSignalR();
-
-  const streamSuccess = (stream: MediaStream) => {
-    audioTrack = stream.getAudioTracks()[0];
-    videoTrack = stream.getVideoTracks()[0];
-    joinRoom();
-  };
-
-  const joinRoom = () => {
-    socket.emit(
-      'joinRoom',
-      { roomName: '1234' },
-      (serverRouterRtpCapabilities: RtpCapabilities) => {
-        createDevice(serverRouterRtpCapabilities);
-      },
-    );
-  };
-
-  const createDevice = async (serverRouterRtpCapabilities: RtpCapabilities) => {
-    try {
-      device = new mediasoupClient.Device();
-      await device.load({
-        routerRtpCapabilities: serverRouterRtpCapabilities,
-      });
-      // createReceiveTransport();
-      createSendTransport();
-    } catch (error: any) {
-      if (error instanceof InvalidStateError) {
-        console.warn('InvalidStateError occurred');
-      } else if (error instanceof TypeError) {
-        console.warn('TypeError occurred');
-      } else {
-        console.warn('An unknown error occurred');
-      }
-    }
-  };
-
-  const createSendTransport = () => {
-    // see server's socket.on('createWebRtcTransport', sender?, ...)
-    // this is a call from Producer, so sender = true
-    socket.emit(
-      'createWebRtcTransport',
-      { consumer: false },
-      (params: TransportOptions) => {
-        // The server sends back params needed
-        // to create Send Transport on the client side
-        producerTransport = device.createSendTransport(params);
-
-        // https://mediasoup.org/documentation/v3/communication-between-client-and-server/#producing-media
-        // this event is raised when a first call to transport.produce() is made
-        // see connectSendTransport() below
-        producerTransport.on(
-          'connect',
-          async ({ dtlsParameters }, callback, errback) => {
-            try {
-              socket.emit(
-                'transport-connect',
-                {
-                  dtlsParameters,
-                },
-                (isAlreadyMembers: boolean) => {
-                  if (isAlreadyMembers) {
-                    // getProducers();
-                  }
-                },
-              );
-
-              // Tell the transport that parameters were transmitted.
-              callback();
-            } catch (error: any) {
-              errback(error);
-            }
-          },
-        );
-
-        producerTransport.on(
-          'produce',
-          async (parameters, callback, errback) => {
-            try {
-              socket.emit(
-                'transport-produce',
-                {
-                  kind: parameters.kind,
-                  rtpParameters: parameters.rtpParameters,
-                },
-                (newProducerId: string) => {
-                  callback({ id: newProducerId });
-                },
-              );
-            } catch (error: any) {
-              errback(error);
-            }
-          },
-        );
-
-        connectSendTransport();
-      },
-    );
-  };
-
-  const connectSendTransport = async () => {
-    audioProducer = await producerTransport.produce({ track: audioTrack });
-    videoProducer = await producerTransport.produce({
-      track: videoTrack,
-      ...VIDEO_PARAMS,
-    });
-  };
+  const { connection, isConnected, initializeConnection, stopConnection } =
+    zustandSignalR();
 
   useEffect(() => {
-    socket.on('connection-success', ({ socketId }) => {
-      console.log('socketId = ' + socketId);
-
-      mediaDevices
-        .getUserMedia({
-          audio: true,
-          video: true,
-        })
-        .then(streamSuccess)
-        .catch(error => {
-          console.log(error.message);
-        });
-    });
-
-    return () => {
-      console.log('socket disconnect');
-      socket.disconnect();
-    };
-  }, []);
-
-  useDidMount(async () => {
-    if (connection && isConnected) {
-      connection.on(
+    if (!isConnected) {
+      initializeConnection(zustandAuth.getState().accessToken);
+    } else {
+      connection?.on(
         'BeginPath',
         (lineColor: string, lineWidth: number, point: Point) => {
           const ctx = canvasRef.current?.getContext('2d');
@@ -208,17 +62,30 @@ export const GamePlayScreen = (_props: GamePlayScreenProps) => {
           }
         },
       );
-      connection.on('LineTo', (point: Point) => {
+      connection?.on('LineTo', (point: Point) => {
         const ctx = canvasRef.current?.getContext('2d');
         if (ctx) {
           draw(ctx, point.x, point.y);
         }
       });
-      connection.on('Undo', () => {
+      connection?.on('Undo', () => {
         undoDraw();
       });
+      connection?.invoke('JoinRoom', {
+        userEmail: zustandUser.getState().user.email,
+        userAvatar: zustandUser.getState().user.avatar,
+        cameraStatus: CameraStatus.Off,
+        roomId: 'test-pain',
+      });
     }
-  });
+
+    return () => {
+      if (isConnected) {
+        // Đệm 1s cho giao diện render mượt hơn
+        setTimeout(() => stopConnection(), 1000);
+      }
+    };
+  }, [isConnected]);
 
   useDidMount(() => {
     const canvas = canvasRef.current;
@@ -281,7 +148,7 @@ export const GamePlayScreen = (_props: GamePlayScreenProps) => {
         },
       }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [strokeColor],
+    [strokeColor, isConnected],
   );
 
   const beginPath = (

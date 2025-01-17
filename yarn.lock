@@ -2406,9 +2406,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@react-native-clipboard/clipboard@npm:^1.14.2":
-  version: 1.14.2
-  resolution: "@react-native-clipboard/clipboard@npm:1.14.2"
+"@react-native-clipboard/clipboard@npm:^1.16.1":
+  version: 1.16.1
+  resolution: "@react-native-clipboard/clipboard@npm:1.16.1"
   peerDependencies:
     react: ">= 16.9.0"
     react-native: ">= 0.61.5"
@@ -2419,7 +2419,7 @@ __metadata:
       optional: true
     react-native-windows:
       optional: true
-  checksum: a14c7de784f78c360b41fc723221d1091ccf59dc12ff5dcadf11c7fe078ae081afa1b95f2fe3cf0d4fcd25bc0e2a04cc56fb85aff8437de19cb2eba7d95362df
+  checksum: 90aafcc62594b08362cfeab48b0bb3e4229e0d7b2be28b0b38d8ffb562e0d4c242aceced23b5644b2b11e519461bc8e8c8d0ec920ee594b130a4c17c63a66f20
   languageName: node
   linkType: hard
 
@@ -7541,7 +7541,7 @@ __metadata:
     "@dicebear/core": ^9.2.2
     "@hookform/resolvers": ^3.9.0
     "@microsoft/signalr": ^8.0.7
-    "@react-native-clipboard/clipboard": ^1.14.2
+    "@react-native-clipboard/clipboard": ^1.16.1
     "@react-native-community/blur": ^4.4.1
     "@react-native-community/slider": ^4.5.3
     "@react-native/babel-preset": 0.75.4

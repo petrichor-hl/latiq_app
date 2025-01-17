@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   modalContextTxt: {
-    fontSize: 15,
+    fontSize: 16,
     textAlign: 'center',
   },
   actionBtn: {

@@ -8,7 +8,7 @@ export const Endpoints = {
   Account: {
     REGISTER: '/Account/register',
     LOGIN: '/Account/login',
-    GENERATE_NEW_JWT_TOKEN: '/Account/generate-new-jwt-token',
+    REFRESH_TOKEN: '/Account/refresh-token',
     LOGOUT: '/Account/logout',
   },
   User: {
@@ -17,7 +17,7 @@ export const Endpoints = {
   },
   Room: {
     MAKE_ROOM: '/Room/make-room',
-    GET_ROOM: '/Room',
+    GET_ROOM: '/Room/{roomCode}',
   },
   Topic: {
     GET_LIST_TOPIC: '/Topic',
