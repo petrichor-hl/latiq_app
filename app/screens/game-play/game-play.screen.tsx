@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   View,
   StyleSheet,
@@ -17,7 +17,6 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { useDrawController } from './controllers/draw.controller';
 import { useCountdownController } from './controllers/countdown.controller';
 import { HEIGHT, WIDTH } from '../../base/constants/size-screen';
-import { zustandRoom } from '../../zustand/room.zustand';
 import { SvgXml } from 'react-native-svg';
 import { avatarCollectionsList } from '../pick-avatar/pick-avatar.constants';
 import { useAnswerController } from './controllers/answer.controller';
@@ -27,6 +26,8 @@ import { AnswerItem } from './components/answer-item.component';
 export interface GamePlayScreenProps {}
 
 export const GamePlayScreen = (_props: GamePlayScreenProps) => {
+  const [isShowTextInput, setShowTextInput] = useState(false);
+
   const {
     values: { countdown, scale },
   } = useCountdownController();
@@ -35,15 +36,13 @@ export const GamePlayScreen = (_props: GamePlayScreenProps) => {
     refs: { canvasRef },
     values: { isDrawer, word, drawerNickName, panResponder, remainingTime },
     actions: { clearPaint, setStrokeColor },
-  } = useDrawController();
+  } = useDrawController({ setShowTextInput });
 
   const {
     refs: { textInputRef },
-    values: { answerList },
+    values: { usersInRoom, answerList },
     actions: { handleAnswer },
-  } = useAnswerController({ remainingTime });
-
-  const { usersInRoom } = zustandRoom();
+  } = useAnswerController({ remainingTime, setShowTextInput });
 
   const insets = useSafeAreaInsets();
 
@@ -150,7 +149,7 @@ export const GamePlayScreen = (_props: GamePlayScreenProps) => {
               <AnswerItem key={faker.string.uuid()} answerItem={answerItem} />
             ))}
           </ScrollView>
-          {!isDrawer && (
+          {isShowTextInput && (
             <TextInput
               ref={textInputRef}
               placeholder="Answer here ..."

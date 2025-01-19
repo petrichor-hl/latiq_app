@@ -14,7 +14,12 @@ interface Point {
   y: number;
 }
 
-export const useDrawController = () => {
+interface DrawControllerProps {
+  setShowTextInput: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+export const useDrawController = (props: DrawControllerProps) => {
+  const { setShowTextInput } = props;
   const { connection } = zustandSignalR();
 
   const canvasRef = useRef<Canvas | null>(null);
@@ -55,8 +60,10 @@ export const useDrawController = () => {
         if (userId === zustandUser.getState().user.id) {
           setDrawer(true);
           setWord(keyword);
+          setShowTextInput(false);
         } else {
           setDrawerNickName(userNickName);
+          setShowTextInput(true);
         }
         startProgress();
       },

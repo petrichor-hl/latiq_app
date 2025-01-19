@@ -4,6 +4,8 @@ import { useDidMount } from 'rooks';
 import { SharedValue } from 'react-native-reanimated';
 import { TextInput } from 'react-native';
 import { zustandRoom } from '../../../zustand/room.zustand';
+import { playSound } from '../../../base/helpers/sound.helper';
+import { EnumSoundName } from '../../../base/constants/sound-name';
 
 export interface IAnswerItem {
   userNickName: string;
@@ -13,20 +15,19 @@ export interface IAnswerItem {
 
 interface AnswerControllerProps {
   remainingTime: SharedValue<number>;
+  setShowTextInput: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const useAnswerController = (props: AnswerControllerProps) => {
-  const { remainingTime } = props;
+  const { remainingTime, setShowTextInput } = props;
 
   const { connection } = zustandSignalR();
-  const { plusPoint } = zustandRoom.getState();
+  const { usersInRoom, plusPoint } = zustandRoom();
 
   const [answerList, setAnswerList] = useState<IAnswerItem[]>([]);
   const textInputRef = useRef<TextInput>(null);
 
   const handleAnswer = (answer: string) => {
-    console.log(answer);
-    console.log(remainingTime.value);
     textInputRef.current?.clear();
     connection?.invoke('Answer', answer, Math.floor(remainingTime.value));
   };
@@ -35,6 +36,8 @@ export const useAnswerController = (props: AnswerControllerProps) => {
     connection?.on(
       'CorrectAnswer',
       (userId: string, userNickName: string, point: number) => {
+        playSound(EnumSoundName.CorrectAnswer);
+
         setAnswerList(prev =>
           prev.concat({
             userNickName,
@@ -44,6 +47,8 @@ export const useAnswerController = (props: AnswerControllerProps) => {
         );
 
         plusPoint(userId, point);
+
+        setShowTextInput(false);
       },
     );
 
@@ -66,6 +71,7 @@ export const useAnswerController = (props: AnswerControllerProps) => {
       textInputRef,
     },
     values: {
+      usersInRoom,
       answerList,
     },
     actions: {

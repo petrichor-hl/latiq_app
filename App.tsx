@@ -16,6 +16,7 @@ import 'react-native-url-polyfill/auto';
 import { CodePushContainer } from './app/codepush/code-push-container.component';
 import { registerGlobals } from 'react-native-webrtc';
 import FlashMessage from 'react-native-flash-message';
+import { loadSounds } from './app/base/helpers/sound.helper';
 
 registerGlobals();
 
@@ -38,6 +39,8 @@ const App = (): React.JSX.Element => {
     Platform.OS === 'android' &&
       StatusBar.setBackgroundColor(ColorPalette.transparent);
     StatusBar.setBarStyle('light-content');
+
+    loadSounds();
   }, []);
 
   const Stack = createNativeStackNavigator();
