@@ -31,7 +31,7 @@ interface TopicDropdownProps {
     {
       topicId: string;
       capacity: number;
-      round: number;
+      points: number;
       isPublic: boolean;
     },
     any

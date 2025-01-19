@@ -27,9 +27,10 @@ export const zustandSignalR = create<SignalRState & SignalRAction>()(
         .withUrl(`${BASE_URL}/global-hub`, {
           accessTokenFactory: () => accessToken,
         })
-        .withAutomaticReconnect()
-        .configureLogging(LogLevel.Information)
+        .configureLogging(LogLevel.None)
         .build();
+
+      console.log(connection.baseUrl);
 
       set({ connection });
 

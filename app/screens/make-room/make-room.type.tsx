@@ -8,7 +8,7 @@ export interface Room {
   roomId: string;
   ownerId: string;
   topic: Topic;
-  round: number;
+  points: number;
   capacity: number;
   isPublic: boolean;
 }

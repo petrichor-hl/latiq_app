@@ -1933,6 +1933,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@faker-js/faker@npm:^9.4.0":
+  version: 9.4.0
+  resolution: "@faker-js/faker@npm:9.4.0"
+  checksum: 9f24bc100ff18fa3e698f2e3d71a13f1a50ae5cec8c7e0a0db5a1dd412a5030a22d14c76a7fa11677a68b0569a082cf421dfdfe3aa694d1bcd551de8fbbfd747
+  languageName: node
+  linkType: hard
+
 "@hapi/hoek@npm:^9.0.0, @hapi/hoek@npm:^9.3.0":
   version: 9.3.0
   resolution: "@hapi/hoek@npm:9.3.0"
@@ -7539,6 +7546,7 @@ __metadata:
     "@babel/runtime": ^7.20.0
     "@dicebear/collection": ^9.2.2
     "@dicebear/core": ^9.2.2
+    "@faker-js/faker": ^9.4.0
     "@hookform/resolvers": ^3.9.0
     "@microsoft/signalr": ^8.0.7
     "@react-native-clipboard/clipboard": ^1.16.1

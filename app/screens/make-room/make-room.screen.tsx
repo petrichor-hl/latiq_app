@@ -23,11 +23,14 @@ import {
   WaitingRoomScreen,
   WaitingRoomScreenProps,
 } from '../waiting-room/waiting-room.screen';
+import { zustandRoom } from '../../zustand/room.zustand';
+import { hideLoading, showLoading } from '../../zustand/loading.zustand';
 
 export interface MakeRoomScreenProps {}
 
 export const MakeRoomScreen = (_props: MakeRoomScreenProps) => {
   const insets = useSafeAreaInsets();
+  const { setRoomInfo } = zustandRoom.getState();
 
   const {
     control,
@@ -42,8 +45,13 @@ export const MakeRoomScreen = (_props: MakeRoomScreenProps) => {
   });
 
   const onSubmit = async (makeRoomForm: MakeRoomForm) => {
-    const newRoomInfo = await RoomService.makeRoom(makeRoomForm);
-    push<WaitingRoomScreenProps>(WaitingRoomScreen, { roomInfo: newRoomInfo });
+    showLoading();
+    const newRoomInfo = await RoomService.makeRoom(makeRoomForm, false);
+    setRoomInfo(newRoomInfo);
+    setTimeout(async () => {
+      hideLoading();
+      push<WaitingRoomScreenProps>(WaitingRoomScreen);
+    }, 500);
   };
 
   return (
@@ -69,9 +77,9 @@ export const MakeRoomScreen = (_props: MakeRoomScreenProps) => {
       />
 
       <AppTextInput
-        name="round"
+        name="points"
         control={control}
-        placeHoder="số vòng chơi"
+        placeHoder="số điểm tối đa"
         keyboardType="number-pad"
         // error={errors.password}
       />

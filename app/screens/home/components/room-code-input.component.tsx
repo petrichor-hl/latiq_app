@@ -22,9 +22,11 @@ import {
   WaitingRoomScreenProps,
 } from '../../waiting-room/waiting-room.screen';
 import { hideLoading, showLoading } from '../../../zustand/loading.zustand';
+import { zustandRoom } from '../../../zustand/room.zustand';
 
 export const RoomCodeInput = () => {
   const [code, setCode] = useState('');
+  const { setRoomInfo } = zustandRoom.getState();
 
   const borderColorAnim = useSharedValue<number>(0); // Giá trị khởi tạo cho border width
 
@@ -52,9 +54,10 @@ export const RoomCodeInput = () => {
       Keyboard.dismiss();
       try {
         const roomInfo = await RoomService.getRoomInfo(code, false);
+        setRoomInfo(roomInfo);
         setTimeout(async () => {
           hideLoading();
-          push<WaitingRoomScreenProps>(WaitingRoomScreen, { roomInfo });
+          push<WaitingRoomScreenProps>(WaitingRoomScreen);
         }, 500);
       } catch (error) {
         hideLoading();

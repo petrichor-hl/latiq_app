@@ -1,10 +1,12 @@
 export interface IUserInRoom {
-  userEmail: string;
+  userId: string;
+  userNickName: string;
   userAvatar: string;
-  cameraStatus: CameraStatus;
+  userPoints: number;
+  // cameraStatus: CameraStatus;
 }
 
-export enum CameraStatus {
-  On = 'On',
-  Off = 'Off',
-}
+// export enum CameraStatus {
+//   On = 'On',
+//   Off = 'Off',
+// }

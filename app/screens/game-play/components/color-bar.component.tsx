@@ -6,7 +6,7 @@ interface ColorBarProps {
   onColorPressed: (color: string) => void;
 }
 
-const colors = ['black', 'red', 'green', 'blue', 'purple'];
+const colors = ['black', 'red', 'green', 'blue', 'purple', 'orange'];
 
 export const ColorBar = forwardRef<View, ColorBarProps>((props, ref) => {
   const { style, onColorPressed } = props;

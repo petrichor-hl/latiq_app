@@ -4,16 +4,16 @@ import { ColorPalette } from '../../../base/constants/color-palette';
 
 interface RoomInfoProps {
   topicName: string;
-  round: number;
+  points: number;
 }
 
 export const RoomInfo = (props: RoomInfoProps) => {
-  const { topicName, round } = props;
+  const { topicName, points } = props;
 
   return (
     <View style={styles.container}>
       <Text style={styles.infoTxt}>{`Chủ đề: ${topicName}`}</Text>
-      <Text style={styles.infoTxt}>{`Round: ${round}`}</Text>
+      <Text style={styles.infoTxt}>{`Points: ${points}`}</Text>
     </View>
   );
 };
