@@ -128,6 +128,7 @@ export const useWaitingRoomSignalR = (_props: WaitingRoomSignalRProps) => {
         // }
       }
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isConnected]);
 
   const handleStartGame = () => {

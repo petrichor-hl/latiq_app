@@ -1,11 +1,12 @@
 import { useRef, useState } from 'react';
 import { zustandSignalR } from '../../../zustand/signal-r.zustand';
-import { useDidMount } from 'rooks';
+import { useDidMount, useWillUnmount } from 'rooks';
 import { SharedValue } from 'react-native-reanimated';
 import { TextInput } from 'react-native';
 import { zustandRoom } from '../../../zustand/room.zustand';
 import { playSound } from '../../../base/helpers/sound.helper';
 import { EnumSoundName } from '../../../base/constants/sound-name';
+import { zustandUser } from '../../../zustand/user.zustand';
 
 export interface IAnswerItem {
   userNickName: string;
@@ -22,7 +23,8 @@ export const useAnswerController = (props: AnswerControllerProps) => {
   const { remainingTime, setShowTextInput } = props;
 
   const { connection } = zustandSignalR();
-  const { usersInRoom, plusPoint } = zustandRoom();
+  const { plusPoint } = zustandRoom.getState();
+  const { user } = zustandUser.getState();
 
   const [answerList, setAnswerList] = useState<IAnswerItem[]>([]);
   const textInputRef = useRef<TextInput>(null);
@@ -48,7 +50,9 @@ export const useAnswerController = (props: AnswerControllerProps) => {
 
         plusPoint(userId, point);
 
-        setShowTextInput(false);
+        if (userId === user.id) {
+          setShowTextInput(false);
+        }
       },
     );
 
@@ -66,12 +70,16 @@ export const useAnswerController = (props: AnswerControllerProps) => {
     );
   });
 
+  useWillUnmount(() => {
+    connection?.off('CorrectAnswer');
+    connection?.off('IncorrectAnswer');
+  });
+
   return {
     refs: {
       textInputRef,
     },
     values: {
-      usersInRoom,
       answerList,
     },
     actions: {

@@ -17,11 +17,10 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { useDrawController } from './controllers/draw.controller';
 import { useCountdownController } from './controllers/countdown.controller';
 import { HEIGHT, WIDTH } from '../../base/constants/size-screen';
-import { SvgXml } from 'react-native-svg';
-import { avatarCollectionsList } from '../pick-avatar/pick-avatar.constants';
 import { useAnswerController } from './controllers/answer.controller';
 import { faker } from '@faker-js/faker';
 import { AnswerItem } from './components/answer-item.component';
+import { Rankings } from './components/rankings.component';
 
 export interface GamePlayScreenProps {}
 
@@ -40,7 +39,7 @@ export const GamePlayScreen = (_props: GamePlayScreenProps) => {
 
   const {
     refs: { textInputRef },
-    values: { usersInRoom, answerList },
+    values: { answerList },
     actions: { handleAnswer },
   } = useAnswerController({ remainingTime, setShowTextInput });
 
@@ -108,41 +107,7 @@ export const GamePlayScreen = (_props: GamePlayScreenProps) => {
       </View>
 
       <View style={{ flexDirection: 'row', flex: 1 }}>
-        <ScrollView
-          contentContainerStyle={{ padding: 6, rowGap: 6 }}
-          style={{ maxWidth: 150 }}>
-          {usersInRoom.map(user => {
-            const [collectionNumber, seedNumber] = user.userAvatar
-              .split('-')
-              .map(e => Number(e));
-            return (
-              <View
-                key={user.userId}
-                style={{
-                  flexDirection: 'row',
-                  padding: 8,
-                  backgroundColor: ColorPalette.primary,
-                  borderRadius: 6,
-                  columnGap: 8,
-                }}>
-                <SvgXml
-                  xml={
-                    avatarCollectionsList[collectionNumber].avatarXml(40)[
-                      seedNumber
-                    ]
-                  }
-                />
-                <View>
-                  <Text>{user.userNickName}</Text>
-                  <Text
-                    style={{
-                      fontWeight: 'bold',
-                    }}>{`${user.userPoints} điểm`}</Text>
-                </View>
-              </View>
-            );
-          })}
-        </ScrollView>
+        <Rankings />
         <View style={styles.answerListCtn}>
           <ScrollView>
             {answerList.map(answerItem => (

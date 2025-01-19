@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react';
 import { PanResponder } from 'react-native';
 import Canvas, { CanvasRenderingContext2D } from 'react-native-canvas';
-import { useDidMount } from 'rooks';
+import { useDidMount, useWillUnmount } from 'rooks';
 import { ColorPalette } from '../../../base/constants/color-palette';
 import { WIDTH } from '../../../base/constants/size-screen';
 import { zustandSignalR } from '../../../zustand/signal-r.zustand';
@@ -68,6 +68,13 @@ export const useDrawController = (props: DrawControllerProps) => {
         startProgress();
       },
     );
+  });
+
+  useWillUnmount(() => {
+    connection?.off('BeginPath');
+    connection?.off('LineTo');
+    connection?.off('ClearPaint');
+    connection?.off('SelectDrawer');
   });
 
   useDidMount(() => {
