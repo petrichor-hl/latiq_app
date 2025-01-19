@@ -1,17 +1,27 @@
 import { useRef, useState } from 'react';
-import { PanResponder } from 'react-native';
+import { PanResponder, TextInput } from 'react-native';
 import Canvas, { CanvasRenderingContext2D } from 'react-native-canvas';
 import { useDidMount, useWillUnmount } from 'rooks';
 import { ColorPalette } from '../../../base/constants/color-palette';
 import { WIDTH } from '../../../base/constants/size-screen';
 import { zustandSignalR } from '../../../zustand/signal-r.zustand';
-import {} from '../../../zustand/auth.zustand';
 import { zustandUser } from '../../../zustand/user.zustand';
 import { useSharedValue, withTiming } from 'react-native-reanimated';
+import { zustandRoom } from '../../../zustand/room.zustand';
+import { playSound } from '../../../base/helpers/sound.helper';
+import { EnumSoundName } from '../../../base/constants/sound-name';
+import { showMessage } from 'react-native-flash-message';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 interface Point {
   x: number;
   y: number;
+}
+
+interface IAnswerItem {
+  userNickName: string;
+  content: string;
+  isCorrect: boolean;
 }
 
 interface DrawControllerProps {
@@ -20,17 +30,25 @@ interface DrawControllerProps {
 
 export const useDrawController = (props: DrawControllerProps) => {
   const { setShowTextInput } = props;
-  const { connection } = zustandSignalR();
+  const { connection, stopConnection } = zustandSignalR.getState();
+  const { setUsersInRoom, plusPoint } = zustandRoom.getState();
 
   const canvasRef = useRef<Canvas | null>(null);
   const [strokeColor, setStrokeColor] = useState(ColorPalette.black);
   const lineWidthRef = useRef(3.5);
 
-  const [isDrawer, setDrawer] = useState(false);
-  const [word, setWord] = useState('');
+  const drawerIdRef = useRef('');
   const [drawerNickName, setDrawerNickName] = useState('');
+  const [word, setWord] = useState('');
 
   const remainingTime = useSharedValue(25); // 100%
+
+  const { user } = zustandUser.getState();
+
+  const [answerList, setAnswerList] = useState<IAnswerItem[]>([]);
+  const textInputRef = useRef<TextInput>(null);
+
+  const safeTop = useSafeAreaInsets().top;
 
   useDidMount(() => {
     connection?.on(
@@ -57,8 +75,8 @@ export const useDrawController = (props: DrawControllerProps) => {
     connection?.on(
       'SelectDrawer',
       (userId: string, userNickName: string, keyword: string) => {
+        drawerIdRef.current = userId;
         if (userId === zustandUser.getState().user.id) {
-          setDrawer(true);
           setWord(keyword);
           setShowTextInput(false);
         } else {
@@ -68,6 +86,59 @@ export const useDrawController = (props: DrawControllerProps) => {
         startProgress();
       },
     );
+
+    connection?.on(
+      'CorrectAnswer',
+      (userId: string, userNickName: string, point: number) => {
+        playSound(EnumSoundName.CorrectAnswer);
+
+        setAnswerList(prev =>
+          prev.concat({
+            userNickName,
+            content: 'đã trả lời đúng',
+            isCorrect: true,
+          }),
+        );
+
+        plusPoint(userId, point);
+        plusPoint(drawerIdRef.current, point);
+
+        if (userId === user.id) {
+          setShowTextInput(false);
+        }
+      },
+    );
+
+    connection?.on(
+      'IncorrectAnswer',
+      (userNickName: string, answer: string) => {
+        setAnswerList(prev =>
+          prev.concat({
+            userNickName,
+            content: answer,
+            isCorrect: false,
+          }),
+        );
+      },
+    );
+
+    connection?.on('LeaveRoom', (userId: string, userNickName: string) => {
+      setUsersInRoom(
+        zustandRoom
+          .getState()
+          .usersInRoom.filter(userInRoom => userInRoom.userId !== userId),
+      );
+
+      showMessage({
+        message: `${userNickName} đã rời khỏi phòng`,
+        position: 'top',
+        statusBarHeight: safeTop,
+        duration: 2000,
+        backgroundColor: ColorPalette.primary,
+        style: { alignItems: 'center' },
+        titleStyle: { fontSize: 16 },
+      });
+    });
   });
 
   useWillUnmount(() => {
@@ -75,6 +146,13 @@ export const useDrawController = (props: DrawControllerProps) => {
     connection?.off('LineTo');
     connection?.off('ClearPaint');
     connection?.off('SelectDrawer');
+
+    connection?.off('CorrectAnswer');
+    connection?.off('IncorrectAnswer');
+
+    connection?.off('LeaveRoom');
+
+    stopConnection();
   });
 
   useDidMount(() => {
@@ -91,40 +169,46 @@ export const useDrawController = (props: DrawControllerProps) => {
     }
   });
 
-  const panResponder = isDrawer
-    ? PanResponder.create({
-        onStartShouldSetPanResponder: () => true,
-        // Callback này được kích hoạt ngay khi người dùng bắt đầu chạm vào màn hình
-        onPanResponderStart: () => {},
-        // Callback này được kích hoạt ngay sau khi hệ thống quyết định rằng thao tác cảm ứng này sẽ được cấp quyền cho PanResponder
-        onPanResponderGrant: evt => {
-          const { locationX, locationY } = evt.nativeEvent;
-          const ctx = canvasRef.current?.getContext('2d');
-          if (ctx) {
-            connection?.invoke('BeginPath', strokeColor, lineWidthRef.current, {
-              x: locationX,
-              y: locationY,
-            });
-            beginPath(
-              ctx,
-              strokeColor,
-              lineWidthRef.current,
-              locationX,
-              locationY,
-            );
-          }
-        },
-        onPanResponderMove: evt => {
-          const { locationX, locationY } = evt.nativeEvent;
-          const ctx = canvasRef.current?.getContext('2d');
-          if (ctx) {
-            connection?.invoke('LineTo', { x: locationX, y: locationY });
-            draw(ctx, locationX, locationY);
-          }
-        },
-        onPanResponderRelease: () => {},
-      })
-    : undefined;
+  const panResponder =
+    drawerIdRef.current === zustandUser.getState().user.id
+      ? PanResponder.create({
+          onStartShouldSetPanResponder: () => true,
+          // Callback này được kích hoạt ngay khi người dùng bắt đầu chạm vào màn hình
+          onPanResponderStart: () => {},
+          // Callback này được kích hoạt ngay sau khi hệ thống quyết định rằng thao tác cảm ứng này sẽ được cấp quyền cho PanResponder
+          onPanResponderGrant: evt => {
+            const { locationX, locationY } = evt.nativeEvent;
+            const ctx = canvasRef.current?.getContext('2d');
+            if (ctx) {
+              connection?.invoke(
+                'BeginPath',
+                strokeColor,
+                lineWidthRef.current,
+                {
+                  x: locationX,
+                  y: locationY,
+                },
+              );
+              beginPath(
+                ctx,
+                strokeColor,
+                lineWidthRef.current,
+                locationX,
+                locationY,
+              );
+            }
+          },
+          onPanResponderMove: evt => {
+            const { locationX, locationY } = evt.nativeEvent;
+            const ctx = canvasRef.current?.getContext('2d');
+            if (ctx) {
+              connection?.invoke('LineTo', { x: locationX, y: locationY });
+              draw(ctx, locationX, locationY);
+            }
+          },
+          onPanResponderRelease: () => {},
+        })
+      : undefined;
 
   const beginPath = (
     ctx: CanvasRenderingContext2D,
@@ -137,12 +221,6 @@ export const useDrawController = (props: DrawControllerProps) => {
     ctx.moveTo(locationX, locationY);
     ctx.strokeStyle = lineColor;
     ctx.lineWidth = lineWidth;
-
-    // pathStack.current.push({
-    //   color: lineColor,
-    //   lineWidth: lineWidth,
-    //   points: [{ x: locationX, y: locationY }],
-    // });
   };
 
   const draw = (
@@ -152,7 +230,6 @@ export const useDrawController = (props: DrawControllerProps) => {
   ) => {
     ctx.lineTo(locationX, locationY);
     ctx.stroke();
-    // pathStack.current.peek()?.points.push({ x: locationX, y: locationY });
   };
 
   const clearPaint = () => {
@@ -168,16 +245,22 @@ export const useDrawController = (props: DrawControllerProps) => {
     remainingTime.value = withTiming(0, { duration: 25000 }); // Bắt đầu giảm về 0
   };
 
+  const handleAnswer = (answer: string) => {
+    textInputRef.current?.clear();
+    connection?.invoke('Answer', answer, Math.floor(remainingTime.value));
+  };
+
   return {
     refs: {
       canvasRef,
+      textInputRef,
     },
     values: {
-      isDrawer,
-      word,
+      isDrawer: drawerIdRef.current === zustandUser.getState().user.id,
       drawerNickName,
+      word,
+      answerList,
       panResponder,
-      strokeColor,
       remainingTime,
     },
     actions: {
@@ -186,6 +269,7 @@ export const useDrawController = (props: DrawControllerProps) => {
         clearPaint();
         connection?.invoke('ClearPaint');
       },
+      handleAnswer,
     },
   };
 };

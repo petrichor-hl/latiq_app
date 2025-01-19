@@ -17,7 +17,7 @@ export const Rankings = () => {
     <Animated.FlatList
       data={sortedUsers}
       keyExtractor={item => item.userId}
-      contentContainerStyle={{ padding: 6, rowGap: 6 }}
+      contentContainerStyle={{ padding: 6 }}
       itemLayoutAnimation={LinearTransition}
       style={{ maxWidth: 150 }}
       renderItem={({ item }) => {
@@ -32,6 +32,7 @@ export const Rankings = () => {
               padding: 6,
               backgroundColor: ColorPalette.primary,
               borderRadius: 6,
+              marginBottom: 6,
               columnGap: 8,
             }}>
             <SvgXml

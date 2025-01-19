@@ -17,7 +17,6 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { useDrawController } from './controllers/draw.controller';
 import { useCountdownController } from './controllers/countdown.controller';
 import { HEIGHT, WIDTH } from '../../base/constants/size-screen';
-import { useAnswerController } from './controllers/answer.controller';
 import { faker } from '@faker-js/faker';
 import { AnswerItem } from './components/answer-item.component';
 import { Rankings } from './components/rankings.component';
@@ -32,23 +31,22 @@ export const GamePlayScreen = (_props: GamePlayScreenProps) => {
   } = useCountdownController();
 
   const {
-    refs: { canvasRef },
-    values: { isDrawer, word, drawerNickName, panResponder, remainingTime },
-    actions: { clearPaint, setStrokeColor },
+    refs: { canvasRef, textInputRef },
+    values: {
+      drawerNickName,
+      word,
+      isDrawer,
+      answerList,
+      panResponder,
+      remainingTime,
+    },
+    actions: { clearPaint, setStrokeColor, handleAnswer },
   } = useDrawController({ setShowTextInput });
-
-  const {
-    refs: { textInputRef },
-    values: { answerList },
-    actions: { handleAnswer },
-  } = useAnswerController({ remainingTime, setShowTextInput });
 
   const insets = useSafeAreaInsets();
 
   const progressAnimatedStyle = useAnimatedStyle(() => ({
     width: `${(remainingTime.value / 25) * 100}%`,
-    backgroundColor:
-      remainingTime.value <= 10 ? ColorPalette.rose[600] : ColorPalette.primary,
   }));
 
   return (

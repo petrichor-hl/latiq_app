@@ -7,7 +7,7 @@ import { zustandRoom } from '../../../zustand/room.zustand';
 import { showMessage } from 'react-native-flash-message';
 import { ColorPalette } from '../../../base/constants/color-palette';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { push } from '../../../navigation/navation.config';
+import { navigate } from '../../../navigation/navation.config';
 import {
   GamePlayScreen,
   GamePlayScreenProps,
@@ -20,8 +20,7 @@ interface WaitingRoomSignalRProps {
 export const useWaitingRoomSignalR = (_props: WaitingRoomSignalRProps) => {
   // const { getLocalSteam } = props;
 
-  const { connection, isConnected, initializeConnection, stopConnection } =
-    zustandSignalR();
+  const { connection, isConnected, initializeConnection } = zustandSignalR();
 
   const { user } = zustandUser.getState();
 
@@ -85,7 +84,7 @@ export const useWaitingRoomSignalR = (_props: WaitingRoomSignalRProps) => {
       });
 
       connection?.on('StartGame', () => {
-        push<GamePlayScreenProps>(GamePlayScreen);
+        navigate<GamePlayScreenProps>(GamePlayScreen);
       });
 
       // connection?.on(
@@ -103,8 +102,8 @@ export const useWaitingRoomSignalR = (_props: WaitingRoomSignalRProps) => {
         userId: user.id,
         userNickName: user.nickName,
         userAvatar: user.avatar,
-        // cameraStatus: CameraStatus.On,
         roomId: roomInfo.roomId,
+        // cameraStatus: CameraStatus.On,
       });
 
       // Đệm 500ms cho giao diện render mượt hơn
@@ -113,11 +112,14 @@ export const useWaitingRoomSignalR = (_props: WaitingRoomSignalRProps) => {
 
     return () => {
       if (isConnected) {
-        stopConnection();
+        connection?.off('JoinRoom');
+        connection?.off('LeaveRoom');
+        connection?.off('NewRoomOwner');
+        connection?.off('ReceiveUserInRooms');
+        connection?.off('StartGame');
 
         // Đệm 1s cho giao diện render mượt hơn
         // setTimeout(() => stopConnection(), 1000);
-
         // if (timeoutRef.current) {
         //   /* Nếu trong vòng 500ms trước khi getLocalSteam mà người dùng thoát khỏi màn hình này
         //    * thì phải clear Timeout

@@ -2,10 +2,11 @@ import Clipboard from '@react-native-clipboard/clipboard';
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { ColorPalette } from '../../../base/constants/color-palette';
-import { pop } from '../../../navigation/navation.config';
+import { goBack } from '../../../navigation/navation.config';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { showMessage } from 'react-native-flash-message';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { zustandSignalR } from '../../../zustand/signal-r.zustand';
 
 interface RoomHeaderProps {
   roomCode: string;
@@ -13,7 +14,11 @@ interface RoomHeaderProps {
 
 export const RoomHeader = (props: RoomHeaderProps) => {
   const { roomCode } = props;
+
+  const { stopConnection } = zustandSignalR.getState();
+
   const safeTop = useSafeAreaInsets().top;
+
   const copyToClipboard = () => {
     Clipboard.setString(roomCode);
     showMessage({
@@ -29,7 +34,12 @@ export const RoomHeader = (props: RoomHeaderProps) => {
 
   return (
     <View style={styles.headerRow}>
-      <TouchableOpacity onPress={() => pop(2)} style={styles.backBtn}>
+      <TouchableOpacity
+        onPress={() => {
+          stopConnection();
+          goBack();
+        }}
+        style={styles.backBtn}>
         <Ionicons name="arrow-undo" size={44} color={ColorPalette.primary} />
       </TouchableOpacity>
       <View style={{ alignItems: 'center' }}>
