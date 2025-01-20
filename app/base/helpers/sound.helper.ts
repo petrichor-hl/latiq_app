@@ -9,6 +9,8 @@ type SoundMap = {
 // Biến lưu trữ tất cả các âm thanh đã được tải
 const soundMap: SoundMap = {};
 
+Sound.setCategory('Playback');
+
 // Hàm load tất cả các file âm thanh
 export const loadSounds = (): void => {
   Object.values(EnumSoundName).forEach(soundName => {

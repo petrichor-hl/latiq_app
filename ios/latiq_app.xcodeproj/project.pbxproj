@@ -13,6 +13,7 @@
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		4461F95C636DE59A7BE20879 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 5FB7A6D63E1E3FDA78E1268A /* PrivacyInfo.xcprivacy */; };
+		566ECE5C2D3E62EA005C03C1 /* correct_answer.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 566ECE5B2D3E62EA005C03C1 /* correct_answer.mp3 */; };
 		56D1AAF42CB2F488004644AE /* button_click.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 56D1AAF32CB2F488004644AE /* button_click.mp3 */; };
 		7699B88040F8A987B510C191 /* libPods-latiq_app-latiq_appTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 19F6CBCC0A4E27FBF8BF4A61 /* libPods-latiq_app-latiq_appTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
@@ -41,6 +42,7 @@
 		13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = PrivacyInfo.xcprivacy; path = latiq_app/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		19F6CBCC0A4E27FBF8BF4A61 /* libPods-latiq_app-latiq_appTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-latiq_app-latiq_appTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3B4392A12AC88292D35C810B /* Pods-latiq_app.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-latiq_app.debug.xcconfig"; path = "Target Support Files/Pods-latiq_app/Pods-latiq_app.debug.xcconfig"; sourceTree = "<group>"; };
+		566ECE5B2D3E62EA005C03C1 /* correct_answer.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = correct_answer.mp3; sourceTree = "<group>"; };
 		56D1AAF32CB2F488004644AE /* button_click.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = button_click.mp3; sourceTree = "<group>"; };
 		5709B34CF0A7D63546082F79 /* Pods-latiq_app.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-latiq_app.release.xcconfig"; path = "Target Support Files/Pods-latiq_app/Pods-latiq_app.release.xcconfig"; sourceTree = "<group>"; };
 		5B7EB9410499542E8C5724F5 /* Pods-latiq_app-latiq_appTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-latiq_app-latiq_appTests.debug.xcconfig"; path = "Target Support Files/Pods-latiq_app-latiq_appTests/Pods-latiq_app-latiq_appTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -123,6 +125,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				566ECE5B2D3E62EA005C03C1 /* correct_answer.mp3 */,
 				56D1AAF32CB2F488004644AE /* button_click.mp3 */,
 				13B07FAE1A68108700A75B9A /* latiq_app */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
@@ -250,6 +253,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
+				566ECE5C2D3E62EA005C03C1 /* correct_answer.mp3 in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				4461F95C636DE59A7BE20879 /* PrivacyInfo.xcprivacy in Resources */,
 				56D1AAF42CB2F488004644AE /* button_click.mp3 in Resources */,
@@ -596,10 +600,7 @@
 					"-DFOLLY_CFG_NO_COROUTINES=1",
 					"-DFOLLY_HAVE_CLOCK_GETTIME=1",
 				);
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					" ",
-				);
+				OTHER_LDFLAGS = "$(inherited)  ";
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) DEBUG";
@@ -672,10 +673,7 @@
 					"-DFOLLY_CFG_NO_COROUTINES=1",
 					"-DFOLLY_HAVE_CLOCK_GETTIME=1",
 				);
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					" ",
-				);
+				OTHER_LDFLAGS = "$(inherited)  ";
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				USE_HERMES = true;
