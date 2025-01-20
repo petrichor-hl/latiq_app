@@ -20,6 +20,7 @@ import { HEIGHT, WIDTH } from '../../base/constants/size-screen';
 import { faker } from '@faker-js/faker';
 import { AnswerItem } from './components/answer-item.component';
 import { Rankings } from './components/rankings.component';
+import { useBackHandlerController } from './controllers/back-handler.controller';
 
 export interface GamePlayScreenProps {}
 
@@ -27,6 +28,8 @@ export const GamePlayScreen = (_props: GamePlayScreenProps) => {
   const {
     values: { countdown, scale },
   } = useCountdownController();
+
+  useBackHandlerController();
 
   const {
     refs: { canvasRef, textInputRef },
