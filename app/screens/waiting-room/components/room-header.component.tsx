@@ -14,8 +14,7 @@ interface RoomHeaderProps {
 
 export const RoomHeader = (props: RoomHeaderProps) => {
   const { roomCode } = props;
-
-  const { stopConnection } = zustandSignalR.getState();
+  const { connection } = zustandSignalR.getState();
 
   const safeTop = useSafeAreaInsets().top;
 
@@ -36,7 +35,7 @@ export const RoomHeader = (props: RoomHeaderProps) => {
     <View style={styles.headerRow}>
       <TouchableOpacity
         onPress={() => {
-          stopConnection();
+          connection?.invoke('LeaveRoom');
           goBack();
         }}
         style={styles.backBtn}>

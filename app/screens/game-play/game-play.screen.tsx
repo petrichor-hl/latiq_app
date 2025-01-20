@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   View,
   StyleSheet,
@@ -24,8 +24,6 @@ import { Rankings } from './components/rankings.component';
 export interface GamePlayScreenProps {}
 
 export const GamePlayScreen = (_props: GamePlayScreenProps) => {
-  const [isShowTextInput, setShowTextInput] = useState(false);
-
   const {
     values: { countdown, scale },
   } = useCountdownController();
@@ -39,9 +37,10 @@ export const GamePlayScreen = (_props: GamePlayScreenProps) => {
       answerList,
       panResponder,
       remainingTime,
+      isShowTextInput,
     },
     actions: { clearPaint, setStrokeColor, handleAnswer },
-  } = useDrawController({ setShowTextInput });
+  } = useDrawController();
 
   const insets = useSafeAreaInsets();
 

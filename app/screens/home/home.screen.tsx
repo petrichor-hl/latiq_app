@@ -26,6 +26,9 @@ import {
   MakeRoomScreenProps,
 } from '../make-room/make-room.screen';
 import { HEIGHT, WIDTH } from '../../base/constants/size-screen';
+import { zustandSignalR } from '../../zustand/signal-r.zustand';
+import { useDidMount } from 'rooks';
+import { zustandAuth } from '../../zustand/auth.zustand';
 
 export interface HomeScreenProps {}
 
@@ -36,6 +39,12 @@ export const HomeScreen = () => {
   const [collectionNumber, seedNumber] = user.avatar
     .split('-')
     .map(e => Number(e));
+
+  const { initializeConnection } = zustandSignalR.getState();
+
+  useDidMount(() => {
+    initializeConnection(zustandAuth.getState().accessToken);
+  });
 
   return (
     <ImageBackground

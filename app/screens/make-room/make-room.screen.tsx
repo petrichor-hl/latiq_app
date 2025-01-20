@@ -12,7 +12,7 @@ import { ColorPalette } from '../../base/constants/color-palette';
 import { HEIGHT, WIDTH } from '../../base/constants/size-screen';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { goBack, push } from '../../navigation/navation.config';
+import { goBack, navigate } from '../../navigation/navation.config';
 import { MakeRoomForm, makeRoomSchema } from './make-room.form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Controller, useForm } from 'react-hook-form';
@@ -50,7 +50,7 @@ export const MakeRoomScreen = (_props: MakeRoomScreenProps) => {
     setRoomInfo(newRoomInfo);
     setTimeout(async () => {
       hideLoading();
-      push<WaitingRoomScreenProps>(WaitingRoomScreen);
+      navigate<WaitingRoomScreenProps>(WaitingRoomScreen);
     }, 500);
   };
 

@@ -24,13 +24,9 @@ interface IAnswerItem {
   isCorrect: boolean;
 }
 
-interface DrawControllerProps {
-  setShowTextInput: React.Dispatch<React.SetStateAction<boolean>>;
-}
-
-export const useDrawController = (props: DrawControllerProps) => {
-  const { setShowTextInput } = props;
-  const { connection, stopConnection } = zustandSignalR.getState();
+export const useDrawController = () => {
+  const [isShowTextInput, setShowTextInput] = useState(false);
+  const { connection } = zustandSignalR.getState();
   const { setUsersInRoom, plusPoint } = zustandRoom.getState();
 
   const canvasRef = useRef<Canvas | null>(null);
@@ -142,6 +138,8 @@ export const useDrawController = (props: DrawControllerProps) => {
   });
 
   useWillUnmount(() => {
+    connection?.invoke('LeaveRoom');
+
     connection?.off('BeginPath');
     connection?.off('LineTo');
     connection?.off('ClearPaint');
@@ -151,8 +149,6 @@ export const useDrawController = (props: DrawControllerProps) => {
     connection?.off('IncorrectAnswer');
 
     connection?.off('LeaveRoom');
-
-    stopConnection();
   });
 
   useDidMount(() => {
@@ -262,6 +258,7 @@ export const useDrawController = (props: DrawControllerProps) => {
       answerList,
       panResponder,
       remainingTime,
+      isShowTextInput,
     },
     actions: {
       setStrokeColor,
