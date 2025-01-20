@@ -11,7 +11,11 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Canvas from 'react-native-canvas';
 import { ColorPalette } from '../../base/constants/color-palette';
 import { ColorBar } from './components/color-bar.component';
-import Animated, { useAnimatedStyle } from 'react-native-reanimated';
+import Animated, {
+  FadeIn,
+  FadeOut,
+  useAnimatedStyle,
+} from 'react-native-reanimated';
 import { Spacer } from '../../base/components/spacer.component';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { useGamePlayController } from './controllers/game-play.controller';
@@ -21,6 +25,8 @@ import { faker } from '@faker-js/faker';
 import { AnswerItem } from './components/answer-item.component';
 import { Rankings } from './components/rankings.component';
 import { useBackHandlerController } from './controllers/back-handler.controller';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import LottieView from 'lottie-react-native';
 
 export interface GamePlayScreenProps {}
 
@@ -32,7 +38,7 @@ export const GamePlayScreen = (_props: GamePlayScreenProps) => {
   useBackHandlerController();
 
   const {
-    refs: { canvasRef, textInputRef },
+    refs: { canvasRef, textInputRef, fireworkRef, tickRef },
     values: {
       drawerNickName,
       word,
@@ -41,6 +47,7 @@ export const GamePlayScreen = (_props: GamePlayScreenProps) => {
       panResponder,
       remainingTime,
       isShowTextInput,
+      isShowFirework,
     },
     actions: { clearPaint, setStrokeColor, handleAnswer },
   } = useGamePlayController();
@@ -114,7 +121,7 @@ export const GamePlayScreen = (_props: GamePlayScreenProps) => {
               <AnswerItem key={faker.string.uuid()} answerItem={answerItem} />
             ))}
           </ScrollView>
-          {isShowTextInput && (
+          {isShowTextInput ? (
             <TextInput
               ref={textInputRef}
               placeholder="Answer here ..."
@@ -122,15 +129,50 @@ export const GamePlayScreen = (_props: GamePlayScreenProps) => {
               onSubmitEditing={e => handleAnswer(e.nativeEvent.text)}
               style={styles.answerTextInput}
             />
+          ) : (
+            !isDrawer && (
+              <View style={styles.answerCorrectCtn}>
+                <FontAwesome5
+                  name="check-circle"
+                  size={24}
+                  color={ColorPalette.green[500]}
+                  solid
+                />
+              </View>
+            )
           )}
         </View>
       </View>
 
-      {countdown > 0 && (
+      {isShowFirework && (
         <Animated.View
-          style={[styles.countdownContainer, { transform: [{ scale }] }]}>
-          <Text style={styles.countdownText}>{countdown}</Text>
+          entering={FadeIn}
+          exiting={FadeOut}
+          style={styles.fireworkContainer}>
+          <LottieView
+            style={styles.tickStyle}
+            resizeMode="cover"
+            ref={tickRef}
+            source={require('../../assets/lottie/green-tick.lottie')}
+            loop={false}
+          />
+          <LottieView
+            style={{ width: WIDTH, height: HEIGHT }}
+            resizeMode="cover"
+            ref={fireworkRef}
+            source={require('../../assets/lottie/firework-0.lottie')}
+            loop={false}
+          />
         </Animated.View>
+      )}
+
+      {countdown > 0 && (
+        <View style={[styles.countdownContainer]}>
+          <Animated.Text
+            style={[styles.countdownText, { transform: [{ scale }] }]}>
+            {countdown}
+          </Animated.Text>
+        </View>
       )}
     </View>
   );
@@ -157,6 +199,19 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#000000AA',
+  },
+  fireworkContainer: {
+    position: 'absolute',
+    width: WIDTH,
+    height: HEIGHT,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#00000055',
+  },
+  tickStyle: {
+    position: 'absolute',
+    width: 240,
+    height: 240,
   },
   countdownText: {
     fontSize: 120,
@@ -195,5 +250,14 @@ const styles = StyleSheet.create({
     color: ColorPalette.white,
     fontSize: 18,
     fontWeight: '500',
+  },
+  answerCorrectCtn: {
+    height: 48,
+    borderWidth: 2,
+    borderColor: ColorPalette.green[500],
+    borderRadius: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF22',
   },
 });

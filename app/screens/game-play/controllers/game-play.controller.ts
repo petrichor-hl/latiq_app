@@ -17,6 +17,7 @@ import {
   GameResultScreen,
   GameResultScreenProps,
 } from '../../game-result/game-result.screen';
+import LottieView from 'lottie-react-native';
 
 interface Point {
   x: number;
@@ -50,6 +51,10 @@ export const useGamePlayController = () => {
   const textInputRef = useRef<TextInput>(null);
 
   const safeTop = useSafeAreaInsets().top;
+
+  const fireworkRef = useRef<LottieView>(null);
+  const tickRef = useRef<LottieView>(null);
+  const [isShowFirework, setShowFirework] = useState(false);
 
   useDidMount(() => {
     connection?.on(
@@ -106,6 +111,7 @@ export const useGamePlayController = () => {
 
         if (userId === user.id) {
           setShowTextInput(false);
+          showFireworkAnimation();
         }
       },
     );
@@ -144,8 +150,6 @@ export const useGamePlayController = () => {
   });
 
   useWillUnmount(() => {
-    connection?.invoke('LeaveRoom');
-
     connection?.off('BeginPath');
     connection?.off('LineTo');
     connection?.off('ClearPaint');
@@ -155,6 +159,8 @@ export const useGamePlayController = () => {
     connection?.off('IncorrectAnswer');
 
     connection?.off('LeaveRoom');
+
+    connection?.invoke('LeaveRoom');
   });
 
   useDidMount(() => {
@@ -252,10 +258,19 @@ export const useGamePlayController = () => {
     connection?.invoke('SendAnswer', answer, Math.floor(remainingTime.value));
   };
 
+  const showFireworkAnimation = () => {
+    setShowFirework(true);
+    fireworkRef.current?.play();
+    tickRef.current?.play();
+    setTimeout(() => setShowFirework(false), 2500);
+  };
+
   return {
     refs: {
       canvasRef,
       textInputRef,
+      fireworkRef,
+      tickRef,
     },
     values: {
       isDrawer: drawerIdRef.current === zustandUser.getState().user.id,
@@ -265,6 +280,7 @@ export const useGamePlayController = () => {
       panResponder,
       remainingTime,
       isShowTextInput,
+      isShowFirework,
     },
     actions: {
       setStrokeColor,
