@@ -12,6 +12,11 @@ import { playSound } from '../../../base/helpers/sound.helper';
 import { EnumSoundName } from '../../../base/constants/sound-name';
 import { showMessage } from 'react-native-flash-message';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { navigate } from '../../../navigation/navation.config';
+import {
+  GameResultScreen,
+  GameResultScreenProps,
+} from '../../game-result/game-result.screen';
 
 interface Point {
   x: number;
@@ -24,7 +29,7 @@ interface IAnswerItem {
   isCorrect: boolean;
 }
 
-export const useDrawController = () => {
+export const useGamePlayController = () => {
   const [isShowTextInput, setShowTextInput] = useState(false);
   const { connection } = zustandSignalR.getState();
   const { setUsersInRoom, plusPoint } = zustandRoom.getState();
@@ -69,7 +74,7 @@ export const useDrawController = () => {
     });
 
     connection?.on(
-      'SelectDrawer',
+      'StartNewTurn',
       (userId: string, userNickName: string, keyword: string) => {
         drawerIdRef.current = userId;
         if (userId === zustandUser.getState().user.id) {
@@ -84,7 +89,7 @@ export const useDrawController = () => {
     );
 
     connection?.on(
-      'CorrectAnswer',
+      'AnsweredCorrectly',
       (userId: string, userNickName: string, point: number) => {
         playSound(EnumSoundName.CorrectAnswer);
 
@@ -105,18 +110,15 @@ export const useDrawController = () => {
       },
     );
 
-    connection?.on(
-      'IncorrectAnswer',
-      (userNickName: string, answer: string) => {
-        setAnswerList(prev =>
-          prev.concat({
-            userNickName,
-            content: answer,
-            isCorrect: false,
-          }),
-        );
-      },
-    );
+    connection?.on('AnsweredWrong', (userNickName: string, answer: string) => {
+      setAnswerList(prev =>
+        prev.concat({
+          userNickName,
+          content: answer,
+          isCorrect: false,
+        }),
+      );
+    });
 
     connection?.on('LeaveRoom', (userId: string, userNickName: string) => {
       setUsersInRoom(
@@ -134,6 +136,10 @@ export const useDrawController = () => {
         style: { alignItems: 'center' },
         titleStyle: { fontSize: 16 },
       });
+    });
+
+    connection?.on('EndGame', () => {
+      navigate<GameResultScreenProps>(GameResultScreen);
     });
   });
 
@@ -243,7 +249,7 @@ export const useDrawController = () => {
 
   const handleAnswer = (answer: string) => {
     textInputRef.current?.clear();
-    connection?.invoke('Answer', answer, Math.floor(remainingTime.value));
+    connection?.invoke('SendAnswer', answer, Math.floor(remainingTime.value));
   };
 
   return {

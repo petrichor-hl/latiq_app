@@ -96,7 +96,7 @@ export const HomeScreen = () => {
           activeOpacity={0.5}
           onPress={() => {}}
           style={[styles.appBtn, { backgroundColor: ColorPalette.secondary }]}>
-          <Text style={styles.btnTitle}>PHÒNG SẴN CÓ</Text>
+          <Text style={styles.btnTitle}>DANH SÁCH BẠN BÈ</Text>
         </TouchableOpacity>
       </SlideIn>
       <SlideIn style={styles.expandWidth} delay={1000}>

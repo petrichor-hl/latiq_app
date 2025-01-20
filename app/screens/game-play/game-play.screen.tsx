@@ -14,7 +14,7 @@ import { ColorBar } from './components/color-bar.component';
 import Animated, { useAnimatedStyle } from 'react-native-reanimated';
 import { Spacer } from '../../base/components/spacer.component';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import { useDrawController } from './controllers/draw.controller';
+import { useGamePlayController } from './controllers/game-play.controller';
 import { useCountdownController } from './controllers/countdown.controller';
 import { HEIGHT, WIDTH } from '../../base/constants/size-screen';
 import { faker } from '@faker-js/faker';
@@ -43,7 +43,7 @@ export const GamePlayScreen = (_props: GamePlayScreenProps) => {
       isShowTextInput,
     },
     actions: { clearPaint, setStrokeColor, handleAnswer },
-  } = useDrawController();
+  } = useGamePlayController();
 
   const insets = useSafeAreaInsets();
 
