@@ -132,7 +132,7 @@ export const GamePlayScreen = (_props: GamePlayScreenProps) => {
             <LottieView
               style={{ width: 240, height: 240 }}
               resizeMode="cover"
-              source={require('../../assets/lottie/travel.lottie')}
+              source={require('../../assets/lottie/travel.json')}
               autoPlay
               loop
             />
@@ -197,14 +197,14 @@ export const GamePlayScreen = (_props: GamePlayScreenProps) => {
             style={styles.tickStyle}
             resizeMode="cover"
             ref={tickRef}
-            source={require('../../assets/lottie/green-tick.lottie')}
+            source={require('../../assets/lottie/green-tick.json')}
             loop={false}
           />
           <LottieView
             style={{ width: WIDTH, height: HEIGHT }}
             resizeMode="cover"
             ref={fireworkRef}
-            source={require('../../assets/lottie/firework-0.lottie')}
+            source={require('../../assets/lottie/firework-0.json')}
             loop={false}
           />
         </Animated.View>
