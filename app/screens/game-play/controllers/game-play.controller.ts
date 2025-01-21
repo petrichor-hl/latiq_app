@@ -57,6 +57,7 @@ export const useGamePlayController = () => {
   const [isShowFirework, setShowFirework] = useState(false);
 
   const [isShowAnswer, setShowAnswer] = useState(false);
+  const countRef = useRef(0);
 
   useDidMount(() => {
     connection?.on(
@@ -130,6 +131,7 @@ export const useGamePlayController = () => {
     });
 
     connection?.on('ShowAnswer', (correactAnswer: string) => {
+      countRef.current++;
       clearPaint();
 
       setWord(correactAnswer);
@@ -303,6 +305,7 @@ export const useGamePlayController = () => {
       isShowTextInput,
       isShowFirework,
       isShowAnswer,
+      isEven: countRef.current % 2 === 0,
     },
     actions: {
       setStrokeColor,

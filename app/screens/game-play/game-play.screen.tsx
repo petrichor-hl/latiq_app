@@ -49,6 +49,7 @@ export const GamePlayScreen = (_props: GamePlayScreenProps) => {
       isShowTextInput,
       isShowFirework,
       isShowAnswer,
+      isEven,
     },
     actions: { clearPaint, setStrokeColor, handleAnswer },
   } = useGamePlayController();
@@ -130,9 +131,13 @@ export const GamePlayScreen = (_props: GamePlayScreenProps) => {
               alignItems: 'center',
             }}>
             <LottieView
-              style={{ width: 240, height: 240 }}
+              style={{ width: isEven ? 240 : 200, height: isEven ? 240 : 200 }}
               resizeMode="cover"
-              source={require('../../assets/lottie/travel.json')}
+              source={
+                isEven
+                  ? require('../../assets/lottie/travel.json')
+                  : require('../../assets/lottie/donkey.json')
+              }
               autoPlay
               loop
             />
@@ -141,7 +146,7 @@ export const GamePlayScreen = (_props: GamePlayScreenProps) => {
                 fontSize: 15,
                 fontWeight: '500',
                 color: ColorPalette.black,
-                top: -10,
+                top: isEven ? -10 : 5,
               }}>{`Đáp án:`}</Text>
 
             <Text
@@ -149,7 +154,7 @@ export const GamePlayScreen = (_props: GamePlayScreenProps) => {
                 fontSize: 18,
                 fontWeight: 'bold',
                 color: ColorPalette.green[600],
-                top: -10,
+                top: isEven ? -10 : 5,
               }}>
               {word}
             </Text>
