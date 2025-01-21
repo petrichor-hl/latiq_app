@@ -45,9 +45,10 @@ export const GamePlayScreen = (_props: GamePlayScreenProps) => {
       isDrawer,
       answerList,
       panResponder,
-      remainingTime,
+      progressTime,
       isShowTextInput,
       isShowFirework,
+      isShowAnswer,
     },
     actions: { clearPaint, setStrokeColor, handleAnswer },
   } = useGamePlayController();
@@ -55,7 +56,7 @@ export const GamePlayScreen = (_props: GamePlayScreenProps) => {
   const insets = useSafeAreaInsets();
 
   const progressAnimatedStyle = useAnimatedStyle(() => ({
-    width: `${(remainingTime.value / 25) * 100}%`,
+    width: `${progressTime.value}%`,
   }));
 
   return (
@@ -64,29 +65,34 @@ export const GamePlayScreen = (_props: GamePlayScreenProps) => {
         styles.container,
         { paddingTop: insets.top, paddingBottom: insets.bottom },
       ]}>
-      <View {...panResponder?.panHandlers}>
-        <Canvas
-          ref={canvasRef}
-          style={{ backgroundColor: ColorPalette.white }}
-        />
+      <View
+        {...panResponder?.panHandlers}
+        style={{
+          backgroundColor: ColorPalette.white,
+          width: WIDTH,
+          height: WIDTH,
+        }}>
+        <Canvas ref={canvasRef} />
 
-        <View style={styles.topControlsCtn}>
-          {isDrawer ? (
-            <React.Fragment>
-              <ColorBar onColorPressed={color => setStrokeColor(color)} />
-              <Spacer />
-              <TouchableOpacity onPress={clearPaint}>
-                <MaterialIcons
-                  name="cleaning-services"
-                  size={32}
-                  color={ColorPalette.black}
-                />
-              </TouchableOpacity>
-            </React.Fragment>
-          ) : (
-            <Text style={styles.drawer}>{`Người vẽ: ${drawerNickName}`}</Text>
-          )}
-        </View>
+        {!isShowAnswer && (
+          <View style={styles.topControlsCtn}>
+            {isDrawer ? (
+              <React.Fragment>
+                <ColorBar onColorPressed={color => setStrokeColor(color)} />
+                <Spacer />
+                <TouchableOpacity onPress={clearPaint}>
+                  <MaterialIcons
+                    name="cleaning-services"
+                    size={32}
+                    color={ColorPalette.black}
+                  />
+                </TouchableOpacity>
+              </React.Fragment>
+            ) : (
+              <Text style={styles.drawer}>{`Người vẽ: ${drawerNickName}`}</Text>
+            )}
+          </View>
+        )}
 
         <View
           style={{
@@ -97,7 +103,7 @@ export const GamePlayScreen = (_props: GamePlayScreenProps) => {
             marginHorizontal: 8,
             rowGap: 4,
           }}>
-          {isDrawer && (
+          {isDrawer && !isShowAnswer && (
             <TouchableOpacity>
               <Text>
                 Từ khoá:{' '}
@@ -111,6 +117,44 @@ export const GamePlayScreen = (_props: GamePlayScreenProps) => {
             <Animated.View style={[styles.progress, progressAnimatedStyle]} />
           </View>
         </View>
+
+        {isShowAnswer && (
+          <Animated.View
+            entering={FadeIn}
+            exiting={FadeOut}
+            style={{
+              position: 'absolute',
+              width: WIDTH,
+              height: WIDTH,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            <LottieView
+              style={{ width: 240, height: 240 }}
+              resizeMode="cover"
+              source={require('../../assets/lottie/travel.lottie')}
+              autoPlay
+              loop
+            />
+            <Text
+              style={{
+                fontSize: 15,
+                fontWeight: '500',
+                color: ColorPalette.black,
+                top: -10,
+              }}>{`Đáp án:`}</Text>
+
+            <Text
+              style={{
+                fontSize: 18,
+                fontWeight: 'bold',
+                color: ColorPalette.green[600],
+                top: -10,
+              }}>
+              {word}
+            </Text>
+          </Animated.View>
+        )}
       </View>
 
       <View style={{ flexDirection: 'row', flex: 1 }}>

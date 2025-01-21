@@ -43,7 +43,7 @@ export const useGamePlayController = () => {
   const [drawerNickName, setDrawerNickName] = useState('');
   const [word, setWord] = useState('');
 
-  const remainingTime = useSharedValue(25); // 100%
+  const progressTime = useSharedValue(100); // 100%
 
   const { user } = zustandUser.getState();
 
@@ -55,6 +55,8 @@ export const useGamePlayController = () => {
   const fireworkRef = useRef<LottieView>(null);
   const tickRef = useRef<LottieView>(null);
   const [isShowFirework, setShowFirework] = useState(false);
+
+  const [isShowAnswer, setShowAnswer] = useState(false);
 
   useDidMount(() => {
     connection?.on(
@@ -82,6 +84,7 @@ export const useGamePlayController = () => {
       'StartNewTurn',
       (userId: string, userNickName: string, keyword: string) => {
         drawerIdRef.current = userId;
+        setShowAnswer(false);
         if (userId === zustandUser.getState().user.id) {
           setWord(keyword);
           setShowTextInput(false);
@@ -89,7 +92,7 @@ export const useGamePlayController = () => {
           setDrawerNickName(userNickName);
           setShowTextInput(true);
         }
-        startProgress();
+        startProgress(25);
       },
     );
 
@@ -126,6 +129,15 @@ export const useGamePlayController = () => {
       );
     });
 
+    connection?.on('ShowAnswer', (correactAnswer: string) => {
+      clearPaint();
+
+      setWord(correactAnswer);
+      setShowAnswer(true);
+
+      startProgress(5);
+    });
+
     connection?.on('LeaveRoom', (userId: string, userNickName: string) => {
       setUsersInRoom(
         zustandRoom
@@ -150,15 +162,16 @@ export const useGamePlayController = () => {
   });
 
   useWillUnmount(() => {
+    connection?.off('LeaveRoom');
+
+    connection?.off('SelectDrawer');
     connection?.off('BeginPath');
     connection?.off('LineTo');
     connection?.off('ClearPaint');
-    connection?.off('SelectDrawer');
 
     connection?.off('CorrectAnswer');
     connection?.off('IncorrectAnswer');
-
-    connection?.off('LeaveRoom');
+    connection?.off('ShowAnswer');
 
     connection?.invoke('LeaveRoom');
   });
@@ -178,7 +191,7 @@ export const useGamePlayController = () => {
   });
 
   const panResponder =
-    drawerIdRef.current === zustandUser.getState().user.id
+    drawerIdRef.current === zustandUser.getState().user.id && !isShowAnswer
       ? PanResponder.create({
           onStartShouldSetPanResponder: () => true,
           // Callback này được kích hoạt ngay khi người dùng bắt đầu chạm vào màn hình
@@ -247,15 +260,23 @@ export const useGamePlayController = () => {
     }
   };
 
-  const startProgress = () => {
+  const startProgress = (seconds: number) => {
     // cancelAnimation(progress); // Dừng bất kỳ animation đang chạy
-    remainingTime.value = 25; // Reset về 100%
-    remainingTime.value = withTiming(0, { duration: 25000 }); // Bắt đầu giảm về 0
+    progressTime.value = 100; // Reset về 100%
+    progressTime.value = withTiming(0, { duration: seconds * 1000 }); // Bắt đầu giảm về 0
   };
 
   const handleAnswer = (answer: string) => {
     textInputRef.current?.clear();
-    connection?.invoke('SendAnswer', answer, Math.floor(remainingTime.value));
+    if (isShowAnswer) {
+      connection?.invoke('SendMessage', answer);
+    } else {
+      connection?.invoke(
+        'SendAnswer',
+        answer,
+        Math.floor((progressTime.value / 100) * 25),
+      );
+    }
   };
 
   const showFireworkAnimation = () => {
@@ -278,9 +299,10 @@ export const useGamePlayController = () => {
       word,
       answerList,
       panResponder,
-      remainingTime,
+      progressTime,
       isShowTextInput,
       isShowFirework,
+      isShowAnswer,
     },
     actions: {
       setStrokeColor,
