@@ -5,9 +5,11 @@ import { Text, View } from 'react-native';
 import { SvgXml } from 'react-native-svg';
 import { avatarCollectionsList } from '../../pick-avatar/pick-avatar.constants';
 import { ColorPalette } from '../../../base/constants/color-palette';
+import { zustandUser } from '../../../zustand/user.zustand';
 
-export const Rankings = () => {
+export const RankingBoard = () => {
   const { usersInRoom } = zustandRoom();
+  const { user } = zustandUser.getState();
 
   const sortedUsers = [...usersInRoom].sort(
     (a, b) => b.userPoints - a.userPoints,
@@ -30,7 +32,10 @@ export const Rankings = () => {
             style={{
               flexDirection: 'row',
               padding: 6,
-              backgroundColor: ColorPalette.primary,
+              backgroundColor:
+                item.userId === user.id
+                  ? ColorPalette.green[500]
+                  : ColorPalette.primary,
               borderRadius: 6,
               marginBottom: 6,
               columnGap: 8,
@@ -43,10 +48,16 @@ export const Rankings = () => {
               }
             />
             <View>
-              <Text>{item.userNickName}</Text>
+              <Text
+                style={{
+                  color: ColorPalette.black,
+                }}>
+                {item.userNickName}
+              </Text>
               <Text
                 style={{
                   fontWeight: 'bold',
+                  color: ColorPalette.black,
                 }}>{`${item.userPoints} điểm`}</Text>
             </View>
           </View>
