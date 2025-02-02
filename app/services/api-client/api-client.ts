@@ -76,6 +76,7 @@ export const ApiClient = <ReqType, ResType>(request: ApiRequest<ReqType>) => {
           });
           return reject('TOKEN_EXPIRED');
         }
+
         // UNAUTHORIZED
         if (response.status === 401) {
           try {
@@ -97,7 +98,7 @@ export const ApiClient = <ReqType, ResType>(request: ApiRequest<ReqType>) => {
           }
         }
 
-        if (response.status === 404) {
+        if (response.status === 400 || response.status === 404) {
           console.log(`${nameUrlLog} - CLIENT_ERROR - ❌`);
           zustandGlobalModal.getState().show({
             title: '- THÔNG BÁO -',

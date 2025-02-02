@@ -1,8 +1,13 @@
 export const ColorPalette = {
   // needs future revision
   primary: '#fbbf24', // amber[400]
-  primaryActive: '#ca8a04', // dimmer version of primary - yellow[600]
+  primaryActive: '#cf9604',
+
   secondary: '#083fea', // Vivid blue - Get from: https://www.colorhexa.com/eab308
+  secondaryActive: '#052ba0',
+
+  tertiary: '#D03131',
+  tertiaryActive: '#a82626',
 
   black: '#000',
   white: '#FFF',
