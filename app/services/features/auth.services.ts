@@ -107,7 +107,7 @@ export const AuthService = {
   },
   logout: async () => {
     try {
-      await ApiClient<{}, {}>({
+      await ApiClient<null, null>({
         endpoint: Endpoints.Account.LOGOUT,
         method: 'get',
       });

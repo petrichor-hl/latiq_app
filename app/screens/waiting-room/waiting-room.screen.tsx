@@ -4,7 +4,6 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  TouchableOpacity,
   View,
 } from 'react-native';
 import { HEIGHT, WIDTH } from '../../base/constants/size-screen';
@@ -19,6 +18,7 @@ import { SvgXml } from 'react-native-svg';
 import { avatarCollectionsList } from '../pick-avatar/pick-avatar.constants';
 import { useWaitingRoomSignalR } from './controllers/signal-r.controller';
 import { ColorPalette } from '../../base/constants/color-palette';
+import { PhysicalButton } from '../../base/components/physical-button.component';
 // import { useWaitingRoomMediaSoup } from './controllers/mediasoup.controller';
 // import { CameraStatus } from './waiting-room.type';
 
@@ -126,21 +126,28 @@ export const WaitingRoomScreen = (_props: WaitingRoomScreenProps) => {
       )}
 
       {/* <BottomMedia localStream={localStream} /> */}
-      {isRoomOwner && (
+      {isRoomOwner && usersInRoom.length >= 3 && (
         <View
           style={{
             backgroundColor: '#0009',
             padding: 20,
+            paddingBottom: Math.max(insets.bottom, 20),
           }}>
-          <TouchableOpacity
+          <PhysicalButton
+            paddingVertical={0}
+            buttonColor={ColorPalette.tertiary}
+            buttonBackgroundColor={ColorPalette.tertiaryActive}
+            onPress={handleStartGame}>
+            <Text style={styles.btnTitle}>START</Text>
+          </PhysicalButton>
+          {/* <TouchableOpacity
             activeOpacity={0.5}
             onPress={handleStartGame}
             style={[
               styles.appBtn,
               { backgroundColor: ColorPalette.rose[600] },
             ]}>
-            <Text style={styles.btnTitle}>START</Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
       )}
     </ImageBackground>

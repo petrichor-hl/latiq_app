@@ -2,11 +2,15 @@ import Clipboard from '@react-native-clipboard/clipboard';
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { ColorPalette } from '../../../base/constants/color-palette';
-import { goBack } from '../../../navigation/navation.config';
+import { goBack, push } from '../../../navigation/navation.config';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { showMessage } from 'react-native-flash-message';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { zustandSignalR } from '../../../zustand/signal-r.zustand';
+import {
+  InviteFriendScreen,
+  InviteFriendScreenProps,
+} from '../invite-friend.screen';
 
 interface RoomHeaderProps {
   roomCode: string;
@@ -37,17 +41,21 @@ export const RoomHeader = (props: RoomHeaderProps) => {
         onPress={() => {
           connection?.invoke('LeaveRoom');
           goBack();
-        }}
-        style={styles.backBtn}>
+        }}>
         <Ionicons name="arrow-undo" size={44} color={ColorPalette.primary} />
       </TouchableOpacity>
-      <View style={{ alignItems: 'center' }}>
+      <View style={{ width: 44 }} />
+      <View style={{ flex: 1, alignItems: 'center' }}>
         <Text style={styles.roomCodeTitle}>Mã phòng</Text>
         <Text style={styles.roomCode}>{roomCode}</Text>
       </View>
-
       <TouchableOpacity onPress={copyToClipboard} style={{ width: 44 }}>
         <Ionicons name="copy" size={36} color={ColorPalette.primary} />
+      </TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => push<InviteFriendScreenProps>(InviteFriendScreen)}
+        style={{ width: 44, transform: [{ scaleX: -1 }] }}>
+        <Ionicons name="person-add" size={36} color={ColorPalette.primary} />
       </TouchableOpacity>
     </View>
   );
@@ -57,12 +65,9 @@ const styles = StyleSheet.create({
   headerRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
     paddingHorizontal: 20,
   },
-  backBtn: {
-    alignSelf: 'flex-start',
-  },
+
   roomCodeTitle: {
     color: ColorPalette.white,
     fontSize: 16,

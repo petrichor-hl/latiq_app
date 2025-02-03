@@ -29,6 +29,8 @@ import { HEIGHT, WIDTH } from '../../base/constants/size-screen';
 import { zustandSignalR } from '../../zustand/signal-r.zustand';
 import { useDidMount } from 'rooks';
 import { zustandAuth } from '../../zustand/auth.zustand';
+import { PhysicalButton } from '../../base/components/physical-button.component';
+import { ProfileScreen, ProfileScreenProps } from '../profile/profile.screen';
 
 export interface HomeScreenProps {}
 
@@ -54,7 +56,7 @@ export const HomeScreen = () => {
         styles.container,
         { paddingTop: insets.top, paddingBottom: insets.bottom },
       ]}>
-      <SlideIn style={styles.expandWidth}>
+      <SlideIn>
         <TouchableOpacity
           activeOpacity={0.5}
           onPress={() =>
@@ -83,29 +85,29 @@ export const HomeScreen = () => {
           <RoomCodeInput />
         </SlideIn>
       </KeyboardAvoidingView>
+
       <SlideIn style={styles.expandWidth} delay={600}>
-        <TouchableOpacity
-          activeOpacity={0.5}
-          onPress={() => push<MakeRoomScreenProps>(MakeRoomScreen)}
-          style={styles.appBtn}>
+        <PhysicalButton
+          onPress={() => push<MakeRoomScreenProps>(MakeRoomScreen)}>
           <Text style={styles.btnTitle}>TẠO PHÒNG</Text>
-        </TouchableOpacity>
+        </PhysicalButton>
       </SlideIn>
+
       <SlideIn style={styles.expandWidth} delay={800}>
-        <TouchableOpacity
-          activeOpacity={0.5}
-          onPress={() => {}}
-          style={[styles.appBtn, { backgroundColor: ColorPalette.secondary }]}>
+        <PhysicalButton
+          buttonColor={ColorPalette.secondary}
+          buttonBackgroundColor={ColorPalette.secondaryActive}>
           <Text style={styles.btnTitle}>DANH SÁCH BẠN BÈ</Text>
-        </TouchableOpacity>
+        </PhysicalButton>
       </SlideIn>
+
       <SlideIn style={styles.expandWidth} delay={1000}>
-        <TouchableOpacity
-          activeOpacity={0.5}
-          // onPress={() => push<GamePlayScreenProps>(GamePlayScreen)}
-          style={[styles.appBtn, { backgroundColor: ColorPalette.rose[600] }]}>
+        <PhysicalButton
+          buttonColor={ColorPalette.tertiary}
+          buttonBackgroundColor={ColorPalette.tertiaryActive}
+          onPress={() => push<ProfileScreenProps>(ProfileScreen)}>
           <Text style={styles.btnTitle}>HỒ SƠ</Text>
-        </TouchableOpacity>
+        </PhysicalButton>
       </SlideIn>
     </ImageBackground>
   );
@@ -118,7 +120,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 20,
-    rowGap: 14,
+    rowGap: 16,
   },
   expandWidth: {
     width: '100%',
@@ -148,12 +150,5 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '700',
     color: ColorPalette.white,
-  },
-  appBtn: {
-    height: 52,
-    borderRadius: 8,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: ColorPalette.primary,
   },
 });

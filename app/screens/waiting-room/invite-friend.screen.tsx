@@ -2,38 +2,36 @@ import React from 'react';
 import {
   ImageBackground,
   StyleSheet,
+  Text,
   TouchableOpacity,
   View,
 } from 'react-native';
 import { HEIGHT, WIDTH } from '../../base/constants/size-screen';
-import { ColorPalette } from '../../base/constants/color-palette';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { navigate } from '../../navigation/navation.config';
-import { HomeScreen, HomeScreenProps } from '../home/home.screen';
+import { ColorPalette } from '../../base/constants/color-palette';
+import { goBack } from '../../navigation/navation.config';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
-export interface GameResultScreenProps {}
+export interface InviteFriendScreenProps {}
 
-export const GameResultScreen = (_props: GameResultScreenProps) => {
+export const InviteFriendScreen = (_props: InviteFriendScreenProps) => {
   const insets = useSafeAreaInsets();
 
   return (
     <ImageBackground
-      source={require('../../assets/images/background/background-2.png')}
+      source={require('../../assets/images/background/background-0.png')}
       resizeMode="cover"
       style={[styles.container, { paddingTop: insets.top }]}>
       <View style={styles.headerRow}>
-        <TouchableOpacity
-          onPress={() => navigate<HomeScreenProps>(HomeScreen)}
-          style={{ width: 44 }}>
-          <Ionicons name="home" size={38} color={ColorPalette.primary} />
+        <TouchableOpacity onPress={goBack}>
+          <Ionicons name="arrow-undo" size={44} color={ColorPalette.primary} />
         </TouchableOpacity>
 
-        {/* <View style={{ flex: 1, alignItems: 'center' }}>
-          <Text style={styles.sreenTitle}></Text>
+        <View style={{ flex: 1, alignItems: 'center' }}>
+          <Text style={styles.sreenTitle}>Mời bạn bè</Text>
         </View>
 
-        <View style={{ width: 44 }} /> */}
+        <View style={{ width: 44 }} />
       </View>
     </ImageBackground>
   );
@@ -50,7 +48,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 20,
-    paddingTop: 16,
   },
   sreenTitle: {
     color: ColorPalette.white,
