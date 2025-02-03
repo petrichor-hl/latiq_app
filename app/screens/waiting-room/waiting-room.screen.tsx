@@ -4,7 +4,6 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  TouchableOpacity,
   View,
 } from 'react-native';
 import { HEIGHT, WIDTH } from '../../base/constants/size-screen';
@@ -132,6 +131,7 @@ export const WaitingRoomScreen = (_props: WaitingRoomScreenProps) => {
           style={{
             backgroundColor: '#0009',
             padding: 20,
+            paddingBottom: Math.max(insets.bottom, 20),
           }}>
           <PhysicalButton
             paddingVertical={0}
@@ -147,7 +147,6 @@ export const WaitingRoomScreen = (_props: WaitingRoomScreenProps) => {
               styles.appBtn,
               { backgroundColor: ColorPalette.rose[600] },
             ]}>
-            
           </TouchableOpacity> */}
         </View>
       )}

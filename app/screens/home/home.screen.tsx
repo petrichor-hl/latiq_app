@@ -30,6 +30,7 @@ import { zustandSignalR } from '../../zustand/signal-r.zustand';
 import { useDidMount } from 'rooks';
 import { zustandAuth } from '../../zustand/auth.zustand';
 import { PhysicalButton } from '../../base/components/physical-button.component';
+import { ProfileScreen, ProfileScreenProps } from '../profile/profile.screen';
 
 export interface HomeScreenProps {}
 
@@ -103,7 +104,8 @@ export const HomeScreen = () => {
       <SlideIn style={styles.expandWidth} delay={1000}>
         <PhysicalButton
           buttonColor={ColorPalette.tertiary}
-          buttonBackgroundColor={ColorPalette.tertiaryActive}>
+          buttonBackgroundColor={ColorPalette.tertiaryActive}
+          onPress={() => push<ProfileScreenProps>(ProfileScreen)}>
           <Text style={styles.btnTitle}>HỒ SƠ</Text>
         </PhysicalButton>
       </SlideIn>
@@ -148,12 +150,5 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '700',
     color: ColorPalette.white,
-  },
-  appBtn: {
-    height: 52,
-    borderRadius: 8,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: ColorPalette.primary,
   },
 });

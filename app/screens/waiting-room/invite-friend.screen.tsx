@@ -19,7 +19,7 @@ export const InviteFriendScreen = (_props: InviteFriendScreenProps) => {
 
   return (
     <ImageBackground
-      source={require('../../assets/images/background/background-2.png')}
+      source={require('../../assets/images/background/background-0.png')}
       resizeMode="cover"
       style={[styles.container, { paddingTop: insets.top }]}>
       <View style={styles.headerRow}>
