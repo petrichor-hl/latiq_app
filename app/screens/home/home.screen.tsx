@@ -31,6 +31,10 @@ import { useDidMount } from 'rooks';
 import { zustandAuth } from '../../zustand/auth.zustand';
 import { PhysicalButton } from '../../base/components/physical-button.component';
 import { ProfileScreen, ProfileScreenProps } from '../profile/profile.screen';
+import {
+  FriendListScreen,
+  FriendListScreenProps,
+} from '../friend-list/friend-list.screen';
 
 export interface HomeScreenProps {}
 
@@ -96,7 +100,8 @@ export const HomeScreen = () => {
       <SlideIn style={styles.expandWidth} delay={800}>
         <PhysicalButton
           buttonColor={ColorPalette.secondary}
-          buttonBackgroundColor={ColorPalette.secondaryActive}>
+          buttonBackgroundColor={ColorPalette.secondaryActive}
+          onPress={() => push<FriendListScreenProps>(FriendListScreen)}>
           <Text style={styles.btnTitle}>DANH SÁCH BẠN BÈ</Text>
         </PhysicalButton>
       </SlideIn>

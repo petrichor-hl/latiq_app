@@ -14,6 +14,7 @@ export const Endpoints = {
   User: {
     GET_PROFILE: '/User/get-profile',
     UPDATE_PROFILE: '/User/update-profile',
+    GET_FRIENDS: '/User/friends',
   },
   Room: {
     MAKE_ROOM: '/Room/make-room',

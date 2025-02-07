@@ -1,8 +1,8 @@
-export interface UserProfile {
-  id: string;
+export interface Friend {
+  friendId: string;
+  userId: string;
   email: string;
   nickName: string;
   avatar: string;
-  experience: number;
   isOnline: boolean;
 }
