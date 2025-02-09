@@ -24,7 +24,7 @@ interface Point {
   y: number;
 }
 
-interface IAnswerItem {
+export interface IAnswerItem {
   userNickName: string;
   content: string;
   isCorrect: boolean;

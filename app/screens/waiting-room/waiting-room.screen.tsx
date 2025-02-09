@@ -19,6 +19,7 @@ import { avatarCollectionsList } from '../pick-avatar/pick-avatar.constants';
 import { useWaitingRoomSignalR } from './controllers/signal-r.controller';
 import { ColorPalette } from '../../base/constants/color-palette';
 import { PhysicalButton } from '../../base/components/physical-button.component';
+import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 // import { useWaitingRoomMediaSoup } from './controllers/mediasoup.controller';
 // import { CameraStatus } from './waiting-room.type';
 
@@ -109,12 +110,31 @@ export const WaitingRoomScreen = (_props: WaitingRoomScreenProps) => {
                       )[seedNumber]
                     }
                   />
+                  {roomInfo.ownerId === user.userId && (
+                    <View
+                      style={{
+                        position: 'absolute',
+                        alignSelf: 'center',
+                        padding: 8,
+                        borderBottomLeftRadius: 8, // Bo góc trái dưới
+                        borderBottomRightRadius: 8, // Bo góc phải dưới
+                        backgroundColor: ColorPalette.primary,
+                      }}>
+                      <FontAwesome6
+                        name="crown"
+                        size={24}
+                        color={ColorPalette.white}
+                      />
+                    </View>
+                  )}
+
                   <Text
                     style={{
                       textAlign: 'center',
                       color: ColorPalette.white,
                       paddingVertical: 4,
                       fontSize: 16,
+                      fontWeight: 'bold',
                     }}>
                     {user.userNickName}
                   </Text>
