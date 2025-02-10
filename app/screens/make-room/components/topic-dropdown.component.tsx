@@ -168,7 +168,6 @@ const styles = StyleSheet.create({
     height: 160,
     width: 160,
     borderRadius: 6,
-    alignSelf: 'center',
   },
   optionsContainer: {
     borderRadius: 4,

@@ -31,6 +31,10 @@ import { useDidMount } from 'rooks';
 import { zustandAuth } from '../../zustand/auth.zustand';
 import { PhysicalButton } from '../../base/components/physical-button.component';
 import { ProfileScreen, ProfileScreenProps } from '../profile/profile.screen';
+import {
+  PublicRoomListScreen,
+  PublicRoomListScreenProps,
+} from '../public-room/public-room-list.screen';
 
 export interface HomeScreenProps {}
 
@@ -96,18 +100,30 @@ export const HomeScreen = () => {
       <SlideIn style={styles.expandWidth} delay={800}>
         <PhysicalButton
           buttonColor={ColorPalette.secondary}
-          buttonBackgroundColor={ColorPalette.secondaryActive}>
-          <Text style={styles.btnTitle}>DANH SÁCH BẠN BÈ</Text>
+          buttonBackgroundColor={ColorPalette.secondaryActive}
+          onPress={() => push<PublicRoomListScreenProps>(PublicRoomListScreen)}>
+          <Text style={styles.btnTitle}>DANH SÁCH PHÒNG</Text>
         </PhysicalButton>
       </SlideIn>
 
       <SlideIn style={styles.expandWidth} delay={1000}>
-        <PhysicalButton
-          buttonColor={ColorPalette.tertiary}
-          buttonBackgroundColor={ColorPalette.tertiaryActive}
-          onPress={() => push<ProfileScreenProps>(ProfileScreen)}>
-          <Text style={styles.btnTitle}>HỒ SƠ</Text>
-        </PhysicalButton>
+        <View style={{ flexDirection: 'row', columnGap: 16 }}>
+          <View style={{ flex: 1 }}>
+            <PhysicalButton
+              buttonColor={ColorPalette.green[700]}
+              buttonBackgroundColor={ColorPalette.green[900]}>
+              <Text style={styles.btnTitle}>BẠN BÈ</Text>
+            </PhysicalButton>
+          </View>
+          <View style={{ flex: 1 }}>
+            <PhysicalButton
+              buttonColor={ColorPalette.tertiary}
+              buttonBackgroundColor={ColorPalette.tertiaryActive}
+              onPress={() => push<ProfileScreenProps>(ProfileScreen)}>
+              <Text style={styles.btnTitle}>HỒ SƠ</Text>
+            </PhysicalButton>
+          </View>
+        </View>
       </SlideIn>
     </ImageBackground>
   );
