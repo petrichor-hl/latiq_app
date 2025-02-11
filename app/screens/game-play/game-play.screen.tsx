@@ -177,6 +177,8 @@ export const GamePlayScreen = (_props: GamePlayScreenProps) => {
               placeholderTextColor={ColorPalette.white}
               onSubmitEditing={e => handleAnswer(e.nativeEvent.text)}
               style={styles.answerTextInput}
+              autoCorrect={false}
+              autoCapitalize="none"
             />
           ) : (
             !isDrawer && (
