@@ -29,6 +29,10 @@ import { playSound } from '../../base/helpers/sound.helper';
 import { EnumSoundName } from '../../base/constants/sound-name';
 import { zustandSignalR } from '../../zustand/signal-r.zustand';
 import Animated, { LinearTransition } from 'react-native-reanimated';
+import {
+  MakeRoomScreen,
+  MakeRoomScreenProps,
+} from '../make-room/make-room.screen';
 
 export interface PublicRoomListScreenProps {}
 
@@ -110,10 +114,14 @@ export const PublicRoomListScreen = (_props: PublicRoomListScreenProps) => {
         style={{
           flex: 1,
           justifyContent: 'center',
+          alignItems: 'center',
+          rowGap: 12,
         }}>
-        <Text style={styles.emptyRoomTxt}>
-          {'Hãy mời thêm bạn bè\nvào phòng nhé!'}
-        </Text>
+        <Text style={styles.emptyRoomTxt}>{'Hiện chưa có sẵn phòng\n...'}</Text>
+        <PhysicalButton
+          onPress={() => push<MakeRoomScreenProps>(MakeRoomScreen)}>
+          <Text style={styles.btnTitle}>TẠO PHÒNG</Text>
+        </PhysicalButton>
       </View>
     );
   };
@@ -122,7 +130,7 @@ export const PublicRoomListScreen = (_props: PublicRoomListScreenProps) => {
     <ImageBackground
       source={require('../../assets/images/background/background-0.png')}
       resizeMode="cover"
-      style={[styles.container, { paddingTop: insets.top + 15 }]}>
+      style={[styles.container, { paddingTop: insets.top }]}>
       <View style={styles.headerRow}>
         <PhysicalButton
           paddingVertical={0}
@@ -132,9 +140,7 @@ export const PublicRoomListScreen = (_props: PublicRoomListScreenProps) => {
           <Ionicons name={'arrow-undo'} size={28} color={ColorPalette.white} />
         </PhysicalButton>
 
-        <View style={{ flex: 1, alignItems: 'center' }}>
-          <Text style={styles.sreenTitle}>Danh sách phòng sẵn có</Text>
-        </View>
+        <Text style={styles.sreenTitle}>Danh sách phòng sẵn có</Text>
 
         <View style={{ width: 64 }} />
       </View>
@@ -170,6 +176,7 @@ const styles = StyleSheet.create({
     columnGap: 20,
   },
   sreenTitle: {
+    flex: 1,
     color: ColorPalette.white,
     fontSize: 20,
     fontWeight: 'bold',
@@ -201,5 +208,10 @@ const styles = StyleSheet.create({
     height: 2,
     backgroundColor: ColorPalette.gray[200],
     marginVertical: 10,
+  },
+  btnTitle: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: ColorPalette.white,
   },
 });
