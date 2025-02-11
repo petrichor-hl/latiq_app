@@ -1,5 +1,5 @@
 import React, { PropsWithChildren } from 'react';
-import { DimensionValue, Pressable, StyleSheet } from 'react-native';
+import { DimensionValue, Pressable, StyleSheet, View } from 'react-native';
 import Animated, {
   Easing,
   useSharedValue,
@@ -76,7 +76,7 @@ export const PhysicalButton = (props: PhysicalButtonProps) => {
         ]}>
         {children}
       </Animated.View>
-      <Animated.View
+      <View
         style={[
           styles.buttonBackground,
           { backgroundColor: buttonBackgroundColor },
@@ -88,7 +88,7 @@ export const PhysicalButton = (props: PhysicalButtonProps) => {
 
 const styles = StyleSheet.create({
   button: {
-    minHeight: 48,
+    minHeight: MIN_HEIGHT - 8,
     borderRadius: 15,
     justifyContent: 'center',
     alignItems: 'center',
