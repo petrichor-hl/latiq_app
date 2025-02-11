@@ -33,6 +33,7 @@ export const useWaitingRoomSignalR = (_props: WaitingRoomSignalRProps) => {
 
   useEffect(() => {
     if (!isConnected) {
+      console.log('isConnected = ' + isConnected);
       initializeConnection(zustandAuth.getState().accessToken);
     } else {
       connection?.on('JoinRoom', (newUser: IUserInRoom) => {

@@ -16,7 +16,7 @@ import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 export const TopicThree = () => {
   const { usersInRoom } = zustandRoom.getState();
 
-  const sortedUsersByPoint = usersInRoom.sort(
+  const sortedUsersByPoint = [...usersInRoom].sort(
     (a, b) => b.userPoints - a.userPoints,
   );
 

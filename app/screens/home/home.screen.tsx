@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   StyleSheet,
   ImageBackground,
@@ -50,11 +50,19 @@ export const HomeScreen = () => {
     .split('-')
     .map(e => Number(e));
 
-  const { initializeConnection } = zustandSignalR.getState();
+  const { connection, isConnected, initializeConnection } = zustandSignalR();
 
-  useDidMount(() => {
-    initializeConnection(zustandAuth.getState().accessToken);
-  });
+  useEffect(() => {
+    if (!isConnected) {
+      initializeConnection(zustandAuth.getState().accessToken);
+    } else {
+      // connection?.on('ReceiveInviteToJoinRoom', (...) => {
+      // });
+    }
+
+    return () => {};
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isConnected]);
 
   return (
     <ImageBackground
