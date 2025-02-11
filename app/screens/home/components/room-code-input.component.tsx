@@ -1,12 +1,5 @@
 import React, { useState } from 'react';
-import {
-  Keyboard,
-  Platform,
-  StyleSheet,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { Keyboard, Platform, StyleSheet, TextInput, View } from 'react-native';
 import Animated, {
   interpolateColor,
   useAnimatedStyle,
@@ -23,6 +16,7 @@ import {
 } from '../../waiting-room/waiting-room.screen';
 import { hideLoading, showLoading } from '../../../zustand/loading.zustand';
 import { zustandRoom } from '../../../zustand/room.zustand';
+import { PhysicalButton } from '../../../base/components/physical-button.component';
 
 export const RoomCodeInput = () => {
   const [code, setCode] = useState('');
@@ -80,16 +74,20 @@ export const RoomCodeInput = () => {
           keyboardType="number-pad"
         />
       </Animated.View>
-      <TouchableOpacity
-        activeOpacity={0.5}
-        onPress={onSubmitRoomCode}
-        style={[styles.appBtn, styles.joinRoomBtn]}>
+
+      <PhysicalButton
+        width={80}
+        height={Platform.OS === 'android' ? 60 : 56}
+        paddingVertical={0}
+        buttonColor={ColorPalette.primary}
+        buttonBackgroundColor={ColorPalette.primaryActive}
+        onPress={onSubmitRoomCode}>
         <Ionicons
           name="arrow-forward-circle-outline"
           size={32}
           color={ColorPalette.black}
         />
-      </TouchableOpacity>
+      </PhysicalButton>
     </View>
   );
 };
@@ -114,15 +112,5 @@ const styles = StyleSheet.create({
     backgroundColor: ColorPalette.white,
     borderRadius: 5,
     fontSize: 18,
-  },
-  appBtn: {
-    height: Platform.OS === 'ios' ? 54 : 60,
-    borderRadius: 8,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: ColorPalette.primary,
-  },
-  joinRoomBtn: {
-    width: 80,
   },
 });
