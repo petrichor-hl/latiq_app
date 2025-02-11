@@ -17,6 +17,7 @@ export const zustandUser = create<UserState & UserAction>()(
       email: '',
       nickName: '',
       avatar: '',
+      experience: 0,
     },
     updateProfile: newProfile => {
       set(s => {
