@@ -6,6 +6,8 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import { ColorPalette } from '../constants/color-palette';
+import { playSound } from '../helpers/sound.helper';
+import { EnumSoundName } from '../constants/sound-name';
 
 interface PhysicalButtonProps extends PropsWithChildren {
   width?: DimensionValue;
@@ -35,6 +37,7 @@ export const PhysicalButton = (props: PhysicalButtonProps) => {
   const y = useSharedValue(0);
 
   const handlePressIn = () => {
+    playSound(EnumSoundName.ButtonClick);
     y.value = withTiming(5, {
       duration: 100, // Thời gian chạy animation
       easing: Easing.ease,
