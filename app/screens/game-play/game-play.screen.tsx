@@ -23,7 +23,7 @@ import { useCountdownController } from './controllers/countdown.controller';
 import { HEIGHT, WIDTH } from '../../base/constants/size-screen';
 import { faker } from '@faker-js/faker';
 import { AnswerItem } from './components/answer-item.component';
-import { Rankings } from './components/rankings.component';
+import { RankingBoard } from './components/ranking-board.component';
 import { useBackHandlerController } from './controllers/back-handler.controller';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import LottieView from 'lottie-react-native';
@@ -163,7 +163,7 @@ export const GamePlayScreen = (_props: GamePlayScreenProps) => {
       </View>
 
       <View style={{ flexDirection: 'row', flex: 1 }}>
-        <Rankings />
+        <RankingBoard />
         <View style={styles.answerListCtn}>
           <ScrollView>
             {answerList.map(answerItem => (
