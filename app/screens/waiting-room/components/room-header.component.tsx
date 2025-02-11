@@ -2,15 +2,12 @@ import Clipboard from '@react-native-clipboard/clipboard';
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { ColorPalette } from '../../../base/constants/color-palette';
-import { goBack, push } from '../../../navigation/navation.config';
+import { goBack } from '../../../navigation/navation.config';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { showMessage } from 'react-native-flash-message';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { zustandSignalR } from '../../../zustand/signal-r.zustand';
-import {
-  InviteFriendScreen,
-  InviteFriendScreenProps,
-} from '../invite-friend.screen';
+import { PhysicalButton } from '../../../base/components/physical-button.component';
 
 interface RoomHeaderProps {
   roomCode: string;
@@ -37,26 +34,39 @@ export const RoomHeader = (props: RoomHeaderProps) => {
 
   return (
     <View style={styles.headerRow}>
-      <TouchableOpacity
+      <PhysicalButton
+        paddingVertical={0}
+        paddingHorizontal={0}
+        width={64}
         onPress={() => {
           connection?.invoke('LeaveRoom');
           goBack();
         }}>
-        <Ionicons name="arrow-undo" size={44} color={ColorPalette.primary} />
-      </TouchableOpacity>
-      <View style={{ width: 44 }} />
-      <View style={{ flex: 1, alignItems: 'center' }}>
-        <Text style={styles.roomCodeTitle}>Mã phòng</Text>
-        <Text style={styles.roomCode}>{roomCode}</Text>
-      </View>
-      <TouchableOpacity onPress={copyToClipboard} style={{ width: 44 }}>
-        <Ionicons name="copy" size={36} color={ColorPalette.primary} />
-      </TouchableOpacity>
+        <Ionicons name={'arrow-undo'} size={28} color={ColorPalette.white} />
+      </PhysicalButton>
+
       <TouchableOpacity
-        onPress={() => push<InviteFriendScreenProps>(InviteFriendScreen)}
-        style={{ width: 44, transform: [{ scaleX: -1 }] }}>
-        <Ionicons name="person-add" size={36} color={ColorPalette.primary} />
+        style={{ flex: 1, alignItems: 'center' }}
+        onPress={copyToClipboard}>
+        <Text style={styles.roomCodeTitle}>Mã phòng</Text>
+        <View
+          style={{ flexDirection: 'row', columnGap: 4, alignItems: 'center' }}>
+          <Text style={styles.roomCode}>{roomCode}</Text>
+          <Ionicons name="copy" size={20} color={ColorPalette.primary} />
+        </View>
       </TouchableOpacity>
+
+      <PhysicalButton
+        paddingVertical={0}
+        paddingHorizontal={0}
+        onPress={() => {}}>
+        <Ionicons
+          name="person-add"
+          size={28}
+          color={ColorPalette.white}
+          style={{ transform: [{ scaleX: -1 }] }}
+        />
+      </PhysicalButton>
     </View>
   );
 };
@@ -66,6 +76,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: 20,
+    columnGap: 12,
   },
 
   roomCodeTitle: {

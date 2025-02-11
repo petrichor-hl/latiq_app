@@ -5,7 +5,6 @@ import {
   StyleSheet,
   Switch,
   Text,
-  TouchableOpacity,
   View,
 } from 'react-native';
 import { ColorPalette } from '../../base/constants/color-palette';
@@ -25,6 +24,7 @@ import {
 } from '../waiting-room/waiting-room.screen';
 import { zustandRoom } from '../../zustand/room.zustand';
 import { hideLoading, showLoading } from '../../zustand/loading.zustand';
+import { PhysicalButton } from '../../base/components/physical-button.component';
 
 export interface MakeRoomScreenProps {}
 
@@ -60,11 +60,15 @@ export const MakeRoomScreen = (_props: MakeRoomScreenProps) => {
       resizeMode="cover"
       style={[
         styles.container,
-        { paddingTop: insets.top, paddingBottom: insets.bottom },
+        { paddingTop: insets.top + 15, paddingBottom: insets.bottom },
       ]}>
-      <TouchableOpacity onPress={() => goBack()} style={styles.backBtn}>
-        <Ionicons name={'arrow-undo'} size={44} color={ColorPalette.primary} />
-      </TouchableOpacity>
+      <PhysicalButton
+        paddingVertical={0}
+        paddingHorizontal={0}
+        width={64}
+        onPress={() => goBack()}>
+        <Ionicons name={'arrow-undo'} size={28} color={ColorPalette.white} />
+      </PhysicalButton>
 
       <TopicDropdown control={control} />
 
@@ -105,15 +109,13 @@ export const MakeRoomScreen = (_props: MakeRoomScreenProps) => {
           );
         }}
       />
-      <TouchableOpacity
+      <PhysicalButton
         onPress={() => {
           Keyboard.dismiss();
           handleSubmit(onSubmit)();
-        }}
-        activeOpacity={0.5}
-        style={styles.appBtn}>
+        }}>
         <Text style={styles.btnTitle}>TẠO PHÒNG</Text>
-      </TouchableOpacity>
+      </PhysicalButton>
     </ImageBackground>
   );
 };
