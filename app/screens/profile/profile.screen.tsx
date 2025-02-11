@@ -27,7 +27,7 @@ import { ScrollView } from 'react-native';
 export interface ProfileScreenProps {}
 
 export const ProfileScreen = (_props: ProfileScreenProps) => {
-  const { user } = zustandUser.getState();
+  const { user } = zustandUser();
 
   const achievements = [
     { id: 1, title: 'Word Master', icon: '🎯' },
@@ -83,7 +83,11 @@ export const ProfileScreen = (_props: ProfileScreenProps) => {
             onPress={() =>
               push<PickAvatarScreenProps>(PickAvatarScreen, {
                 collectionNumber: collectionNumber,
-                onPickAvatar: avatar => UserService.updateProfile({ avatar }),
+                onPickAvatar: avatar =>
+                  UserService.updateProfile({
+                    nickname: user.nickName,
+                    avatar,
+                  }),
               })
             }
             style={styles.avatarImg}>

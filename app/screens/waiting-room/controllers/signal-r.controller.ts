@@ -121,6 +121,8 @@ export const useWaitingRoomSignalR = (_props: WaitingRoomSignalRProps) => {
         connection?.off('ReceiveUserInRooms');
         connection?.off('StartGame');
 
+        connection?.off('ReceiveInviteToJoinRoom');
+
         // Đệm 1s cho giao diện render mượt hơn
         // setTimeout(() => stopConnection(), 1000);
         // if (timeoutRef.current) {

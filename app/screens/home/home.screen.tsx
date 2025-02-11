@@ -27,7 +27,6 @@ import {
 } from '../make-room/make-room.screen';
 import { HEIGHT, WIDTH } from '../../base/constants/size-screen';
 import { zustandSignalR } from '../../zustand/signal-r.zustand';
-import { useDidMount } from 'rooks';
 import { zustandAuth } from '../../zustand/auth.zustand';
 import { PhysicalButton } from '../../base/components/physical-button.component';
 import { ProfileScreen, ProfileScreenProps } from '../profile/profile.screen';
@@ -56,8 +55,7 @@ export const HomeScreen = () => {
     if (!isConnected) {
       initializeConnection(zustandAuth.getState().accessToken);
     } else {
-      // connection?.on('ReceiveInviteToJoinRoom', (...) => {
-      // });
+      connection?.on('ReceiveInviteToJoinRoom', () => {});
     }
 
     return () => {};
@@ -78,7 +76,8 @@ export const HomeScreen = () => {
           onPress={() =>
             push<PickAvatarScreenProps>(PickAvatarScreen, {
               collectionNumber: collectionNumber,
-              onPickAvatar: avatar => UserService.updateProfile({ avatar }),
+              onPickAvatar: avatar =>
+                UserService.updateProfile({ nickname: user.nickName, avatar }),
             })
           }
           style={styles.avatarImg}>
