@@ -1,8 +1,8 @@
 import React from 'react';
-import { IAnswerItem } from '../controllers/answer.controller';
 import { StyleSheet, Text, View } from 'react-native';
 import { ColorPalette } from '../../../base/constants/color-palette';
 import Entypo from 'react-native-vector-icons/Entypo';
+import { IAnswerItem } from '../controllers/game-play.controller';
 
 interface AnswerItemProps {
   answerItem: IAnswerItem;

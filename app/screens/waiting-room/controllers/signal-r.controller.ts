@@ -68,15 +68,17 @@ export const useWaitingRoomSignalR = (_props: WaitingRoomSignalRProps) => {
 
       connection?.on('NewRoomOwner', (newOwnerId: string) => {
         setRoomOwnerId(newOwnerId);
-        showMessage({
-          message: 'Bây giờ Bạn là chủ phòng',
-          position: 'top',
-          statusBarHeight: safeTop,
-          duration: 2000,
-          backgroundColor: ColorPalette.primary,
-          style: { alignItems: 'center' },
-          titleStyle: { fontSize: 16 },
-        });
+        if (user.id === newOwnerId) {
+          showMessage({
+            message: 'Bây giờ Bạn là chủ phòng',
+            position: 'top',
+            statusBarHeight: safeTop,
+            duration: 2000,
+            backgroundColor: ColorPalette.primary,
+            style: { alignItems: 'center' },
+            titleStyle: { fontSize: 16 },
+          });
+        }
       });
 
       connection?.on('ReceiveUserInRooms', (userInRooms: IUserInRoom[]) => {
