@@ -52,19 +52,26 @@ export const ProfileScreen = (_props: ProfileScreenProps) => {
       resizeMode="cover"
       style={[
         styles.container,
-        { paddingTop: insets.top, paddingBottom: Math.max(insets.bottom, 20) },
+        {
+          paddingTop: insets.top + 15,
+          paddingBottom: Math.max(insets.bottom, 20),
+        },
       ]}>
       {/* Header */}
       <View style={styles.headerRow}>
-        <TouchableOpacity onPress={goBack}>
-          <Ionicons name="arrow-undo" size={44} color={ColorPalette.primary} />
-        </TouchableOpacity>
+        <PhysicalButton
+          paddingVertical={0}
+          paddingHorizontal={0}
+          width={64}
+          onPress={() => goBack()}>
+          <Ionicons name={'arrow-undo'} size={28} color={ColorPalette.white} />
+        </PhysicalButton>
 
         <View style={{ flex: 1, alignItems: 'center' }}>
           <Text style={styles.sreenTitle}>Hồ sơ</Text>
         </View>
 
-        <View style={{ width: 44 }} />
+        <View style={{ width: 64 }} />
       </View>
       {/* Body */}
       <ScrollView

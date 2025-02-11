@@ -140,14 +140,6 @@ export const WaitingRoomScreen = (_props: WaitingRoomScreenProps) => {
             onPress={handleStartGame}>
             <Text style={styles.btnTitle}>START</Text>
           </PhysicalButton>
-          {/* <TouchableOpacity
-            activeOpacity={0.5}
-            onPress={handleStartGame}
-            style={[
-              styles.appBtn,
-              { backgroundColor: ColorPalette.rose[600] },
-            ]}>
-          </TouchableOpacity> */}
         </View>
       )}
     </ImageBackground>
