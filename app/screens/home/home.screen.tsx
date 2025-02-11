@@ -35,6 +35,10 @@ import {
   PublicRoomListScreen,
   PublicRoomListScreenProps,
 } from '../public-room/public-room-list.screen';
+import {
+  FriendListScreen,
+  FriendListScreenProps,
+} from '../friend-list/friend-list.screen';
 
 export interface HomeScreenProps {}
 
@@ -111,7 +115,8 @@ export const HomeScreen = () => {
           <View style={{ flex: 1 }}>
             <PhysicalButton
               buttonColor={ColorPalette.green[700]}
-              buttonBackgroundColor={ColorPalette.green[900]}>
+              buttonBackgroundColor={ColorPalette.green[900]}
+              onPress={() => push<FriendListScreenProps>(FriendListScreen)}>
               <Text style={styles.btnTitle}>BẠN BÈ</Text>
             </PhysicalButton>
           </View>

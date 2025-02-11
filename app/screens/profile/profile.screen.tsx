@@ -53,7 +53,7 @@ export const ProfileScreen = (_props: ProfileScreenProps) => {
       style={[
         styles.container,
         {
-          paddingTop: insets.top + 15,
+          paddingTop: insets.top,
           paddingBottom: Math.max(insets.bottom, 20),
         },
       ]}>
