@@ -7,7 +7,7 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated';
 import { ColorPalette } from '../../../base/constants/color-palette';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import Feather from 'react-native-vector-icons/Feather';
 import { RoomService } from '../../../services/features/room.services';
 import { push } from '../../../navigation/navation.config';
 import {
@@ -82,10 +82,10 @@ export const RoomCodeInput = () => {
         buttonColor={ColorPalette.primary}
         buttonBackgroundColor={ColorPalette.primaryActive}
         onPress={onSubmitRoomCode}>
-        <Ionicons
-          name="arrow-forward-circle-outline"
-          size={32}
-          color={ColorPalette.black}
+        <Feather
+          name="arrow-right-circle"
+          size={28}
+          color={ColorPalette.white}
         />
       </PhysicalButton>
     </View>

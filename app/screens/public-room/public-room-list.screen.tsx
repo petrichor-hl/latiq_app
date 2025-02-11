@@ -119,6 +119,7 @@ export const PublicRoomListScreen = (_props: PublicRoomListScreenProps) => {
         }}>
         <Text style={styles.emptyRoomTxt}>{'Hiện chưa có sẵn phòng\n...'}</Text>
         <PhysicalButton
+          paddingVertical={0}
           onPress={() => push<MakeRoomScreenProps>(MakeRoomScreen)}>
           <Text style={styles.btnTitle}>TẠO PHÒNG</Text>
         </PhysicalButton>
