@@ -13,7 +13,7 @@ import { SplashScreen } from './app/screens/splash.screen';
 import { ScreenWrapper } from './app/navigation/screen-wrapper';
 import { HomeScreen } from './app/screens/home/home.screen';
 import 'react-native-url-polyfill/auto';
-import { CodePushContainer } from './app/codepush/code-push-container.component';
+// import { CodePushContainer } from './app/codepush/code-push-container.component';
 import { registerGlobals } from 'react-native-webrtc';
 import FlashMessage from 'react-native-flash-message';
 import { loadSounds } from './app/base/helpers/sound.helper';
@@ -46,29 +46,29 @@ const App = (): React.JSX.Element => {
   const Stack = createNativeStackNavigator();
 
   return (
-    <CodePushContainer>
-      <SafeAreaProvider>
-        <MenuProvider>
-          <NavigationContainer ref={refNavigation}>
-            <Stack.Navigator
-              screenOptions={{
-                headerShown: false,
-                orientation: 'portrait',
-              }}>
-              <Stack.Screen name={ScreenName.SPLASH} component={SplashScreen} />
-              <Stack.Screen
-                name={ScreenName.SCREEN_WRAPPER}
-                component={ScreenWrapper}
-                initialParams={{ screen: HomeScreen }}
-              />
-            </Stack.Navigator>
-          </NavigationContainer>
-          <GlobalModal />
-        </MenuProvider>
-        <FlashMessage />
-        <GlobalLoading />
-      </SafeAreaProvider>
-    </CodePushContainer>
+    // <CodePushContainer>
+    <SafeAreaProvider>
+      <MenuProvider>
+        <NavigationContainer ref={refNavigation}>
+          <Stack.Navigator
+            screenOptions={{
+              headerShown: false,
+              orientation: 'portrait',
+            }}>
+            <Stack.Screen name={ScreenName.SPLASH} component={SplashScreen} />
+            <Stack.Screen
+              name={ScreenName.SCREEN_WRAPPER}
+              component={ScreenWrapper}
+              initialParams={{ screen: HomeScreen }}
+            />
+          </Stack.Navigator>
+        </NavigationContainer>
+        <GlobalModal />
+      </MenuProvider>
+      <FlashMessage />
+      <GlobalLoading />
+    </SafeAreaProvider>
+    // </CodePushContainer>
   );
 };
 
