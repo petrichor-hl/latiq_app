@@ -19,4 +19,11 @@ export const RoomService = {
       loading: isShowLoading,
     });
   },
+  getPublicRoomList: async (isShowLoading?: boolean) => {
+    return await ApiClient<{}, Room[]>({
+      method: 'get',
+      endpoint: Endpoints.Room.GET_PUBLIC_ROOMS,
+      loading: isShowLoading,
+    });
+  },
 };
