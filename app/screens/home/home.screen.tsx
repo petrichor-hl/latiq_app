@@ -6,6 +6,7 @@ import {
   Text,
   View,
   KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { SvgXml } from 'react-native-svg';
@@ -38,9 +39,10 @@ import {
   FriendListScreen,
   FriendListScreenProps,
 } from '../friend-list/friend-list.screen';
-import { playSoundWithLoop } from '../../base/helpers/sound.helper';
-import { EnumSoundName } from '../../base/constants/sound-name';
 import { zustandMediaSoup } from '../../zustand/media-soup.zustand';
+import { useDidMount } from 'rooks';
+import { EnumSoundName } from '../../base/constants/sound-name';
+import { playSound } from '../../base/helpers/sound.helper';
 
 export interface HomeScreenProps {}
 
@@ -48,15 +50,15 @@ export const HomeScreen = () => {
   const insets = useSafeAreaInsets();
   const { user } = zustandUser();
 
-  useEffect(() => {
-    playSoundWithLoop(EnumSoundName.Lobby);
-  }, []);
-
   const [collectionNumber, seedNumber] = user.avatar
     .split('-')
     .map(e => Number(e));
 
   const { connection, isConnected, initializeConnection } = zustandSignalR();
+
+  useDidMount(() => {
+    playSound(EnumSoundName.Lobby, true, Platform.OS === 'android' ? 0.2 : 1);
+  });
 
   useEffect(() => {
     if (!isConnected) {
@@ -69,14 +71,14 @@ export const HomeScreen = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isConnected]);
 
-  const { isConnected: isSocketConnected, connect } = zustandMediaSoup();
+  const { isConnected: isSocketConnected, connect } =
+    zustandMediaSoup.getState();
 
-  useEffect(() => {
+  useDidMount(() => {
     if (!isSocketConnected) {
       connect();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isSocketConnected]);
+  });
 
   return (
     <ImageBackground

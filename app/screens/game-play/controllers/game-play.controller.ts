@@ -60,9 +60,6 @@ export const useGamePlayController = () => {
   const countRef = useRef(0);
 
   useDidMount(() => {
-    // Phát âm thanh trong quá trình chơi
-    // playSound(EnumSoundName.InGame);
-
     connection?.on(
       'BeginPath',
       (lineColor: string, lineWidth: number, point: Point) => {

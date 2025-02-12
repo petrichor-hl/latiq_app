@@ -141,7 +141,7 @@ export const PublicRoomListScreen = (_props: PublicRoomListScreenProps) => {
           <Ionicons name={'arrow-undo'} size={28} color={ColorPalette.white} />
         </PhysicalButton>
 
-        <Text style={styles.sreenTitle}>Danh sách phòng sẵn có</Text>
+        <Text style={styles.sreenTitle}>{'Danh sách phòng\nsẵn có'}</Text>
 
         <View style={{ width: 64 }} />
       </View>

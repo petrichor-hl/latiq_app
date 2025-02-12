@@ -25,25 +25,22 @@ export const loadSounds = (): void => {
 };
 
 // Hàm phát âm thanh dựa trên tên
-export const playSound = (soundName: EnumSoundName): void => {
-  const sound = soundMap[soundName];
-  if (sound) {
-    sound.play(success => {
-      if (!success) {
-        console.log(`Failed to play sound ${soundName}`);
-      }
-    });
-  } else {
-    console.log(`Sound ${soundName} not found`);
-  }
-};
-
-export const playSoundWithLoop = (soundName: EnumSoundName): void => {
+export const playSound = (
+  soundName: EnumSoundName,
+  loop?: boolean,
+  volume?: number,
+): void => {
   const sound = soundMap[soundName];
 
   if (sound) {
-    sound.setNumberOfLoops(-1);
-    sound.setVolume(0.3);
+    if (loop) {
+      sound.setNumberOfLoops(-1);
+    }
+
+    if (volume) {
+      sound.setVolume(volume);
+    }
+
     sound.play(success => {
       if (!success) {
         console.log(`Failed to play sound ${soundName}`);
