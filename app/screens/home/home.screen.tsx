@@ -38,12 +38,18 @@ import {
   FriendListScreen,
   FriendListScreenProps,
 } from '../friend-list/friend-list.screen';
+import { playSoundWithLoop } from '../../base/helpers/sound.helper';
+import { EnumSoundName } from '../../base/constants/sound-name';
 
 export interface HomeScreenProps {}
 
 export const HomeScreen = () => {
   const insets = useSafeAreaInsets();
   const { user } = zustandUser();
+
+  useEffect(() => {
+    playSoundWithLoop(EnumSoundName.Lobby);
+  }, []);
 
   const [collectionNumber, seedNumber] = user.avatar
     .split('-')

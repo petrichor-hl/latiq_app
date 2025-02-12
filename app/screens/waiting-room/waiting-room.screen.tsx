@@ -285,7 +285,7 @@ export const WaitingRoomScreen = (_props: WaitingRoomScreenProps) => {
       )}
 
       {/* <BottomMedia localStream={localStream} /> */}
-      {isRoomOwner && usersInRoom.length >= 3 && (
+      {isRoomOwner && usersInRoom.length >= 1 && (
         <View
           style={{
             backgroundColor: '#0009',
