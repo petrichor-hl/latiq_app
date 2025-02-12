@@ -54,27 +54,6 @@ export const playSoundWithLoop = (soundName: EnumSoundName): void => {
   }
 };
 
-export const playSoundsInOrder = async (
-  sounds: EnumSoundName[],
-): Promise<void> => {
-  for (const soundName of sounds) {
-    await new Promise<void>(resolve => {
-      const sound = soundMap[soundName];
-      if (sound) {
-        sound.play(success => {
-          if (!success) {
-            console.log(`Failed to play sound ${soundName}`);
-          }
-          resolve(); // Gọi resolve khi âm thanh đã phát xong
-        });
-      } else {
-        console.log(`Sound ${soundName} not found`);
-        resolve(); // Gọi resolve nếu âm thanh không tìm thấy
-      }
-    });
-  }
-};
-
 export const stopCurrentSound = (soundName: EnumSoundName): void => {
   const sound = soundMap[soundName];
   if (sound) {
