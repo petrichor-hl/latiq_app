@@ -1,5 +1,4 @@
-import { useEffect } from 'react';
-import { zustandAuth } from '../../../zustand/auth.zustand';
+import { useEffect, useRef } from 'react';
 import { zustandSignalR } from '../../../zustand/signal-r.zustand';
 import { zustandUser } from '../../../zustand/user.zustand';
 import { IUserInRoom } from '../waiting-room.type';
@@ -12,15 +11,17 @@ import {
   GamePlayScreen,
   GamePlayScreenProps,
 } from '../../game-play/game-play.screen';
+import { Platform } from 'react-native';
 
 interface WaitingRoomSignalRProps {
-  // getLocalSteam: () => void;
+  getLocalSteam: () => void;
+  receiveProducer: () => void;
 }
 
-export const useWaitingRoomSignalR = (_props: WaitingRoomSignalRProps) => {
-  // const { getLocalSteam } = props;
+export const useWaitingRoomSignalR = (props: WaitingRoomSignalRProps) => {
+  const { getLocalSteam, receiveProducer } = props;
 
-  const { connection, isConnected, initializeConnection } = zustandSignalR();
+  const { connection } = zustandSignalR.getState();
 
   const { user } = zustandUser.getState();
 
@@ -28,18 +29,46 @@ export const useWaitingRoomSignalR = (_props: WaitingRoomSignalRProps) => {
     zustandRoom();
   // const [usersInRoom, setUsersInRoom] = useState<IUserInRoom[]>([]);
 
-  // const timeoutRef = useRef<NodeJS.Timeout>();
+  const timeoutRef = useRef<NodeJS.Timeout>();
   const safeTop = useSafeAreaInsets().top;
 
   useEffect(() => {
-    if (!isConnected) {
-      console.log('isConnected = ' + isConnected);
-      initializeConnection(zustandAuth.getState().accessToken);
-    } else {
-      connection?.on('JoinRoom', (newUser: IUserInRoom) => {
-        setUsersInRoom(zustandRoom.getState().usersInRoom.concat(newUser));
+    connection?.on('JoinRoom', (newUser: IUserInRoom) => {
+      setUsersInRoom(zustandRoom.getState().usersInRoom.concat(newUser));
+      showMessage({
+        message: `${newUser.userNickName} vừa vào phòng`,
+        position: 'top',
+        statusBarHeight: safeTop,
+        duration: 2000,
+        backgroundColor: ColorPalette.primary,
+        style: { alignItems: 'center' },
+        titleStyle: { fontSize: 16 },
+      });
+    });
+
+    connection?.on('LeaveRoom', (userId: string, userNickName: string) => {
+      setUsersInRoom(
+        zustandRoom
+          .getState()
+          .usersInRoom.filter(userInRoom => userInRoom.userId !== userId),
+      );
+
+      showMessage({
+        message: `${userNickName} đã rời khỏi phòng`,
+        position: 'top',
+        statusBarHeight: safeTop,
+        duration: 2000,
+        backgroundColor: ColorPalette.primary,
+        style: { alignItems: 'center' },
+        titleStyle: { fontSize: 16 },
+      });
+    });
+
+    connection?.on('NewRoomOwner', (newOwnerId: string) => {
+      setRoomOwnerId(newOwnerId);
+      if (user.id === newOwnerId) {
         showMessage({
-          message: `${newUser.userNickName} vừa vào phòng`,
+          message: 'Bây giờ Bạn là chủ phòng',
           position: 'top',
           statusBarHeight: safeTop,
           duration: 2000,
@@ -47,96 +76,65 @@ export const useWaitingRoomSignalR = (_props: WaitingRoomSignalRProps) => {
           style: { alignItems: 'center' },
           titleStyle: { fontSize: 16 },
         });
-      });
+      }
+    });
 
-      connection?.on('LeaveRoom', (userId: string, userNickName: string) => {
-        setUsersInRoom(
-          zustandRoom
-            .getState()
-            .usersInRoom.filter(userInRoom => userInRoom.userId !== userId),
-        );
+    connection?.on('ReceiveUserInRooms', (userInRooms: IUserInRoom[]) => {
+      setUsersInRoom(userInRooms);
+    });
 
-        showMessage({
-          message: `${userNickName} đã rời khỏi phòng`,
-          position: 'top',
-          statusBarHeight: safeTop,
-          duration: 2000,
-          backgroundColor: ColorPalette.primary,
-          style: { alignItems: 'center' },
-          titleStyle: { fontSize: 16 },
-        });
-      });
+    connection?.on('StartGame', () => {
+      navigate<GamePlayScreenProps>(GamePlayScreen);
+    });
 
-      connection?.on('NewRoomOwner', (newOwnerId: string) => {
-        setRoomOwnerId(newOwnerId);
-        if (user.id === newOwnerId) {
-          showMessage({
-            message: 'Bây giờ Bạn là chủ phòng',
-            position: 'top',
-            statusBarHeight: safeTop,
-            duration: 2000,
-            backgroundColor: ColorPalette.primary,
-            style: { alignItems: 'center' },
-            titleStyle: { fontSize: 16 },
-          });
-        }
-      });
+    // connection?.on(
+    //   'ChangeCameraStatus',
+    //   (email: string, cameraStatus: CameraStatus) => {
+    //     setUsersInRoom(prevUsers =>
+    //       prevUsers.map(user =>
+    //         user.userEmail === email ? { ...user, cameraStatus } : user,
+    //       ),
+    //     );
+    //   },
+    // );
 
-      connection?.on('ReceiveUserInRooms', (userInRooms: IUserInRoom[]) => {
-        setUsersInRoom(userInRooms);
-      });
+    connection?.invoke('JoinRoom', {
+      userId: user.id,
+      userNickName: user.nickName,
+      userAvatar: user.avatar,
+      roomId: roomInfo.roomId,
+      // cameraStatus: CameraStatus.On,
+    });
 
-      connection?.on('StartGame', () => {
-        navigate<GamePlayScreenProps>(GamePlayScreen);
-      });
+    // Đệm 500ms cho giao diện render mượt hơn
+    if (Platform.OS === 'android') {
+      timeoutRef.current = setTimeout(getLocalSteam, 500);
+    }
 
-      // connection?.on(
-      //   'ChangeCameraStatus',
-      //   (email: string, cameraStatus: CameraStatus) => {
-      //     setUsersInRoom(prevUsers =>
-      //       prevUsers.map(user =>
-      //         user.userEmail === email ? { ...user, cameraStatus } : user,
-      //       ),
-      //     );
-      //   },
-      // );
-
-      connection?.invoke('JoinRoom', {
-        userId: user.id,
-        userNickName: user.nickName,
-        userAvatar: user.avatar,
-        roomId: roomInfo.roomId,
-        // cameraStatus: CameraStatus.On,
-      });
-
-      // Đệm 500ms cho giao diện render mượt hơn
-      // timeoutRef.current = setTimeout(getLocalSteam, 500);
+    if (Platform.OS === 'ios') {
+      timeoutRef.current = setTimeout(receiveProducer, 500);
     }
 
     return () => {
-      if (isConnected) {
-        connection?.off('JoinRoom');
-        connection?.off('LeaveRoom');
-        connection?.off('NewRoomOwner');
-        connection?.off('ReceiveUserInRooms');
-        connection?.off('StartGame');
+      connection?.off('JoinRoom');
+      connection?.off('LeaveRoom');
+      connection?.off('NewRoomOwner');
+      connection?.off('ReceiveUserInRooms');
+      connection?.off('StartGame');
 
-        connection?.off('ReceiveInviteToJoinRoom');
+      connection?.off('ReceiveInviteToJoinRoom');
 
-        // Đệm 1s cho giao diện render mượt hơn
-        // setTimeout(() => stopConnection(), 1000);
-        // if (timeoutRef.current) {
-        //   /* Nếu trong vòng 500ms trước khi getLocalSteam mà người dùng thoát khỏi màn hình này
-        //    * thì phải clear Timeout
-        //    * Nếu không, tuy đã rời màn hình waiting-room, nhưng thì sau 500ms
-        //    * App vẫn lấy stream camera và mic
-        //    */
-        //   clearTimeout(timeoutRef.current);
-        // }
+      if (timeoutRef.current) {
+        /* Nếu trong vòng 500ms trước khi getLocalSteam mà người dùng thoát khỏi màn hình này
+         * thì phải clear Timeout
+         * Nếu không, tuy đã rời màn hình waiting-room, nhưng thì sau 500ms
+         * App vẫn lấy stream camera và mic
+         */
+        clearTimeout(timeoutRef.current);
       }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isConnected]);
+  }, []);
 
   const handleStartGame = () => {
     connection?.invoke('StartGame');
@@ -146,8 +144,9 @@ export const useWaitingRoomSignalR = (_props: WaitingRoomSignalRProps) => {
     ref: {},
     values: {
       isRoomOwner: roomInfo.ownerId === user.id,
-      roomInfo,
-      usersInRoom,
+      otherUsersInRoom: [...usersInRoom].filter(
+        userInRoom => userInRoom.userId !== user.id,
+      ),
     },
     actions: {
       handleStartGame,

@@ -40,6 +40,7 @@ import {
 } from '../friend-list/friend-list.screen';
 import { playSoundWithLoop } from '../../base/helpers/sound.helper';
 import { EnumSoundName } from '../../base/constants/sound-name';
+import { zustandMediaSoup } from '../../zustand/media-soup.zustand';
 
 export interface HomeScreenProps {}
 
@@ -67,6 +68,15 @@ export const HomeScreen = () => {
     return () => {};
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isConnected]);
+
+  const { isConnected: isSocketConnected, connect } = zustandMediaSoup();
+
+  useEffect(() => {
+    if (!isSocketConnected) {
+      connect();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isSocketConnected]);
 
   return (
     <ImageBackground

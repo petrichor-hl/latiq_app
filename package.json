@@ -17,7 +17,6 @@
     "@microsoft/signalr": "^8.0.7",
     "@react-native-clipboard/clipboard": "^1.16.1",
     "@react-native-community/blur": "^4.4.1",
-    "@react-native-community/slider": "^4.5.3",
     "@react-navigation/native": "^6.1.18",
     "@react-navigation/native-stack": "^6.11.0",
     "apisauce": "^3.0.1",
@@ -46,7 +45,6 @@
     "react-native-webview": "^13.12.3",
     "rooks": "^7.14.1",
     "socket.io-client": "^4.8.0",
-    "toastify-react-native": "^5.0.2",
     "zod": "^3.23.8",
     "zustand": "^5.0.0-rc.2"
   },
