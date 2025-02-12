@@ -38,6 +38,7 @@ import {
   FriendListScreen,
   FriendListScreenProps,
 } from '../friend-list/friend-list.screen';
+import { zustandMediaSoup } from '../../zustand/media-soup.zustand';
 
 export interface HomeScreenProps {}
 
@@ -61,6 +62,15 @@ export const HomeScreen = () => {
     return () => {};
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isConnected]);
+
+  const { isConnected: isSocketConnected, connect } = zustandMediaSoup();
+
+  useEffect(() => {
+    if (!isSocketConnected) {
+      connect();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isSocketConnected]);
 
   return (
     <ImageBackground

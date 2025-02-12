@@ -131,7 +131,7 @@ export const PublicRoomListScreen = (_props: PublicRoomListScreenProps) => {
     <ImageBackground
       source={require('../../assets/images/background/background-0.png')}
       resizeMode="cover"
-      style={[styles.container, { paddingTop: insets.top }]}>
+      style={[styles.container, { paddingTop: insets.top + 15 }]}>
       <View style={styles.headerRow}>
         <PhysicalButton
           paddingVertical={0}

@@ -166,13 +166,14 @@ export const useGamePlayController = () => {
   useWillUnmount(() => {
     connection?.off('LeaveRoom');
 
-    connection?.off('SelectDrawer');
     connection?.off('BeginPath');
     connection?.off('LineTo');
     connection?.off('ClearPaint');
 
-    connection?.off('CorrectAnswer');
-    connection?.off('IncorrectAnswer');
+    connection?.off('StartNewTurn');
+
+    connection?.off('AnsweredCorrectly');
+    connection?.off('AnsweredWrong');
     connection?.off('ShowAnswer');
 
     connection?.invoke('LeaveRoom');

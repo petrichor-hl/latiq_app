@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 
-import { zustandMediaSoup } from '../../../zustand/zustandMediaSoup.zustand';
+import { zustandMediaSoup } from '../../../zustand/media-soup.zustand';
 import {
   mediaDevices,
   MediaStream,
@@ -30,9 +30,8 @@ export const useWaitingRoomMediaSoup = (props: WaitingRoomMediaSoupProps) => {
 
   const {
     socket,
-    isConnected,
-    connect,
-    disconnect,
+    // isConnected,
+    // disconnect,
     setProducerTransport,
     setConsumerTransport,
     setAudioProducer,
@@ -48,55 +47,93 @@ export const useWaitingRoomMediaSoup = (props: WaitingRoomMediaSoupProps) => {
   const audioTrackRef = useRef<MediaStreamTrack>();
   const videoTrackRef = useRef<MediaStreamTrack>();
   const [localVideoConsumers, setLocalVideoConsumers] = useState<
+    // Record<Email, VideoConsumer>
     Record<string, Consumer>
   >({});
 
   useEffect(() => {
-    if (!isConnected) {
-      connect();
-    } else {
-      socket?.emit('joinRoom', {
-        email: zustandUser.getState().user.email,
+    socket?.emit('joinRoom', {
+      email: zustandUser.getState().user.id,
+      roomName: roomCode,
+    });
+
+    socket?.on('new-producer', ({ peerEmail, newProducerId }) => {
+      signalNewPeer(peerEmail, newProducerId);
+    });
+
+    socket?.on('producer-closed', peerEmail => {
+      // setRemoteCameraStatus(prevRemoteCameraStatus => {
+      //   const newState = { ...prevRemoteCameraStatus };
+      //   delete newState[peerEmail];
+      //   return newState;
+      // });
+      setLocalVideoConsumers(prevLocalVideoConsumers => {
+        // Phòng trường hợp vào room, mà chưa produce media mà đã thoát room
+        prevLocalVideoConsumers[peerEmail]?.close();
+        const newState = { ...prevLocalVideoConsumers };
+        delete newState[peerEmail];
+        return newState;
+      });
+    });
+
+    return () => {
+      socket?.emit('leaveRoom', {
+        email: zustandUser.getState().user.id,
         roomName: roomCode,
       });
 
-      socket?.on('new-producer', ({ peerEmail, newProducerId }) => {
-        signalNewPeer(peerEmail, newProducerId);
-      });
+      socket?.off('new-producer');
+      socket?.off('producer-closed');
 
-      // socket?.on('cameraStatusChanged', ({ peerEmail, cameraStatus }) => {
-      //   console.log('cameraStatusChanged');
-      //   setRemoteCameraStatus(prevRemoteCameraStatus => ({
-      //     ...prevRemoteCameraStatus,
-      //     [peerEmail]: cameraStatus,
-      //   }));
-      // });
+      audioTrackRef.current?.stop();
+      videoTrackRef.current?.stop();
 
-      socket?.on('producer-closed', peerEmail => {
-        // setRemoteCameraStatus(prevRemoteCameraStatus => {
-        //   const newState = { ...prevRemoteCameraStatus };
-        //   delete newState[peerEmail];
-        //   return newState;
-        // });
-        setLocalVideoConsumers(prevLocalVideoConsumers => {
-          // Phòng trường hợp vào room, mà chưa produce media mà đã thoát room
-          prevLocalVideoConsumers[peerEmail]?.close();
-          const newState = { ...prevLocalVideoConsumers };
-          delete newState[peerEmail];
-          return newState;
-        });
-      });
-    }
-    return () => {
-      if (isConnected) {
-        disconnect();
-        audioProducerRef.current?.close();
-        videoProducerRef.current?.close();
-        producerTransportRef.current?.close();
-        consumerTransportRef.current?.close();
-      }
+      audioTrackRef.current?.release();
+      videoTrackRef.current?.release();
+
+      audioProducerRef.current?.close();
+      videoProducerRef.current?.close();
+      producerTransportRef.current?.close();
+      consumerTransportRef.current?.close();
     };
-  }, [isConnected]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Only for iOS simulator - which no built-in camera
+  const receiveProducer = () => {
+    socket?.emit(
+      'getRouterRtpCapabilities',
+      { roomName: roomCode },
+      async (serverRouterRtpCapabilities: RtpCapabilities) => {
+        try {
+          deviceRef.current = new mediasoupClient.Device();
+          await deviceRef.current?.load({
+            routerRtpCapabilities: serverRouterRtpCapabilities,
+          });
+          createReceiveTransport();
+          // Lấy các producerId theo từng peer
+          socket.emit(
+            'get-others-peer-poducer-ids-in-room',
+            (peersProducerIds: Record<string, string[]>) => {
+              Object.keys(peersProducerIds).forEach(peerEmail => {
+                peersProducerIds[peerEmail].forEach(serverProducerId => {
+                  signalNewPeer(peerEmail, serverProducerId);
+                });
+              });
+            },
+          );
+        } catch (error: any) {
+          if (error instanceof InvalidStateError) {
+            console.warn('InvalidStateError occurred');
+          } else if (error instanceof TypeError) {
+            console.warn('TypeError occurred');
+          } else {
+            console.warn('An unknown error occurred');
+          }
+        }
+      },
+    );
+  };
 
   const getLocalSteam = () => {
     mediaDevices
@@ -118,15 +155,13 @@ export const useWaitingRoomMediaSoup = (props: WaitingRoomMediaSoupProps) => {
   };
 
   const getRouterRtpCapabilities = () => {
-    if (socket && isConnected) {
-      socket.emit(
-        'getRouterRtpCapabilities',
-        { roomName: roomCode },
-        (serverRouterRtpCapabilities: RtpCapabilities) => {
-          createDevice(serverRouterRtpCapabilities);
-        },
-      );
-    }
+    socket?.emit(
+      'getRouterRtpCapabilities',
+      { roomName: roomCode },
+      (serverRouterRtpCapabilities: RtpCapabilities) => {
+        createDevice(serverRouterRtpCapabilities);
+      },
+    );
   };
 
   const createDevice = async (serverRouterRtpCapabilities: RtpCapabilities) => {
@@ -287,6 +322,7 @@ export const useWaitingRoomMediaSoup = (props: WaitingRoomMediaSoupProps) => {
     },
     actions: {
       getLocalSteam,
+      receiveProducer,
     },
   };
 };

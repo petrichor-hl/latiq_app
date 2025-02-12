@@ -1,25 +1,30 @@
 import React, { useState } from 'react';
-import { View, TouchableOpacity, StyleSheet } from 'react-native';
-import Entypo from 'react-native-vector-icons/Entypo';
+import { View, StyleSheet, Text } from 'react-native';
+// import Entypo from 'react-native-vector-icons/Entypo';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { MediaStream, RTCView } from 'react-native-webrtc';
 import { ColorPalette } from '../../../base/constants/color-palette';
-import { pop } from '../../../navigation/navation.config';
+import { goBack } from '../../../navigation/navation.config';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { zustandMediaSoup } from '../../../zustand/zustandMediaSoup.zustand';
 import { zustandUser } from '../../../zustand/user.zustand';
 import { SvgXml } from 'react-native-svg';
 import { avatarCollectionsList } from '../../pick-avatar/pick-avatar.constants';
+// import { zustandSignalR } from '../../../zustand/signal-r.zustand';
+import { zustandMediaSoup } from '../../../zustand/media-soup.zustand';
+import { PhysicalButton } from '../../../base/components/physical-button.component';
 import { zustandSignalR } from '../../../zustand/signal-r.zustand';
-import { CameraStatus } from '../waiting-room.type';
+// import { CameraStatus } from '../waiting-room.type';
 
 interface BottomMediaProps {
+  isRoomOwner: boolean;
+  readyToStart: boolean;
+  handleStartGame: () => void;
   localStream?: MediaStream;
 }
 
 export const BottomMedia = (props: BottomMediaProps) => {
-  const { localStream } = props;
+  const { isRoomOwner, readyToStart, handleStartGame, localStream } = props;
 
   const [collectionNumber, seedNumber] = zustandUser
     .getState()
@@ -27,7 +32,8 @@ export const BottomMedia = (props: BottomMediaProps) => {
     .map(e => Number(e));
 
   const insets = useSafeAreaInsets();
-  const { connection } = zustandSignalR();
+  const { connection } = zustandSignalR.getState();
+
   const { audioProducer, videoProducer } = zustandMediaSoup();
   const [isMicOff, toggleMic] = useState(false);
   const [isCameraOff, toggleCamera] = useState(false);
@@ -70,42 +76,43 @@ export const BottomMedia = (props: BottomMediaProps) => {
           rowGap: 12,
         }}>
         <View style={{ flex: 1, flexDirection: 'row', columnGap: 12 }}>
-          <TouchableOpacity
-            style={[
-              styles.controlBtn,
-              { backgroundColor: ColorPalette.blue[800] },
-            ]}
+          <PhysicalButton
+            height={(videoLayoutSize - 12) / 2}
+            width={(videoLayoutSize - 12) / 2}
+            buttonColor={ColorPalette.secondary}
+            buttonBackgroundColor={ColorPalette.secondaryActive}
             onPress={() => {
-              /* Trong file singal-r.controller.ts
-               * có đoạn setTimeout(getLocalSteam, 500);
-               * Lúc này videoProducer của camera chưa được khởi tạo
-               * Nên khi người dùng nhấn button này chúng ta không làm gì cả
-               * Để giảm các công việc thực thi
-               */
-              if (videoProducer) {
+              //  Trong file singal-r.controller.ts
+              //  có đoạn setTimeout(getLocalSteam, 500);
+              //  Lúc này videoProducer của camera chưa được khởi tạo
+              //  Nên khi người dùng nhấn button này chúng ta không làm gì cả
+              //  Để giảm các công việc thực thi
+              //
+              /* if (videoProducer) {
                 if (videoProducer.paused) {
                   videoProducer.resume();
                 } else {
                   videoProducer.pause();
                 }
-                connection?.invoke(
-                  'ChangeCameraStatus',
-                  videoProducer?.paused ? CameraStatus.Off : CameraStatus.On,
-                );
+                // connection?.invoke(
+                //   'ChangeCameraStatus',
+                //   videoProducer?.paused ? CameraStatus.Off : CameraStatus.On,
+                // );
                 toggleCamera(videoProducer.paused);
-              }
+              } */
             }}>
             <Ionicons
               name={isCameraOff ? 'videocam-off' : 'videocam'}
               size={40}
               color={ColorPalette.white}
             />
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={[
-              styles.controlBtn,
-              { backgroundColor: ColorPalette.green[700] },
-            ]}
+          </PhysicalButton>
+
+          <PhysicalButton
+            height={(videoLayoutSize - 12) / 2}
+            width={(videoLayoutSize - 12) / 2}
+            buttonColor={ColorPalette.green[700]}
+            buttonBackgroundColor={ColorPalette.green[900]}
             onPress={() => {
               if (audioProducer) {
                 if (audioProducer.paused) {
@@ -121,34 +128,39 @@ export const BottomMedia = (props: BottomMediaProps) => {
               size={40}
               color={ColorPalette.white}
             />
-          </TouchableOpacity>
+          </PhysicalButton>
         </View>
 
-        <View style={{ flex: 1, flexDirection: 'row', columnGap: 12 }}>
-          <TouchableOpacity
-            style={[
-              styles.controlBtn,
-              { backgroundColor: ColorPalette.gray[500] },
-            ]}>
-            <Entypo
-              name="dots-three-horizontal"
-              size={40}
-              color={ColorPalette.white}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => pop(2)}
-            style={[
-              styles.controlBtn,
-              { backgroundColor: ColorPalette.red[700] },
-            ]}>
+        {isRoomOwner ? (
+          <PhysicalButton
+            height={(videoLayoutSize - 12) / 2}
+            buttonColor={
+              readyToStart ? ColorPalette.tertiary : ColorPalette.gray[400]
+            }
+            buttonBackgroundColor={
+              readyToStart
+                ? ColorPalette.tertiaryActive
+                : ColorPalette.gray[600]
+            }
+            onPress={readyToStart ? handleStartGame : undefined}>
+            <Text style={styles.btnTitle}>START</Text>
+          </PhysicalButton>
+        ) : (
+          <PhysicalButton
+            height={(videoLayoutSize - 12) / 2}
+            buttonColor={ColorPalette.tertiary}
+            buttonBackgroundColor={ColorPalette.tertiaryActive}
+            onPress={() => {
+              connection?.invoke('LeaveRoom');
+              goBack();
+            }}>
             <FontAwesome6
               name="phone-flip"
               size={36}
               color={ColorPalette.white}
             />
-          </TouchableOpacity>
-        </View>
+          </PhysicalButton>
+        )}
       </View>
     </View>
   );
@@ -176,5 +188,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 8,
+  },
+  btnTitle: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: ColorPalette.white,
   },
 });

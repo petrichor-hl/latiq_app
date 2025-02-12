@@ -33,7 +33,7 @@ export const zustandMediaSoup = create<MediaSoupState & MediaSoupAction>()(
     audioProducer: undefined,
     videoProducer: undefined,
     connect: () => {
-      const socket = io(SFU_SERVER_URL + '/mediasoup'); // Thay bằng URL server của bạn
+      const socket = io(SFU_SERVER_URL + '/mediasoup', { reconnection: false }); // Thay bằng URL server của bạn
 
       socket.on('connect', () => {
         set({ isConnected: true });
@@ -57,6 +57,7 @@ export const zustandMediaSoup = create<MediaSoupState & MediaSoupAction>()(
     },
     disconnect: () => {
       get().socket?.disconnect();
+      set({ socket: undefined });
     },
     setProducerTransport: producerTransport => {
       set(s => {

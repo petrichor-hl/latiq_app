@@ -24,7 +24,6 @@ import { avatarCollectionsList } from '../pick-avatar/pick-avatar.constants';
 import { useWaitingRoomSignalR } from './controllers/signal-r.controller';
 import { ColorPalette } from '../../base/constants/color-palette';
 import { PhysicalButton } from '../../base/components/physical-button.component';
-import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { goBack } from '../../navigation/navation.config';
 import { zustandSignalR } from '../../zustand/signal-r.zustand';
@@ -33,6 +32,11 @@ import { showMessage } from 'react-native-flash-message';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { Friend } from '../friend-list/friend-list.type';
 import { UserService } from '../../services/features/user.services';
+import { useWaitingRoomMediaSoup } from './controllers/mediasoup.controller';
+import { BottomMedia } from './components/bottom-media.component';
+import { zustandRoom } from '../../zustand/room.zustand';
+import { MediaStream, RTCView } from 'react-native-webrtc';
+import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 // import { useWaitingRoomMediaSoup } from './controllers/mediasoup.controller';
 // import { CameraStatus } from './waiting-room.type';
 
@@ -43,16 +47,19 @@ const VIDEO_WINDOW_SIZE = (WIDTH - 20 * 2 - 10) / 2;
 export const WaitingRoomScreen = (_props: WaitingRoomScreenProps) => {
   const insets = useSafeAreaInsets();
 
-  // const {
-  //   values: { localStream, localVideoConsumers },
-  //   actions: { getLocalSteam },
-  // } = useWaitingRoomMediaSoup({ roomCode: roomInfo.roomId });
+  const { roomInfo } = zustandRoom();
 
   const {
-    values: { isRoomOwner, roomInfo, usersInRoom },
+    values: { localStream, localVideoConsumers },
+    actions: { getLocalSteam, receiveProducer },
+  } = useWaitingRoomMediaSoup({ roomCode: roomInfo.roomId });
+
+  const {
+    values: { isRoomOwner, otherUsersInRoom },
     actions: { handleStartGame },
   } = useWaitingRoomSignalR({
-    // getLocalSteam,
+    getLocalSteam,
+    receiveProducer,
   });
 
   const { connection } = zustandSignalR.getState();
@@ -188,7 +195,7 @@ export const WaitingRoomScreen = (_props: WaitingRoomScreenProps) => {
       </View>
 
       <RoomInfo topicName={roomInfo.topic.name} points={roomInfo.points} />
-      {usersInRoom.length === 0 ? (
+      {otherUsersInRoom.length === 0 ? (
         <View style={styles.emptyRoomCtn}>
           <Text style={styles.emptyRoomTxt}>
             {'Hãy mời thêm bạn bè\nvào phòng nhé!'}
@@ -197,43 +204,11 @@ export const WaitingRoomScreen = (_props: WaitingRoomScreenProps) => {
       ) : (
         <ScrollView>
           <View style={styles.gridVideo}>
-            {usersInRoom.map(user => {
-              // if (
-              //   localVideoConsumers[user.userEmail] &&
-              //   user.cameraStatus === CameraStatus.On
-              // ) {
-              //   const mediaStream = new MediaStream();
-              //   mediaStream.addTrack(localVideoConsumers[user.userEmail].track);
-              //   return (
-              //     <View key={user.userEmail} style={styles.videoGridItem}>
-              //       <RTCView
-              //         streamURL={mediaStream.toURL()}
-              //         style={{
-              //           width: VIDEO_WINDOW_SIZE,
-              //           height: VIDEO_WINDOW_SIZE,
-              //         }}
-              //         objectFit="cover"
-              //       />
-              //     </View>
-              //   );
-              // } else {
-              //   const [collectionNumber, seedNumber] = user.userAvatar
-              //     .split('-')
-              //     .map(e => Number(e));
-              //   return (
-              //     <SvgXml
-              //       key={user.userEmail}
-              //       xml={
-              //         avatarCollectionsList[collectionNumber].avatarXml(
-              //           VIDEO_WINDOW_SIZE,
-              //         )[seedNumber]
-              //       }
-              //     />
-              //   );
-              // }
+            {otherUsersInRoom.map(user => {
               const [collectionNumber, seedNumber] = user.userAvatar
                 .split('-')
                 .map(e => Number(e));
+
               return (
                 <View
                   key={user.userId}
@@ -241,14 +216,29 @@ export const WaitingRoomScreen = (_props: WaitingRoomScreenProps) => {
                     backgroundColor: '#0009',
                     width: VIDEO_WINDOW_SIZE,
                     borderRadius: 6,
+                    overflow: 'hidden',
                   }}>
-                  <SvgXml
-                    xml={
-                      avatarCollectionsList[collectionNumber].avatarXml(
-                        VIDEO_WINDOW_SIZE,
-                      )[seedNumber]
-                    }
-                  />
+                  {localVideoConsumers[user.userId] ? (
+                    <RTCView
+                      streamURL={new MediaStream([
+                        localVideoConsumers[user.userId].track,
+                      ]).toURL()}
+                      style={{
+                        width: VIDEO_WINDOW_SIZE,
+                        height: VIDEO_WINDOW_SIZE,
+                      }}
+                      objectFit="cover"
+                    />
+                  ) : (
+                    <SvgXml
+                      xml={
+                        avatarCollectionsList[collectionNumber].avatarXml(
+                          VIDEO_WINDOW_SIZE,
+                        )[seedNumber]
+                      }
+                    />
+                  )}
+
                   {roomInfo.ownerId === user.userId && (
                     <View
                       style={{
@@ -266,7 +256,6 @@ export const WaitingRoomScreen = (_props: WaitingRoomScreenProps) => {
                       />
                     </View>
                   )}
-
                   <Text
                     style={{
                       textAlign: 'center',
@@ -284,23 +273,12 @@ export const WaitingRoomScreen = (_props: WaitingRoomScreenProps) => {
         </ScrollView>
       )}
 
-      {/* <BottomMedia localStream={localStream} /> */}
-      {isRoomOwner && usersInRoom.length >= 3 && (
-        <View
-          style={{
-            backgroundColor: '#0009',
-            padding: 20,
-            paddingBottom: Math.max(insets.bottom, 20),
-          }}>
-          <PhysicalButton
-            paddingVertical={0}
-            buttonColor={ColorPalette.tertiary}
-            buttonBackgroundColor={ColorPalette.tertiaryActive}
-            onPress={handleStartGame}>
-            <Text style={styles.btnTitle}>START</Text>
-          </PhysicalButton>
-        </View>
-      )}
+      <BottomMedia
+        localStream={localStream}
+        isRoomOwner={isRoomOwner}
+        readyToStart={otherUsersInRoom.length >= 2}
+        handleStartGame={handleStartGame}
+      />
 
       <Modal
         animationType="fade"
@@ -404,24 +382,6 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     gap: 10,
     paddingHorizontal: 20,
-  },
-  videoGridItem: {
-    borderRadius: 6,
-    overflow: 'hidden',
-    width: VIDEO_WINDOW_SIZE,
-    height: VIDEO_WINDOW_SIZE,
-  },
-  btnTitle: {
-    fontSize: 16,
-    fontWeight: '700',
-    color: ColorPalette.white,
-  },
-  appBtn: {
-    height: 52,
-    borderRadius: 8,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: ColorPalette.primary,
   },
   separatorStyle: {
     height: 2,
