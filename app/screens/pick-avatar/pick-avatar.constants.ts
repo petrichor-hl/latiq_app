@@ -57,18 +57,6 @@ export const avatarCollectionsList: IAvatarCollection[] = [
       }),
   },
   {
-    label: 'Micah',
-    assetName: require('../../assets/images/png/micah-0.png'),
-    avatarXml: size =>
-      range(1, 13).map(index => {
-        return createAvatar(micah, {
-          seed: `${index}`,
-          size,
-          radius: 6,
-        }).toString();
-      }),
-  },
-  {
     label: 'Big Smile',
     assetName: require('../../assets/images/png/bigSmile-0.png'),
     avatarXml: size =>
