@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, Text } from 'react-native';
-// import Entypo from 'react-native-vector-icons/Entypo';
+import { View, StyleSheet, Text, Platform } from 'react-native';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { MediaStream, RTCView } from 'react-native-webrtc';
@@ -10,10 +9,11 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { zustandUser } from '../../../zustand/user.zustand';
 import { SvgXml } from 'react-native-svg';
 import { avatarCollectionsList } from '../../pick-avatar/pick-avatar.constants';
-// import { zustandSignalR } from '../../../zustand/signal-r.zustand';
 import { zustandMediaSoup } from '../../../zustand/media-soup.zustand';
 import { PhysicalButton } from '../../../base/components/physical-button.component';
 import { zustandSignalR } from '../../../zustand/signal-r.zustand';
+import { EnumSoundName } from '../../../base/constants/sound-name';
+import { playSound } from '../../../base/helpers/sound.helper';
 // import { CameraStatus } from '../waiting-room.type';
 
 interface BottomMediaProps {
@@ -88,7 +88,7 @@ export const BottomMedia = (props: BottomMediaProps) => {
               //  Nên khi người dùng nhấn button này chúng ta không làm gì cả
               //  Để giảm các công việc thực thi
               //
-              /* if (videoProducer) {
+              if (videoProducer) {
                 if (videoProducer.paused) {
                   videoProducer.resume();
                 } else {
@@ -99,7 +99,7 @@ export const BottomMedia = (props: BottomMediaProps) => {
                 //   videoProducer?.paused ? CameraStatus.Off : CameraStatus.On,
                 // );
                 toggleCamera(videoProducer.paused);
-              } */
+              }
             }}>
             <Ionicons
               name={isCameraOff ? 'videocam-off' : 'videocam'}
@@ -153,6 +153,11 @@ export const BottomMedia = (props: BottomMediaProps) => {
             onPress={() => {
               connection?.invoke('LeaveRoom');
               goBack();
+              playSound(
+                EnumSoundName.Lobby,
+                true,
+                Platform.OS === 'android' ? 0.2 : 1,
+              );
             }}>
             <FontAwesome6
               name="phone-flip"

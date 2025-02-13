@@ -9,34 +9,33 @@ import { UserService } from '../services/features/user.services';
 import { HomeScreen, HomeScreenProps } from './home/home.screen';
 import { hideLoading, showLoading } from '../zustand/loading.zustand';
 import { AuthService } from '../services/features/auth.services';
+import { loadSounds } from '../base/helpers/sound.helper';
 
 export const SplashScreen = () => {
-  useDidMount(() => {
-    const checkLoginStatus = async () => {
-      showLoading();
-      const localToken = {
-        accessToken: zustandAuth.getState().accessToken,
-        refreshToken: zustandAuth.getState().refreshToken,
-      };
-
-      if (localToken.accessToken !== '' && localToken.refreshToken !== '') {
-        const isAuthenticated = await AuthService.refreshToken(
-          localToken,
-          false,
-        );
-
-        if (isAuthenticated) {
-          await UserService.getProfile(false);
-          reset<HomeScreenProps>(HomeScreen);
-        }
-      } else {
-        reset<LoginScreenProps>(LoginScreen);
-      }
-      hideLoading();
-    };
-
+  useDidMount(async () => {
+    await loadSounds();
     checkLoginStatus();
   });
+
+  const checkLoginStatus = async () => {
+    showLoading();
+    const localToken = {
+      accessToken: zustandAuth.getState().accessToken,
+      refreshToken: zustandAuth.getState().refreshToken,
+    };
+
+    if (localToken.accessToken !== '' && localToken.refreshToken !== '') {
+      const isAuthenticated = await AuthService.refreshToken(localToken, false);
+
+      if (isAuthenticated) {
+        await UserService.getProfile(false);
+        reset<HomeScreenProps>(HomeScreen);
+      }
+    } else {
+      reset<LoginScreenProps>(LoginScreen);
+    }
+    hideLoading();
+  };
 
   return (
     <View style={styles.container}>

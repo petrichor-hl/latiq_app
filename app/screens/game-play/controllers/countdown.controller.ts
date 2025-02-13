@@ -1,11 +1,14 @@
 import { useEffect, useState } from 'react';
 import { Easing, useSharedValue, withTiming } from 'react-native-reanimated';
+import { playSound } from '../../../base/helpers/sound.helper';
+import { EnumSoundName } from '../../../base/constants/sound-name';
 
 export const useCountdownController = () => {
   const [countdown, setCountdown] = useState(3);
   const scale = useSharedValue(2.5);
 
   useEffect(() => {
+    playSound(EnumSoundName.CountDown);
     scale.value = withTiming(1, { duration: 300, easing: Easing.ease }); // Thu lại
     const timer = setInterval(() => {
       setCountdown(prev => {

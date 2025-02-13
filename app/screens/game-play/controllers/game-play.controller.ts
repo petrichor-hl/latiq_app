@@ -84,6 +84,7 @@ export const useGamePlayController = () => {
     connection?.on(
       'StartNewTurn',
       (userId: string, userNickName: string, keyword: string) => {
+        playSound(EnumSoundName.InGame);
         drawerIdRef.current = userId;
         setShowAnswer(false);
         if (userId === zustandUser.getState().user.id) {
@@ -131,6 +132,7 @@ export const useGamePlayController = () => {
     });
 
     connection?.on('ShowAnswer', (correactAnswer: string) => {
+      playSound(EnumSoundName.Gong);
       countRef.current++;
       clearPaint();
 
@@ -159,6 +161,7 @@ export const useGamePlayController = () => {
     });
 
     connection?.on('EndGame', () => {
+      playSound(EnumSoundName.Result);
       navigate<GameResultScreenProps>(GameResultScreen);
     });
   });

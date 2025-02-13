@@ -6,6 +6,7 @@ import {
   Text,
   View,
   KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { SvgXml } from 'react-native-svg';
@@ -39,6 +40,9 @@ import {
   FriendListScreenProps,
 } from '../friend-list/friend-list.screen';
 import { zustandMediaSoup } from '../../zustand/media-soup.zustand';
+import { useDidMount } from 'rooks';
+import { EnumSoundName } from '../../base/constants/sound-name';
+import { playSound } from '../../base/helpers/sound.helper';
 
 export interface HomeScreenProps {}
 
@@ -52,6 +56,10 @@ export const HomeScreen = () => {
 
   const { connection, isConnected, initializeConnection } = zustandSignalR();
 
+  useDidMount(() => {
+    playSound(EnumSoundName.Lobby, true, Platform.OS === 'android' ? 0.2 : 1);
+  });
+
   useEffect(() => {
     if (!isConnected) {
       initializeConnection(zustandAuth.getState().accessToken);
@@ -63,14 +71,14 @@ export const HomeScreen = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isConnected]);
 
-  const { isConnected: isSocketConnected, connect } = zustandMediaSoup();
+  const { isConnected: isSocketConnected, connect } =
+    zustandMediaSoup.getState();
 
-  useEffect(() => {
+  useDidMount(() => {
     if (!isSocketConnected) {
       connect();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isSocketConnected]);
+  });
 
   return (
     <ImageBackground

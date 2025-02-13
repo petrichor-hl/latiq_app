@@ -5,6 +5,7 @@ import {
   ImageBackground,
   ListRenderItem,
   Modal,
+  Platform,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -15,9 +16,6 @@ import {
 import { HEIGHT, WIDTH } from '../../base/constants/size-screen';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-// import { MediaStream, RTCView } from 'react-native-webrtc';
-
-// import { BottomMedia } from './components/bottom-media.component';
 import { RoomInfo } from './components/room-info.component';
 import { SvgXml } from 'react-native-svg';
 import { avatarCollectionsList } from '../pick-avatar/pick-avatar.constants';
@@ -37,7 +35,9 @@ import { BottomMedia } from './components/bottom-media.component';
 import { zustandRoom } from '../../zustand/room.zustand';
 import { MediaStream, RTCView } from 'react-native-webrtc';
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6';
-// import { useWaitingRoomMediaSoup } from './controllers/mediasoup.controller';
+import { useDidMount } from 'rooks';
+import { playSound, stopCurrentSound } from '../../base/helpers/sound.helper';
+import { EnumSoundName } from '../../base/constants/sound-name';
 // import { CameraStatus } from './waiting-room.type';
 
 export interface WaitingRoomScreenProps {}
@@ -48,6 +48,10 @@ export const WaitingRoomScreen = (_props: WaitingRoomScreenProps) => {
   const insets = useSafeAreaInsets();
 
   const { roomInfo } = zustandRoom();
+
+  useDidMount(() => {
+    stopCurrentSound(EnumSoundName.Lobby);
+  });
 
   const {
     values: { localStream, localVideoConsumers },
@@ -162,6 +166,11 @@ export const WaitingRoomScreen = (_props: WaitingRoomScreenProps) => {
           onPress={() => {
             connection?.invoke('LeaveRoom');
             goBack();
+            playSound(
+              EnumSoundName.Lobby,
+              true,
+              Platform.OS === 'android' ? 0.2 : 1,
+            );
           }}>
           <Ionicons name={'arrow-undo'} size={28} color={ColorPalette.white} />
         </PhysicalButton>

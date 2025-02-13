@@ -14,6 +14,11 @@
 		2E7B2D4B30AD70FD433717F2 /* libPods-latiq_app-latiq_appTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BAED1640E23ABE8C6EAA6982 /* libPods-latiq_app-latiq_appTests.a */; };
 		4461F95C636DE59A7BE20879 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 5FB7A6D63E1E3FDA78E1268A /* PrivacyInfo.xcprivacy */; };
 		566ECE5C2D3E62EA005C03C1 /* correct_answer.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 566ECE5B2D3E62EA005C03C1 /* correct_answer.mp3 */; };
+		56C5A94B2D5CEE7B004DA048 /* result.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 56C5A94A2D5CEE7B004DA048 /* result.mp3 */; };
+		56C5A94C2D5CEE7B004DA048 /* ingame.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 56C5A9482D5CEE7B004DA048 /* ingame.mp3 */; };
+		56C5A94D2D5CEE7B004DA048 /* gong.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 56C5A9472D5CEE7B004DA048 /* gong.mp3 */; };
+		56C5A94E2D5CEE7B004DA048 /* count_down.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 56C5A9462D5CEE7B004DA048 /* count_down.mp3 */; };
+		56C5A94F2D5CEE7B004DA048 /* lobby.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 56C5A9492D5CEE7B004DA048 /* lobby.mp3 */; };
 		56D1AAF42CB2F488004644AE /* button_click.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 56D1AAF32CB2F488004644AE /* button_click.mp3 */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		D29BC9ED35C96BDC248150DF /* libPods-latiq_app.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 697F20F525F99128E3509017 /* libPods-latiq_app.a */; };
@@ -42,6 +47,11 @@
 		13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = PrivacyInfo.xcprivacy; path = latiq_app/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		433FEDC71569E45697807983 /* Pods-latiq_app.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-latiq_app.debug.xcconfig"; path = "Target Support Files/Pods-latiq_app/Pods-latiq_app.debug.xcconfig"; sourceTree = "<group>"; };
 		566ECE5B2D3E62EA005C03C1 /* correct_answer.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = correct_answer.mp3; sourceTree = "<group>"; };
+		56C5A9462D5CEE7B004DA048 /* count_down.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = count_down.mp3; sourceTree = "<group>"; };
+		56C5A9472D5CEE7B004DA048 /* gong.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = gong.mp3; sourceTree = "<group>"; };
+		56C5A9482D5CEE7B004DA048 /* ingame.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = ingame.mp3; sourceTree = "<group>"; };
+		56C5A9492D5CEE7B004DA048 /* lobby.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = lobby.mp3; sourceTree = "<group>"; };
+		56C5A94A2D5CEE7B004DA048 /* result.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = result.mp3; sourceTree = "<group>"; };
 		56D1AAF32CB2F488004644AE /* button_click.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = button_click.mp3; sourceTree = "<group>"; };
 		5FB7A6D63E1E3FDA78E1268A /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xml; name = PrivacyInfo.xcprivacy; path = latiq_app/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		60ECDF8B3138A38B8FABBAD9 /* Pods-latiq_app-latiq_appTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-latiq_app-latiq_appTests.release.xcconfig"; path = "Target Support Files/Pods-latiq_app-latiq_appTests/Pods-latiq_app-latiq_appTests.release.xcconfig"; sourceTree = "<group>"; };
@@ -125,6 +135,11 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				56C5A9462D5CEE7B004DA048 /* count_down.mp3 */,
+				56C5A9472D5CEE7B004DA048 /* gong.mp3 */,
+				56C5A9482D5CEE7B004DA048 /* ingame.mp3 */,
+				56C5A9492D5CEE7B004DA048 /* lobby.mp3 */,
+				56C5A94A2D5CEE7B004DA048 /* result.mp3 */,
 				566ECE5B2D3E62EA005C03C1 /* correct_answer.mp3 */,
 				56D1AAF32CB2F488004644AE /* button_click.mp3 */,
 				13B07FAE1A68108700A75B9A /* latiq_app */,
@@ -254,6 +269,11 @@
 			files = (
 				81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */,
 				566ECE5C2D3E62EA005C03C1 /* correct_answer.mp3 in Resources */,
+				56C5A94B2D5CEE7B004DA048 /* result.mp3 in Resources */,
+				56C5A94C2D5CEE7B004DA048 /* ingame.mp3 in Resources */,
+				56C5A94D2D5CEE7B004DA048 /* gong.mp3 in Resources */,
+				56C5A94E2D5CEE7B004DA048 /* count_down.mp3 in Resources */,
+				56C5A94F2D5CEE7B004DA048 /* lobby.mp3 in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				4461F95C636DE59A7BE20879 /* PrivacyInfo.xcprivacy in Resources */,
 				56D1AAF42CB2F488004644AE /* button_click.mp3 in Resources */,
@@ -600,10 +620,7 @@
 					"-DFOLLY_CFG_NO_COROUTINES=1",
 					"-DFOLLY_HAVE_CLOCK_GETTIME=1",
 				);
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					" ",
-				);
+				OTHER_LDFLAGS = "$(inherited)  ";
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) DEBUG";
@@ -676,10 +693,7 @@
 					"-DFOLLY_CFG_NO_COROUTINES=1",
 					"-DFOLLY_HAVE_CLOCK_GETTIME=1",
 				);
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					" ",
-				);
+				OTHER_LDFLAGS = "$(inherited)  ";
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				USE_HERMES = true;
